@@ -49,6 +49,7 @@ extern "C" {
 MENGE_API bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                              const char* pluginPath = 0x0);
 
+
 /*!
  @brief    Sets the time step for the simulator.
  */
@@ -250,6 +251,9 @@ MENGE_API bool GetObstacleP0(size_t i, float* x0, float* y0, float* z0);
  @returns  True if the values have been properly set.
  */
 MENGE_API bool GetObstacleP1(size_t i, float* x1, float* y1, float* z1);
+
+
+MENGE_API int TestNewFunction();
 }
 
 #endif  // __MENGE_C_API__

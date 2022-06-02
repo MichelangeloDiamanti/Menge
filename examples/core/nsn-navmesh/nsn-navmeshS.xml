@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Experiment xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <Common time_step="0.1" />
+  <SpatialQuery type="nav_mesh" test_visibility="false" file_name="simple.nav" />
+  <Elevation type="nav_mesh" file_name="simple.nav" />
+  <ObstacleSet type="nav_mesh" file_name="simple.nav" class="1" />
+  <AgentProfile name="group1">
+    <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="2" max_accel="5" />
+    <ORCA tau="3" tauObst="0.15" />
+  </AgentProfile>
+  <AgentProfile name="group2">
+    <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="0.8" max_speed="1.8" max_accel="4" />
+    <ORCA tau="3" tauObst="0.15" />
+  </AgentProfile>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group1" />
+    <StateSelector type="const" name="Walk1" />
+    <Generator type="explicit">
+      <Agent p_x="352.9732" p_y="434.3149" />
+      <Agent p_x="261" p_y="220" />
+      <Agent p_x="411" p_y="362" />
+      <Agent p_x="172.404434" p_y="187.170044" />
+      <Agent p_x="232.160645" p_y="92.57643" />
+      <Agent p_x="76.47661" p_y="340.478058" />
+      <Agent p_x="144.879608" p_y="90.2620544" />
+    </Generator>
+  </AgentGroup>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group2" />
+    <StateSelector type="const" name="Start2" />
+    <Generator type="explicit">
+      <Agent p_x="100" p_y="221" />
+      <Agent p_x="154.173584" p_y="260.311218" />
+      <Agent p_x="411" p_y="361" />
+      <Agent p_x="412" p_y="252" />
+      <Agent p_x="275.565979" p_y="20.921505" />
+      <Agent p_x="315.017944" p_y="293.4987" />
+    </Generator>
+  </AgentGroup>
+</Experiment>

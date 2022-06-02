@@ -32,7 +32,10 @@ using std::find;
 bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                    const char* pluginPath) {
   const bool VERBOSE = false;
-  if (_simulator != 0x0) delete _simulator;
+  //if (_simulator != 0x0) {
+  //  delete _simulator;
+  //  _simulator = 0x0;
+  //}
   Menge::SimulatorDB simDB;
   // TODO: Plugin engine is *not* public.  I can't get plugins.
   Menge::PluginEngine::CorePluginEngine engine(&simDB);
@@ -279,4 +282,6 @@ bool GetObstacleP1(size_t i, float* x1, float* y1, float* z1) {
   *z1 = p1._y;
   return true;
 }
+
+MENGE_API int TestNewFunction() { return 44; }
 }  // extern"C"
