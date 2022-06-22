@@ -49,6 +49,10 @@ extern "C" {
 MENGE_API bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                              const char* pluginPath = 0x0);
 
+/*!
+ @brief    Unloads the plugins from the simulator.
+ */
+MENGE_API size_t UnloadPlugins();
 
 /*!
  @brief    Sets the time step for the simulator.

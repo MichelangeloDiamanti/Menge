@@ -104,6 +104,27 @@ class BasePluginEngine {
     return files.size();
   }
 
+  /*!
+  @brief    deletes all the plugins that were loaded (effectively unloading them from memory)
+  @returns  how many plugins where unloaded
+  */
+
+  size_t unloadPlugins() {
+    size_t unloadedPluginsCount = 0;
+
+    PluginMap::iterator it;
+
+    for (it = _plugins.begin(); it != _plugins.end(); it++) {
+      PluginType* plugin = it->second;
+      delete plugin;
+      unloadedPluginsCount++;
+    }
+
+    _plugins.clear();
+
+    return unloadedPluginsCount;
+  }
+
  protected:
   /*!
    @brief    Provides the string that will be written to the logger as an info at the beginning of

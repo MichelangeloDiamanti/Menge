@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="nsn-formation-navigation/nsn-formation-navigationS.xml" 
+	behavior="nsn-formation-navigation/nsn-formation-navigationB.xml" 
+	view="nsn-formation-navigation/nsn-formation-navigationV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

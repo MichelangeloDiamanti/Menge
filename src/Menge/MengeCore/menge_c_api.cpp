@@ -18,6 +18,8 @@
 
 Menge::Agents::SimulatorInterface* _simulator = 0x0;
 
+Menge::PluginEngine::CorePluginEngine* _engine = 0x0;
+
 /////////////////////////////////////////////////////////////////////
 //          API implementation
 /////////////////////////////////////////////////////////////////////
@@ -32,15 +34,13 @@ using std::find;
 bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                    const char* pluginPath) {
   const bool VERBOSE = false;
-  //if (_simulator != 0x0) {
-  //  delete _simulator;
-  //  _simulator = 0x0;
-  //}
+  // if (_simulator != 0x0) delete _simulator;
   Menge::SimulatorDB simDB;
   // TODO: Plugin engine is *not* public.  I can't get plugins.
-  Menge::PluginEngine::CorePluginEngine engine(&simDB);
+  //if (_engine != 0x0) delete _engine;
+  _engine = new Menge::PluginEngine::CorePluginEngine(&simDB);
   if (pluginPath != 0x0) {
-    engine.loadPlugins(pluginPath);
+    _engine->loadPlugins(pluginPath);
   }
   Menge::SimulatorDBEntry* simDBEntry = simDB.getDBEntry(std::string(model));
   if (simDBEntry == 0x0) return false;
@@ -55,6 +55,13 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
   _simulator = simDBEntry->getSimulator(agentCount, timeStep, subSteps, duration, behaveFile,
                                         sceneFile, outFile, scbVersion, verbose);
   return _simulator != 0x0;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+size_t UnloadPlugins() {
+  size_t unloadedPlugins = _engine->unloadPlugins();
+  return unloadedPlugins;
 }
 
 /////////////////////////////////////////////////////////////////////
