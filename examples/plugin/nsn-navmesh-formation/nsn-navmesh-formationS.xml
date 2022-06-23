@@ -8,20 +8,28 @@
     <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="2" max_accel="5" />
     <ORCA tau="3" tauObst="0.15" />
   </AgentProfile>
+  <AgentProfile name="group2">
+    <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="2" max_accel="5" />
+    <ORCA tau="3" tauObst="0.15" />
+  </AgentProfile>
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="Walk1" />
+    <StateSelector type="const" name="GetInFormationGroup1" />
     <Generator type="explicit">
-      <Agent p_x="233" p_y="258" />
-      <Agent p_x="234" p_y="258" />
-      <Agent p_x="235" p_y="258" />
-      <Agent p_x="236" p_y="258" />
-      <Agent p_x="233" p_y="259" />
-      <Agent p_x="233" p_y="260" />
-      <Agent p_x="233" p_y="261" />
-      <Agent p_x="234" p_y="259" />
-      <Agent p_x="235" p_y="259" />
-      <Agent p_x="95.61811" p_y="150.1685" />
+      <Agent p_x="231.08519" p_y="252.452271" />
+      <Agent p_x="231.0898" p_y="251.47876" />
+      <Agent p_x="230.18399" p_y="252.52742" />
+      <Agent p_x="230.23613" p_y="251.663818" />
+    </Generator>
+  </AgentGroup>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group2" />
+    <StateSelector type="const" name="GetInFormationGroup2" />
+    <Generator type="explicit">
+      <Agent p_x="242.8" p_y="252.452271" />
+      <Agent p_x="242.738129" p_y="251.061661" />
+      <Agent p_x="241.294113" p_y="252.396332" />
+      <Agent p_x="241.348541" p_y="251.137955" />
     </Generator>
   </AgentGroup>
 </Experiment>
