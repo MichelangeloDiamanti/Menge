@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<BFSM>
+
+	<GoalSet id="0">
+		<Goal type="point" id="0" x="10" y="10"/>
+	</GoalSet>
+
+    <VelModifier type="texture" file_name="squareForm.txt" />
+
+    <State name="Walk" final="0" >
+        <GoalSelector type="explicit" goal_set="0" goal="0" />
+        <VelComponent type="goal" />
+    </State>
+	
+</BFSM>

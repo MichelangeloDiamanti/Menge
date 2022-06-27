@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="texture/textureS.xml" 
+	behavior="texture/textureB.xml" 
+	view="texture/textureV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

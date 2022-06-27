@@ -37,15 +37,13 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 */
 
 /*!
- *	@file		Formations.cpp
- *	@brief		Plugin for formations
+ *	@file		Textures.cpp
+ *	@brief		Plugin for textures
  */
 
-#include "FormationsConfig.h"
-#include "FormationsModifier.h"
-#include "FormationsTask.h"
-#include "FreeFormation.h"
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
+#include "TextureModifier.h"
+#include "TexturesConfig.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
@@ -55,17 +53,19 @@ extern "C" {
  *
  *	@returns	The name of the plug in.
  */
-FORMATIONS_API const char* getName() { return "formations"; }
+TEXTURES_API const char* getName() { return "textures"; }
 
 /*!
  *	@brief		Description of the plug-in.
  *
  *	@returns	A description of the plugin.
  */
-FORMATIONS_API const char* getDescription() {
-  return "Utilities for adding formations to ped sims "
+TEXTURES_API const char* getDescription() {
+  return "Utilities for adding textures to ped sims "
          "including the following:\n"
-         "\tModifier \"formation\" - forces agents to move in formation. ";
+         "\tModifier \"texture\" - Sets agents velocity according to a texture: spots with \"hot "
+         "colors\" are more likely "
+         "to be selected.";
 }
 
 /*!
@@ -73,7 +73,7 @@ FORMATIONS_API const char* getDescription() {
  *
  *	@param		engine		A pointer to the plugin engine.
  */
-FORMATIONS_API void registerCorePlugin(CorePluginEngine* engine) {
-  engine->registerVelModFactory(new Formations::FormationModifierFactory());
+TEXTURES_API void registerCorePlugin(CorePluginEngine* engine) {
+  engine->registerVelModFactory(new Texture::TextureModifierFactory());
 }
 }
