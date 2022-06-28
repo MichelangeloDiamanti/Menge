@@ -1,11 +1,14 @@
 #ifndef __TEXTURE_MODIFIER_H__
 #define __TEXTURE_MODIFIER_H__
-#endif
 
 #include "TexturesConfig.h"
 
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
+#include "MengeCore/Runtime/os.h"
+
+//#include "CImg.h"
+#include "png.h"
 
 #if defined(_MSC_VER)
 // Visual Studio spews warnings about some members.
@@ -17,7 +20,7 @@
 // forward declaration
 class TiXmlElement;
 
-namespace Texture {
+namespace Textures {
 
 // forward declaration
 class TextureModifierFactory;
@@ -48,6 +51,8 @@ class TEXTURES_API TextureModifier : public Menge::BFSM::VelModifier {
    @param		pVel		The preferred velocity to modify -- modified in place.
    */
   void adaptPrefVelocity(const Menge::Agents::BaseAgent* agent, Menge::Agents::PrefVelocity& pVel);
+
+  friend class TextureModifierFactory;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,3 +128,4 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
 };
 
 }  // namespace Texture
+#endif  // __FORMATIONS_MODIFIER_H__

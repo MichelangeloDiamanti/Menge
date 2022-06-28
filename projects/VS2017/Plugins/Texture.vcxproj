@@ -101,7 +101,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -110,9 +110,9 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;libpng16d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x86;$(MengeLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x86;$(MengeLib);C:\Users\michelangelo17\Documents\cmake\lpng1637\output\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -127,7 +127,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;C:\Users\michelangelo17\Documents\cmake\libpng\output\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -137,9 +137,9 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;libpng16d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;C:\Users\michelangelo17\Documents\cmake\libpng\output\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>

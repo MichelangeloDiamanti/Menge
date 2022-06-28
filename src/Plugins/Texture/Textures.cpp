@@ -74,6 +74,6 @@ TEXTURES_API const char* getDescription() {
  *	@param		engine		A pointer to the plugin engine.
  */
 TEXTURES_API void registerCorePlugin(CorePluginEngine* engine) {
-  engine->registerVelModFactory(new Texture::TextureModifierFactory());
+  engine->registerVelModFactory(new Textures::TextureModifierFactory());
 }
 }
