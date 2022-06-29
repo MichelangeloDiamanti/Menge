@@ -143,8 +143,7 @@ xcopy /y $(TargetPath) $(ExeDir)
     <PostBuildEvent>
       <Message>Copy DLL to executable folder</Message>
       <Command>if not exist $(ExeDir)  md $(ExeDir)
-xcopy /y $(TargetPath) $(ExeDir)
-xcopy /y $(TargetPath) D:\UnityProjects\nsn-virtual-pedestrians\Assets\Plugins\Menge\x86_64</Command>
+xcopy /y $(TargetPath) $(ExeDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

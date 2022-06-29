@@ -1,13 +1,16 @@
 #ifndef __TEXTURE_MODIFIER_H__
 #define __TEXTURE_MODIFIER_H__
 
+#include "Texture.h"
 #include "TexturesConfig.h"
 
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
 #include "MengeCore/Runtime/os.h"
+#include "thirdParty/tinyxml.h"
 
-//#include "CImg.h"
+#define cimg_use_png
+#include "CImg.h"
 #include "png.h"
 
 #if defined(_MSC_VER)
@@ -52,7 +55,24 @@ class TEXTURES_API TextureModifier : public Menge::BFSM::VelModifier {
    */
   void adaptPrefVelocity(const Menge::Agents::BaseAgent* agent, Menge::Agents::PrefVelocity& pVel);
 
+  /*!
+  @brief		Set the texture data.
+  
+
+
+  @param		texture		A managed resource pointer to the underlying texture data.
+  */
+  void setTexture(TexturePtr texture);
+
+  TexturePtr getTexture() { return _texture; };
+
   friend class TextureModifierFactory;
+
+ protected:
+  /*!
+   @brief		The underlying texture data.
+   */
+  TexturePtr _texture;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,5 +147,5 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
   size_t _fileNameID;
 };
 
-}  // namespace Texture
+}  // namespace Textures
 #endif  // __FORMATIONS_MODIFIER_H__

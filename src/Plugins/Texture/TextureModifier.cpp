@@ -1,6 +1,6 @@
 #include "TextureModifier.h"
 
-// using namespace cimg_library;
+using namespace cimg_library;
 
 namespace Textures {
 
@@ -12,6 +12,9 @@ using Menge::Math::Vector2;
 
 using Menge::logger;
 using Menge::Logger;
+
+using Menge::Resource;
+using Menge::ResourceException;
 
 /////////////////////////////////////////////////////////////////////
 //                   Implementation of FormationModifier
@@ -30,9 +33,15 @@ VelModifier* TextureModifier::copy() const { return new TextureModifier(); };
 /////////////////////////////////////////////////////////////////////
 
 void TextureModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
+  int* rgb = _texture->getValueAt(1, 3);
+
+  std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
+
   Vector2 dir = Vector2(0.0f, 0.0f);
   pVel.setSingle(dir);
 }
+
+void TextureModifier::setTexture(TexturePtr texture) { _texture = texture; }
 
 /////////////////////////////////////////////////////////////////////
 //                   Implementation of FormationModFactory
@@ -58,32 +67,15 @@ bool TextureModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier, TiXm
       Menge::os::path::join(2, behaveFldr.c_str(), _attrSet.getString(_fileNameID).c_str());
   Menge::os::path::absPath(path, fName);
 
-  logger << Logger::INFO_MSG << "Texture path: " << path;
+  logger << Logger::INFO_MSG << "Texture file: " << fName;
 
-  // CImg<unsigned char> image(path.c_str());
-
-  // logger << Logger::INFO_MSG << "Texture width: " << image.width() << " height: " <<
-  // image.height();
-
-  FILE* fp = fopen(path.c_str(), "rb");
-
-  png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (!png) abort();
-
-  png_infop info = png_create_info_struct(png);
-  if (!info) abort();
-
-  if (setjmp(png_jmpbuf(png))) abort();
-
-  png_init_io(png, fp);
-
-  png_read_info(png, info);
-
-  int width = png_get_image_width(png, info);
-  int height = png_get_image_height(png, info);
-  png_byte color_type = png_get_color_type(png, info);
-
-  logger << Logger::INFO_MSG << "Texture width: " << width << " height: " << height;
+  try {
+    textureMod->setTexture(loadTexture(fName));
+  } catch (ResourceException) {
+    logger << Logger::ERR_MSG << "Couldn't instantiate the formation referenced on line ";
+    logger << node->Row() << ".";
+    return false;
+  }
 
   return true;
 }

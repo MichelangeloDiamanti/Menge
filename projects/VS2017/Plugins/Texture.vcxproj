@@ -127,7 +127,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;C:\Users\michelangelo17\Documents\cmake\libpng\output\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;C:\Users\michelangelo17\Documents\git_repos\Menge\src\thirdParty\Cimg;C:\Users\michelangelo17\Documents\cmake\libpng\output\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -203,10 +203,12 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\Plugins\Texture\Texture.h" />
     <ClInclude Include="..\..\..\src\Plugins\Texture\TextureModifier.h" />
     <ClInclude Include="..\..\..\src\Plugins\Texture\TexturesConfig.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\Plugins\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\Texture\TextureModifier.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\Texture\Textures.cpp" />
   </ItemGroup>
