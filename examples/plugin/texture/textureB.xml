@@ -6,7 +6,7 @@
 		<Goal type="point" id="0" x="10" y="10"/>
 	</GoalSet>
 
-    <VelModifier type="texture" file_name="test_texture.png" />
+    <VelModifier type="texture" file_name="kendon_zones.png" />
 
     <State name="Walk" final="0" >
         <GoalSelector type="explicit" goal_set="0" goal="0" />

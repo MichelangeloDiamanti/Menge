@@ -21,3 +21,5 @@ To make it work:
     value to the install directory. This variable is used by 
     Visual Studio to determine additiona compiler include
     directories and linker .lib files.
+
+- Finally, place zlib.dll and libpng.dll inside the Menge Exe folder

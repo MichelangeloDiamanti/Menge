@@ -33,7 +33,7 @@ VelModifier* TextureModifier::copy() const { return new TextureModifier(); };
 /////////////////////////////////////////////////////////////////////
 
 void TextureModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
-  int* rgb = _texture->getValueAt(1, 3);
+  int* rgb = _texture->getValueAt(200, 200);
 
   std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
 
