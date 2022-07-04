@@ -100,7 +100,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;$(MengeSrc)\..\thirdParty\Cimg;$(LibPng)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -112,7 +112,7 @@
     <Link>
       <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;libpng16d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x86;$(MengeLib);C:\Users\michelangelo17\Documents\cmake\lpng1637\output\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x86;$(MengeLib);$(LibPng)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -127,7 +127,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;C:\Users\michelangelo17\Documents\git_repos\Menge\src\thirdParty\Cimg;C:\Users\michelangelo17\Documents\cmake\libpng\output\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;$(MengeSrc)\..\thirdParty\Cimg;$(LibPng)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TEXTURES_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -139,7 +139,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
     <Link>
       <AdditionalDependencies>MengeCore_d.lib;tinyxml_d.lib;libpng16d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName)_d.dll</OutputFile>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;C:\Users\michelangelo17\Documents\cmake\libpng\output\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;$(LibPng)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>
@@ -152,7 +152,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\debug\
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;$(MengeSrc)\..\thirdParty\Cimg;$(LibPng)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TEXTURE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
@@ -178,7 +178,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MengeSrc)\;$(MengeSrc)\..\;$(MengeSrc)\..\include;$(MengeSrc)\..\thirdParty\Cimg;$(LibPng)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TEXTURE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
@@ -189,7 +189,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
     </ClCompile>
     <Link>
       <AdditionalDependencies>MengeCore.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\resources\win\lib\x64;$(MengeLib)\x64;$(LibPng)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -211,6 +211,9 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
     <ClCompile Include="..\..\..\src\Plugins\Texture\Texture.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\Texture\TextureModifier.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\Texture\Textures.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\Plugins\Texture\README.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

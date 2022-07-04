@@ -6,6 +6,7 @@
     <MengeSrc>$(SolutionDir)..\..\..\src\Menge</MengeSrc>
     <MengeLib>$(SolutionDir)..\Menge\build\lib</MengeLib>
     <PluginSrc>$(SolutionDir)..\..\..\src\Plugins</PluginSrc>
+    <LibPng>$(LibPng)</LibPng>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />
