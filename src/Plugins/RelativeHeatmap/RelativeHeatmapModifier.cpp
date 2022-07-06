@@ -1,8 +1,8 @@
-#include "TextureModifier.h"
+#include "RelativeHeatmapModifier.h"
 
 using namespace cimg_library;
 
-namespace Textures {
+namespace RelativeHeatmap {
 
 using Menge::Agents::BaseAgent;
 using Menge::Agents::PrefVelocity;
@@ -20,20 +20,20 @@ using Menge::ResourceException;
 //                   Implementation of FormationModifier
 /////////////////////////////////////////////////////////////////////
 
-TextureModifier::TextureModifier() {}
+RelativeHeatmapModifier::RelativeHeatmapModifier() {}
 
 /////////////////////////////////////////////////////////////////////
 
-TextureModifier::~TextureModifier(){};
+RelativeHeatmapModifier::~RelativeHeatmapModifier(){};
 
 /////////////////////////////////////////////////////////////////////
 
-VelModifier* TextureModifier::copy() const { return new TextureModifier(); };
+VelModifier* RelativeHeatmapModifier::copy() const { return new RelativeHeatmapModifier(); };
 
 /////////////////////////////////////////////////////////////////////
 
-void TextureModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
-  int* rgb = _texture->getValueAt(200, 200);
+void RelativeHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
+  int* rgb = _relativeHeatmap->getValueAt(200, 200);
 
   std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
 
@@ -41,21 +41,24 @@ void TextureModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pV
   pVel.setSingle(dir);
 }
 
-void TextureModifier::setTexture(TexturePtr texture) { _texture = texture; }
+void RelativeHeatmapModifier::setRelativeHeatmap(RelativeHeatmapPtr relativeHeatmap) {
+  _relativeHeatmap = relativeHeatmap;
+}
 
 /////////////////////////////////////////////////////////////////////
 //                   Implementation of FormationModFactory
 /////////////////////////////////////////////////////////////////////
 
-TextureModifierFactory::TextureModifierFactory() : VelModFactory() {
+RelativeHeatmapModifierFactory::RelativeHeatmapModifierFactory() : VelModFactory() {
   // no properties yet
   _fileNameID = _attrSet.addStringAttribute("file_name", true /*required*/);
 }
 
-bool TextureModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier, TiXmlElement* node,
-                                        const std::string& behaveFldr) const {
-  TextureModifier* textureMod = dynamic_cast<TextureModifier*>(modifier);
-  assert(textureMod != 0x0 &&
+bool RelativeHeatmapModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier,
+                                                TiXmlElement* node,
+                                                const std::string& behaveFldr) const {
+  RelativeHeatmapModifier* relativeHeatmapMod = dynamic_cast<RelativeHeatmapModifier*>(modifier);
+  assert(relativeHeatmapMod != 0x0 &&
          "Trying to set property modifier properties on an incompatible object");
 
   if (!Menge::BFSM::VelModFactory::setFromXML(modifier, node, behaveFldr)) return false;
@@ -67,10 +70,10 @@ bool TextureModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier, TiXm
       Menge::os::path::join(2, behaveFldr.c_str(), _attrSet.getString(_fileNameID).c_str());
   Menge::os::path::absPath(path, fName);
 
-  logger << Logger::INFO_MSG << "Texture file: " << fName;
+  logger << Logger::INFO_MSG << "RelativeHeatmap file: " << fName;
 
   try {
-    textureMod->setTexture(loadTexture(fName));
+    relativeHeatmapMod->setRelativeHeatmap(loadRelativeHeatmap(fName));
   } catch (ResourceException) {
     logger << Logger::ERR_MSG << "Couldn't instantiate the formation referenced on line ";
     logger << node->Row() << ".";
@@ -80,4 +83,4 @@ bool TextureModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier, TiXm
   return true;
 }
 
-}  // namespace Textures
+}  // namespace RelativeHeatmap

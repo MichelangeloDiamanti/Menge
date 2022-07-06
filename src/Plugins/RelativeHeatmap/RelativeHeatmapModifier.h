@@ -1,8 +1,8 @@
-#ifndef __TEXTURE_MODIFIER_H__
-#define __TEXTURE_MODIFIER_H__
+#ifndef __RELATIVE_HEATMAP_MODIFIER_H__
+#define __RELATIVE_HEATMAP_MODIFIER_H__
 
-#include "Texture.h"
-#include "TexturesConfig.h"
+#include "RelativeHeatmap.h"
+#include "RelativeHeatmapConfig.h"
 
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
@@ -23,23 +23,23 @@
 // forward declaration
 class TiXmlElement;
 
-namespace Textures {
+namespace RelativeHeatmap {
 
 // forward declaration
-class TextureModifierFactory;
+class RelativeHeatmapModifierFactory;
 
-class TEXTURES_API TextureModifier : public Menge::BFSM::VelModifier {
+class RELATIVE_HEATMAP_API RelativeHeatmapModifier : public Menge::BFSM::VelModifier {
  public:
   /*!
    @brief	Constructor
    */
-  TextureModifier();
+  RelativeHeatmapModifier();
 
  protected:
   /*!
    @brief		Destructor.
    */
-  virtual ~TextureModifier();
+  virtual ~RelativeHeatmapModifier();
 
  public:
   /*!
@@ -56,36 +56,37 @@ class TEXTURES_API TextureModifier : public Menge::BFSM::VelModifier {
   void adaptPrefVelocity(const Menge::Agents::BaseAgent* agent, Menge::Agents::PrefVelocity& pVel);
 
   /*!
-  @brief		Set the texture data.
-  
+  @brief		Set the relativeHeatmap data.
+  
 
 
-  @param		texture		A managed resource pointer to the underlying texture data.
+  @param		relativeHeatmap		A managed resource pointer to the underlying
+  relativeHeatmap data.
   */
-  void setTexture(TexturePtr texture);
+  void setRelativeHeatmap(RelativeHeatmapPtr relativeHeatmap);
 
-  TexturePtr getTexture() { return _texture; };
+  RelativeHeatmapPtr getRelativeHeatmap() { return _relativeHeatmap; };
 
-  friend class TextureModifierFactory;
+  friend class RelativeHeatmapModifierFactory;
 
  protected:
   /*!
-   @brief		The underlying texture data.
+   @brief		The underlying relativeHeatmap data.
    */
-  TexturePtr _texture;
+  RelativeHeatmapPtr _relativeHeatmap;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /*!
- @brief		The factory class for the TextureModifier
+ @brief		The factory class for the RelativeHeatmapModifier
  */
-class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
+class RELATIVE_HEATMAP_API RelativeHeatmapModifierFactory : public Menge::BFSM::VelModFactory {
  public:
   /*!
    @brief		Constructor.
    */
-  TextureModifierFactory();
+  RelativeHeatmapModifierFactory();
 
   /*!
    @brief		The name of the modifier
@@ -95,7 +96,7 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
 
    @returns	A string containing the unique modifier name.
    */
-  virtual const char* name() const { return "texture"; }
+  virtual const char* name() const { return "relative_heatmap"; }
 
   /*!
    @brief		A description of the modifier
@@ -105,7 +106,8 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
    @returns	A string containing the modifier description.
    */
   virtual const char* description() const {
-    return "Sets agents velocity according to a texture: spots with \"hot colors\" are more likely "
+    return "Sets agents velocity according to a relativeHeatmap: spots with \"hot colors\" are "
+           "more likely "
            "to be selected";
   };
 
@@ -120,7 +122,7 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
 
    @returns		A pointer to a newly instantiated modifier class.
    */
-  Menge::BFSM::VelModifier* instance() const { return new TextureModifier(); }
+  Menge::BFSM::VelModifier* instance() const { return new RelativeHeatmapModifier(); }
 
   /*!
    @brief		Given a pointer to an modifier instance, sets the appropriate fields from
@@ -147,5 +149,5 @@ class TEXTURES_API TextureModifierFactory : public Menge::BFSM::VelModFactory {
   size_t _fileNameID;
 };
 
-}  // namespace Textures
+}  // namespace RelativeHeatmap
 #endif  // __FORMATIONS_MODIFIER_H__
