@@ -6,6 +6,7 @@
 
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
+#include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Runtime/os.h"
 #include "thirdParty/tinyxml.h"
 
@@ -48,7 +49,19 @@ class RELATIVE_HEATMAP_API RelativeHeatmapModifier : public Menge::BFSM::VelModi
   Menge::BFSM::VelModifier* copy() const;
 
   /*!
-   @brief		Adapt the input preferred velocity according to the formation.
+   @brief       Registers an agent for use with the VelModifier.
+   @param       agent    The agent to be registered
+   */
+  void registerAgent(const Menge::Agents::BaseAgent* agent);
+
+  /*!
+   @brief       Registers an agent for use with the VelModifier.
+   @param       agent    The agent to be unregistered
+   */
+  void unregisterAgent(const Menge::Agents::BaseAgent* agent);
+
+  /*!
+   @brief		Adapt the input preferred velocity according to the relative heatmap.
 
    @param		agent		The agent whose preferred velocity is provided.
    @param		pVel		The preferred velocity to modify -- modified in place.
@@ -57,9 +70,6 @@ class RELATIVE_HEATMAP_API RelativeHeatmapModifier : public Menge::BFSM::VelModi
 
   /*!
   @brief		Set the relativeHeatmap data.
-  
-
-
   @param		relativeHeatmap		A managed resource pointer to the underlying
   relativeHeatmap data.
   */
@@ -74,6 +84,18 @@ class RELATIVE_HEATMAP_API RelativeHeatmapModifier : public Menge::BFSM::VelModi
    @brief		The underlying relativeHeatmap data.
    */
   RelativeHeatmapPtr _relativeHeatmap;
+
+  /*!
+   @brief		The scale factor between heatmap pixels and world units.
+				Ex. if it is 0.1, it means that 1 pixel is 0.1 world units
+   */
+  float _scale;
+
+  /*!
+   @brief		The offset, from the center of the heatmap, where the agent is considered
+   being.
+   */
+  Menge::Vector2 _offset;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,7 +169,22 @@ class RELATIVE_HEATMAP_API RelativeHeatmapModifierFactory : public Menge::BFSM::
    @brief		The identifier for the "file_name" string attribute.
    */
   size_t _fileNameID;
+
+  /*!
+   @brief		The identifier for the "scale" float attribute.
+   */
+  size_t _scaleID;
+
+  /*!
+   @brief		The identifier for the "offset_x" float attribute.
+  */
+  size_t _offsetXID;
+
+  /*!
+   @brief		The identifier for the "offset_y" float attribute.
+  */
+  size_t _offsetYID;
 };
 
 }  // namespace RelativeHeatmap
-#endif  // __FORMATIONS_MODIFIER_H__
+#endif  // __RELATIVE_HEATMAP_MODIFIER_H__

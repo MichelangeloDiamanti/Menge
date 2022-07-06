@@ -17,7 +17,7 @@ using Menge::Resource;
 using Menge::ResourceException;
 
 /////////////////////////////////////////////////////////////////////
-//                   Implementation of FormationModifier
+//                   Implementation of RelativeHeatmapModifier
 /////////////////////////////////////////////////////////////////////
 
 RelativeHeatmapModifier::RelativeHeatmapModifier() {}
@@ -32,10 +32,35 @@ VelModifier* RelativeHeatmapModifier::copy() const { return new RelativeHeatmapM
 
 /////////////////////////////////////////////////////////////////////
 
+void RelativeHeatmapModifier::registerAgent(const BaseAgent* agent) {
+  // Here I can take care of initialization. I need to compute the size of the heatmap in
+  // world units using the provided scale, and set the base agent neighbour distance accordingly
+
+  int HMWidth = _relativeHeatmap->getWidth();
+  int HMHeight = _relativeHeatmap->getHeight();
+  float neighborDistance = HMWidth > HMHeight ? HMWidth : HMHeight;
+  neighborDistance *= _scale;
+  // agent->_neighborDist = neighborDistance;
+
+  std::cout << "registering agent " << agent->_id
+            << " with RelativeHeatmapModifier. The neighbor distance is: " << agent->_neighborDist
+            << " computed neighborDistance: " << neighborDistance << std::endl;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+void RelativeHeatmapModifier::unregisterAgent(const BaseAgent* agent) {
+  // std::cout << "unregistering agent " << agent->_id << " with RelativeHeatmapModifier" <<
+  // std::endl;
+}
+
+/////////////////////////////////////////////////////////////////////
+
 void RelativeHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
   int* rgb = _relativeHeatmap->getValueAt(200, 200);
 
-  std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
+  //std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
+  std::cout << "There are " << agent->_nearAgents.size() << " neigbors" << std::endl;
 
   Vector2 dir = Vector2(0.0f, 0.0f);
   pVel.setSingle(dir);
@@ -46,12 +71,16 @@ void RelativeHeatmapModifier::setRelativeHeatmap(RelativeHeatmapPtr relativeHeat
 }
 
 /////////////////////////////////////////////////////////////////////
-//                   Implementation of FormationModFactory
+//                   Implementation of RelativeHeatmapModifierFactory
 /////////////////////////////////////////////////////////////////////
 
 RelativeHeatmapModifierFactory::RelativeHeatmapModifierFactory() : VelModFactory() {
   // no properties yet
   _fileNameID = _attrSet.addStringAttribute("file_name", true /*required*/);
+
+  _scaleID = _attrSet.addFloatAttribute("scale", false /*required*/, 1.f);
+  _offsetXID = _attrSet.addFloatAttribute("offset_x", false /*required*/, 0.f);
+  _offsetYID = _attrSet.addFloatAttribute("offset_y", false /*required*/, 0.f);
 }
 
 bool RelativeHeatmapModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifier,
@@ -75,10 +104,17 @@ bool RelativeHeatmapModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifi
   try {
     relativeHeatmapMod->setRelativeHeatmap(loadRelativeHeatmap(fName));
   } catch (ResourceException) {
-    logger << Logger::ERR_MSG << "Couldn't instantiate the formation referenced on line ";
+    logger << Logger::ERR_MSG << "Couldn't instantiate the relative heatmap referenced on line ";
     logger << node->Row() << ".";
     return false;
   }
+
+  relativeHeatmapMod->_scale = _attrSet.getFloat(_scaleID);
+  relativeHeatmapMod->_offset =
+      Menge::Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID));
+
+  std::cout << "scale: " << relativeHeatmapMod->_scale
+            << " offset: " << relativeHeatmapMod->_offset;
 
   return true;
 }

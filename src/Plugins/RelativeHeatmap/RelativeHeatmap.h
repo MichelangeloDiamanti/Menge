@@ -37,7 +37,7 @@ class RelativeHeatmap : public Menge::Resource {
   This function works in conjunction with the ResourceManager. That is why it returns a
   pointer, not to a relativeHeatmap, but to a Resource. The ResourceManager uses it to load and
   instantiate Resource instances.
- 
+ 
   @param		fileName		The path to the file containing the relativeHeatmap
   definition.
   @returns	A pointer to the new relativeHeatmap (if the file is valid), NULL if invalid.
@@ -46,12 +46,26 @@ class RelativeHeatmap : public Menge::Resource {
 
   /*!
   @brief		reads the rgb value of the underlying relativeHeatmap at position x,y
- 
+
   @param		x x coordinate
   @param		y y coordinate
   @returns	A pointer to an RGB array.
   */
   int* getValueAt(int x, int y);
+
+  /*!
+  @brief		provides the width of the heatmap
+ 
+  @returns	The width of the heatmap.
+  */
+  int getWidth() { return _image.width(); };
+
+  /*!
+  @brief		provides the height of the heatmap
+ 
+  @returns	The height of the heatmap.
+  */
+  int getHeight() { return _image.height(); };
 
   /*!
    @brief		The unique label for this data type to be used with resource management.
