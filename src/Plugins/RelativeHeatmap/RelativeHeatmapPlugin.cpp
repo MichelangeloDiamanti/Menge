@@ -37,13 +37,14 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 */
 
 /*!
- *	@file		Textures.cpp
- *	@brief		Plugin for textures
+ *	@file		RelativeHeatmapPlugin.cpp
+ *	@brief		Plugin for RelativeHeatmap
  */
 
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
-#include "TextureModifier.h"
-#include "TexturesConfig.h"
+#include "RelativeHeatmap.h"
+#include "RelativeHeatmapModifier.h"
+#include "RelativeHeatmapConfig.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
@@ -53,17 +54,18 @@ extern "C" {
  *
  *	@returns	The name of the plug in.
  */
-TEXTURES_API const char* getName() { return "textures"; }
+RELATIVE_HEATMAP_API const char* getName() { return "relative_heatmap"; }
 
 /*!
  *	@brief		Description of the plug-in.
  *
  *	@returns	A description of the plugin.
  */
-TEXTURES_API const char* getDescription() {
-  return "Utilities for adding textures to ped sims "
+RELATIVE_HEATMAP_API const char* getDescription() {
+  return "Utilities for adding relative heatmaps to ped sims "
          "including the following:\n"
-         "\tModifier \"texture\" - Sets agents velocity according to a texture: spots with \"hot "
+         "\tModifier \"RelativeHeatmap\" - Sets agents velocity according to a RelativeHeatmap: "
+         "spots with \"hot "
          "colors\" are more likely "
          "to be selected.";
 }
@@ -73,7 +75,7 @@ TEXTURES_API const char* getDescription() {
  *
  *	@param		engine		A pointer to the plugin engine.
  */
-TEXTURES_API void registerCorePlugin(CorePluginEngine* engine) {
-  engine->registerVelModFactory(new Textures::TextureModifierFactory());
+RELATIVE_HEATMAP_API void registerCorePlugin(CorePluginEngine* engine) {
+  engine->registerVelModFactory(new RelativeHeatmap::RelativeHeatmapModifierFactory());
 }
 }

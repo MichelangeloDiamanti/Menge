@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="relativeHeatmap/relativeHeatmapS.xml" 
+	behavior="relativeHeatmap/relativeHeatmapB.xml" 
+	view="relativeHeatmap/relativeHeatmapV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

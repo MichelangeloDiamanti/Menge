@@ -17,42 +17,42 @@
 */
 
 /*!
- @file		TEXTURESConfig.h
+ @file		RelativeHeatmapConfig.h
  @brief		Configures the shared library aspect of the includes.
  */
 
-#ifndef __TEXTURES_CONFIG_H__
-#define __TEXTURES_CONFIG_H__
+#ifndef __RELATIVE_HEATMAP_CONFIG_H__
+#define __RELATIVE_HEATMAP_CONFIG_H__
 
 // Now set up compiler-dependent export/import symbols
 
 #if defined(_MSC_VER)
 
-#if defined(TEXTURES_STATICLIB)
-#define TEXTURES_API
+#if defined(RELATIVE_HEATMAP_STATICLIB)
+#define RELATIVE_HEATMAP_API
 #else
-#if defined(TEXTURES_EXPORT)
+#if defined(RELATIVE_HEATMAP_EXPORT)
 // We are building the DLL, export the symbols tagged like this
-#define TEXTURES_API __declspec(dllexport)
+#define RELATIVE_HEATMAP_API __declspec(dllexport)
 #else
 // If we are consuming the DLL, import the symbols tagged like this
-#define TEXTURES_API __declspec(dllimport)
+#define RELATIVE_HEATMAP_API __declspec(dllimport)
 #endif
 #endif
 
 #elif defined(__GNUC__)
 
-#if defined(TEXTURES_STATICLIB)
-#define TEXTURES_API
+#if defined(RELATIVE_HEATMAP_STATICLIB)
+#define RELATIVE_HEATMAP_API
 #else
-#if defined(TEXTURES_EXPORT)
-#define TEXTURES_API __attribute__((visibility("default")))
+#if defined(RELATIVE_HEATMAP_EXPORT)
+#define RELATIVE_HEATMAP_API __attribute__((visibility("default")))
 #else
 // If you use -fvisibility=hidden in GCC, exception handling and RTTI
 // would break if visibility wasn't set during export _and_ import
 // because GCC would immediately forget all type infos encountered.
 // See http://gcc.gnu.org/wiki/Visibility
-#define TEXTURES_API __attribute__((visibility("default")))
+#define RELATIVE_HEATMAP_API __attribute__((visibility("default")))
 #endif
 #endif
 
@@ -62,4 +62,4 @@
 
 #endif  // Compiler-detection
 
-#endif  // __TEXTURES_CONFIG_H__
+#endif

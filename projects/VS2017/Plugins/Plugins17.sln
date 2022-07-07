@@ -24,7 +24,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StressGas", "StressGas.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AgtGCF", "AgtGCF.vcxproj", "{E75202E3-D161-435D-8250-F7D8D850D2BF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texture", "Texture.vcxproj", "{A0E82A68-721B-4CB7-802C-A0BDE808DFF0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RelativeHeatmap", "RelativeHeatmap.vcxproj", "{A0E82A68-721B-4CB7-802C-A0BDE808DFF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

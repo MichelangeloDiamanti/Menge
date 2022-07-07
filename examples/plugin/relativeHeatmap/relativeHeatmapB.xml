@@ -6,7 +6,8 @@
 		<Goal type="point" id="0" x="10" y="10"/>
 	</GoalSet>
 
-    <VelModifier type="texture" file_name="kendon_zones.png" />
+    <!-- scale 0.01 means 100 pixels 1 world unit -->
+    <VelModifier type="relative_heatmap" file_name="kendon_zones.png" scale="0.01" offset_x="0" offset_y="0"/>
 
     <State name="Walk" final="0" >
         <GoalSelector type="explicit" goal_set="0" goal="0" />
