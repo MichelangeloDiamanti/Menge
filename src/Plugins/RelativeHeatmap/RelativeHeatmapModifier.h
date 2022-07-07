@@ -4,9 +4,10 @@
 #include "RelativeHeatmap.h"
 #include "RelativeHeatmapConfig.h"
 
+#include "MengeCore/Agents/BaseAgent.h"
+#include "MengeCore/Agents/SpatialQueries/SpatialQueryStructs.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifierFactory.h"
-#include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Runtime/os.h"
 #include "thirdParty/tinyxml.h"
 
@@ -84,18 +85,6 @@ class RELATIVE_HEATMAP_API RelativeHeatmapModifier : public Menge::BFSM::VelModi
    @brief		The underlying relativeHeatmap data.
    */
   RelativeHeatmapPtr _relativeHeatmap;
-
-  /*!
-   @brief		The scale factor between heatmap pixels and world units.
-				Ex. if it is 0.1, it means that 1 pixel is 0.1 world units
-   */
-  float _scale;
-
-  /*!
-   @brief		The offset, from the center of the heatmap, where the agent is considered
-   being.
-   */
-  Menge::Vector2 _offset;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

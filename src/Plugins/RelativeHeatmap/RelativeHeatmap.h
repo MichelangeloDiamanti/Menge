@@ -7,9 +7,11 @@
 #include "CImg.h"
 #include "png.h"
 
+using namespace cimg_library;
+
 namespace RelativeHeatmap {
 
-using namespace cimg_library;
+using Menge::Math::Vector2;
 
 class RelativeHeatmap : public Menge::Resource {
  public:
@@ -37,15 +39,17 @@ class RelativeHeatmap : public Menge::Resource {
   This function works in conjunction with the ResourceManager. That is why it returns a
   pointer, not to a relativeHeatmap, but to a Resource. The ResourceManager uses it to load and
   instantiate Resource instances.
- 
   @param		fileName		The path to the file containing the relativeHeatmap
   definition.
   @returns	A pointer to the new relativeHeatmap (if the file is valid), NULL if invalid.
   */
   static Menge::Resource* load(const std::string& fileName);
 
+  Vector2 worldToPixel(Vector2 worldCoordinate);
+
   /*!
   @brief		reads the rgb value of the underlying relativeHeatmap at position x,y
+  relative from the center of the heatmap
 
   @param		x x coordinate
   @param		y y coordinate
@@ -53,16 +57,25 @@ class RelativeHeatmap : public Menge::Resource {
   */
   int* getValueAt(int x, int y);
 
+  ///*!
+  //@brief		reads the rgb value of the underlying relativeHeatmap at position x,y relative
+  //from the center of the heatmap
+
+  //@param		x x coordinate
+  //@param		y y coordinate
+  //@returns	A pointer to an RGB array.
+  //*/
+  //int* getValueFromCenter(int x, int y);
+
   /*!
   @brief		provides the width of the heatmap
- 
+ 
   @returns	The width of the heatmap.
   */
   int getWidth() { return _image.width(); };
 
   /*!
   @brief		provides the height of the heatmap
- 
   @returns	The height of the heatmap.
   */
   int getHeight() { return _image.height(); };
@@ -71,6 +84,23 @@ class RelativeHeatmap : public Menge::Resource {
    @brief		The unique label for this data type to be used with resource management.
    */
   static const std::string LABEL;
+
+  /*!
+ @brief		The scale factor between heatmap pixels and world units.
+                              Ex. if it is 0.1, it means that 1 pixel is 0.1 world units
+ */
+  float _scale;
+
+  /*!
+   @brief		The offset, from the center of the heatmap, where the agent is considered
+   being.
+   */
+  Vector2 _offset;
+
+  /*!
+   @brief	the center of the heatmap in pixel units
+  */
+  Vector2 _center;
 
  protected:
   /*!

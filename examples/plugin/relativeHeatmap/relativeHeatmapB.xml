@@ -3,15 +3,21 @@
 <BFSM>
 
 	<GoalSet id="0">
-		<Goal type="point" id="0" x="10" y="10"/>
+		<Goal type="point" id="0" x="12" y="12"/>
 	</GoalSet>
 
-    <!-- scale 0.01 means 100 pixels 1 world unit -->
-    <VelModifier type="relative_heatmap" file_name="kendon_zones.png" scale="0.01" offset_x="0" offset_y="0"/>
+    <State name="Stay" final="0" >
+        <VelComponent type="zero" />
+    </State>
+
 
     <State name="Walk" final="0" >
         <GoalSelector type="explicit" goal_set="0" goal="0" />
         <VelComponent type="goal" />
+
+        <!-- scale 0.01 means 100 pixels 1 world unit -->
+        <VelModifier type="relative_heatmap" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0"/>
+
     </State>
 	
 </BFSM>

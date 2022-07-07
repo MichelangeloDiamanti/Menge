@@ -28,15 +28,38 @@ Menge::Resource* RelativeHeatmap::load(const std::string& fileName) {
   return relativeHeatmap;
 }
 
-int* RelativeHeatmap::getValueAt(int x, int y) {
-  int* rgb = new int[3];
+Vector2 RelativeHeatmap::worldToPixel(Vector2 worldCoordinate) {
+  // apply the scale i.e. 0.01 -> 1 world unit = 100 pixels, so we divide
+  Vector2 scaledWorldCoordinate = worldCoordinate / _scale;
 
-  rgb[0] = (int)_image(x, y, 0, 0);
-  rgb[1] = (int)_image(x, y, 0, 1);
-  rgb[2] = (int)_image(x, y, 0, 2);
+  // compute the pixel coordinate, the y grows in the opposite direction
+  Vector2 pixelCoordinate =
+      Vector2(_center.x() + scaledWorldCoordinate.x(), _center.y() - scaledWorldCoordinate.y());
+
+  return pixelCoordinate;
+}
+
+int* RelativeHeatmap::getValueAt(int x, int y) {
+  int* rgb = new int[3]{0, 0, 0};
+
+  if (x >= 0 && y >= 0 && x <= _image.width() && y <= _image.height()) {
+    rgb[0] = (int)_image(x, y, 0, 0);
+    rgb[1] = (int)_image(x, y, 0, 1);
+    rgb[2] = (int)_image(x, y, 0, 2);
+  }
 
   return rgb;
 }
+
+// int* RelativeHeatmap::getValueAt(int x, int y) {
+//  int* rgb = new int[3];
+//
+//  rgb[0] = (int)_image(_center.x() + x, _center.y() + y, 0, 0);
+//  rgb[1] = (int)_image(_center.x() + x, _center.y() + y, 0, 1);
+//  rgb[2] = (int)_image(_center.x() + x, _center.y() + y, 0, 2);
+//
+//  return rgb;
+//}
 
 RelativeHeatmapPtr loadRelativeHeatmap(const std::string& fileName) throw(
     Menge::ResourceException) {

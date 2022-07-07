@@ -5,6 +5,7 @@ using namespace cimg_library;
 namespace RelativeHeatmap {
 
 using Menge::Agents::BaseAgent;
+using Menge::Agents::NearAgent;
 using Menge::Agents::PrefVelocity;
 using Menge::BFSM::VelModFactory;
 using Menge::BFSM::VelModifier;
@@ -39,12 +40,23 @@ void RelativeHeatmapModifier::registerAgent(const BaseAgent* agent) {
   int HMWidth = _relativeHeatmap->getWidth();
   int HMHeight = _relativeHeatmap->getHeight();
   float neighborDistance = HMWidth > HMHeight ? HMWidth : HMHeight;
-  neighborDistance *= _scale;
+  neighborDistance *= _relativeHeatmap->_scale;
   // agent->_neighborDist = neighborDistance;
 
-  std::cout << "registering agent " << agent->_id
-            << " with RelativeHeatmapModifier. The neighbor distance is: " << agent->_neighborDist
-            << " computed neighborDistance: " << neighborDistance << std::endl;
+  // TODO: I cannot set the agent's _neighborDist because the agent is passed as a constant.
+  // I probably could do this if I was implementing a new simulator and agent type, but then
+  // this plugin would no longer be a simple velocity modifier i.e. can't be combined with other
+  // pedestrian models. So, we might need to replicate here the "scan" for neighbors (if possible).
+  // For now, we just log this waring to inform the user, who can then adjust the _neighborDist
+  // parameter from the scene specification file.
+  if (agent->_neighborDist < neighborDistance) {
+    logger << Logger::WARN_MSG << "The neighbor distance for agent " << agent->_id
+           << " is not sufficient to cover the whole heatmap.";
+  }
+
+  // std::cout << "registering agent " << agent->_id
+  //          << " with RelativeHeatmapModifier. The neighbor distance is: " << agent->_neighborDist
+  //          << " computed neighborDistance: " << neighborDistance << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -57,13 +69,41 @@ void RelativeHeatmapModifier::unregisterAgent(const BaseAgent* agent) {
 /////////////////////////////////////////////////////////////////////
 
 void RelativeHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
-  int* rgb = _relativeHeatmap->getValueAt(200, 200);
+  // int* rgb = _relativeHeatmap->getValueAt(200, 200);
+  // std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
 
-  //std::cout << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2];
-  std::cout << "There are " << agent->_nearAgents.size() << " neigbors" << std::endl;
+  for (NearAgent neighbour : agent->_nearAgents) {
+    Vector2 neighbourRelativePosition = neighbour.agent->_pos - agent->_pos;
+    // neighbourDirection.normalize();
 
-  Vector2 dir = Vector2(0.0f, 0.0f);
-  pVel.setSingle(dir);
+    Vector2 neighbourRelativePositionPixelUnits =
+        _relativeHeatmap->worldToPixel(neighbourRelativePosition);
+
+    int* rgb = _relativeHeatmap->getValueAt(neighbourRelativePositionPixelUnits.x(),
+                                            neighbourRelativePositionPixelUnits.y());
+
+    // Kendon social zone "green"
+    if (rgb[0] == 0 && rgb[1] == 255 && rgb[2] == 0) {
+      std::cout << "Agent " << neighbour.agent->_id << " is in the social zone" << std::endl;
+    }
+    // Kendon personal zone "orange"
+    else if (rgb[0] == 255 && rgb[1] == 128 && rgb[2] == 0) {
+      std::cout << "Agent " << neighbour.agent->_id << " is in the personal zone" << std::endl;
+    }
+    // Kendon intimate zone "red"
+    else if (rgb[0] == 255 && rgb[1] == 0 && rgb[2] == 0) {
+      std::cout << "Agent " << neighbour.agent->_id << " is in the intimate zone" << std::endl;
+    }
+
+    // std::cout << "Agent " << neighbour.agent->_id << " is a neighbour at distance "
+    //          << neighbour.distanceSquared
+    //          << " relative position (world units): " << neighbourRelativePosition
+    //          << " relative position (pixel units): " << neighbourRelativePositionPixelUnits
+    //          << "R: " << rgb[0] << " G: " << rgb[1] << " B: " << rgb[2] << std::endl;
+  }
+
+  // Vector2 dir = Vector2(0.0f, 0.0f);
+  // pVel.setSingle(dir);
 }
 
 void RelativeHeatmapModifier::setRelativeHeatmap(RelativeHeatmapPtr relativeHeatmap) {
@@ -101,6 +141,7 @@ bool RelativeHeatmapModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifi
 
   logger << Logger::INFO_MSG << "RelativeHeatmap file: " << fName;
 
+  // Try to instantiate a heatmap from the specified image file
   try {
     relativeHeatmapMod->setRelativeHeatmap(loadRelativeHeatmap(fName));
   } catch (ResourceException) {
@@ -109,12 +150,21 @@ bool RelativeHeatmapModifierFactory::setFromXML(Menge::BFSM::VelModifier* modifi
     return false;
   }
 
-  relativeHeatmapMod->_scale = _attrSet.getFloat(_scaleID);
-  relativeHeatmapMod->_offset =
+  // Get the specified XML parameters and set it to the heatmap object
+  relativeHeatmapMod->_relativeHeatmap->_scale = _attrSet.getFloat(_scaleID);
+  relativeHeatmapMod->_relativeHeatmap->_offset =
       Menge::Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID));
 
-  std::cout << "scale: " << relativeHeatmapMod->_scale
-            << " offset: " << relativeHeatmapMod->_offset;
+  // Set the center of the heatmap (pixel units) based on the image size and offset
+  float centerX = relativeHeatmapMod->_relativeHeatmap->getWidth() / 2 +
+                  relativeHeatmapMod->_relativeHeatmap->_offset.x();
+  float centerY = relativeHeatmapMod->_relativeHeatmap->getHeight() / 2 +
+                  relativeHeatmapMod->_relativeHeatmap->_offset.y();
+  relativeHeatmapMod->_relativeHeatmap->_center = Vector2(centerX, centerY);
+
+  std::cout << "scale: " << relativeHeatmapMod->_relativeHeatmap->_scale
+            << " offset: " << relativeHeatmapMod->_relativeHeatmap->_offset
+            << " center: " << relativeHeatmapMod->_relativeHeatmap->_center << std::endl;
 
   return true;
 }
