@@ -16,8 +16,12 @@
         <VelComponent type="goal" />
 
         <!-- scale 0.01 means 100 pixels 1 world unit -->
-        <VelModifier type="relative_heatmap" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0"/>
+        <!--VelModifier type="relative_heatmap" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0"/ -->
 
     </State>
-	
+
+    <Transition from="Walk" to="Stay" >
+        <Condition type="color" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0" />
+    </Transition>
+
 </BFSM>

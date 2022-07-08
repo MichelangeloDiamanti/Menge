@@ -43,8 +43,9 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 #include "RelativeHeatmap.h"
-#include "RelativeHeatmapModifier.h"
 #include "RelativeHeatmapConfig.h"
+#include "RelativeHeatmapModifier.h"
+#include "RelativeHeatmapTransition.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
@@ -77,5 +78,6 @@ RELATIVE_HEATMAP_API const char* getDescription() {
  */
 RELATIVE_HEATMAP_API void registerCorePlugin(CorePluginEngine* engine) {
   engine->registerVelModFactory(new RelativeHeatmap::RelativeHeatmapModifierFactory());
+  engine->registerConditionFactory(new RelativeHeatmap::ColorConditionFactory());
 }
 }

@@ -24,6 +24,9 @@
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapTransition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmap.cpp">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapTransition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
