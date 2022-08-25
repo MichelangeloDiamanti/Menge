@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="iva-2022-demo/iva-2022-demoS.xml" 
+	behavior="iva-2022-demo/iva-2022-demoB.xml" 
+	view="iva-2022-demo/iva-2022-demoV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

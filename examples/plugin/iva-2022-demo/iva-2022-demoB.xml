@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BFSM>
+  <GoalSet id="0">
+    <Goal type="point" id="0" capacity="2147483647" weight="1" x="173" y="420" />
+  </GoalSet>
+  <State name="start" final="0">
+    <GoalSelector type="explicit" goal_set="0" goal="0" />
+    <VelComponent type="nav_mesh" file_name="iva-2022-demo-navmesh.nav" heading_threshold="1.09" />
+    <VelModifier type="scale" scale="1" />
+  </State>
+  <Transition from="start" to="end">
+    <Condition type="or">
+      <Condition type="timer" per_agent="0" dist="c" value="120" />
+      <Condition type="goal_reached" distance="0.5" />
+    </Condition>
+  </Transition>
+  <State name="end" final="1">
+    <GoalSelector type="identity" />
+    <VelComponent type="zero" />
+    <VelModifier type="scale" scale="1" />
+  </State>
+</BFSM>

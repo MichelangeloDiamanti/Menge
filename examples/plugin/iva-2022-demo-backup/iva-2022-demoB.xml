@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<BFSM>
+	<GoalSet id="0">
+		<Goal type="point" id="0" x="344.874" y="436.014"/>
+		<Goal type="point" id="1" x="316.349" y="267.506"/>
+
+		<!--Goal type="AABB" id="2" min_x="1.33" max_x="1.33" min_y="1.33" max_y="1.33" /-->
+		<!--Goal type="point" id="3" x="1.33" y="1.33" /-->
+	</GoalSet>
+
+	<GoalSet id="1">
+		<Goal type="point" id="0" x="344.874" y="436.014"/>
+		<Goal type="point" id="1" x="195.349" y="255.506"/>
+	</GoalSet>
+
+
+
+
+
+
+
+	
+	<State name="Walk1" final="0" >
+		<GoalSelector type="explicit" goal_set="0" goal="1" />
+		<VelComponent type="nav_mesh" heading_threshold="0.1" file_name="simple.nav" />
+	</State>
+
+	<State name="Stop1" final="1">
+		<GoalSelector type="identity" />
+		<VelComponent type="zero" />
+	</State>
+
+	<Transition from="Walk1" to="Stop1">
+		<Condition type="goal_reached" distance="0.2" />
+	</Transition>
+
+
+	<!-- Walk2 --> 
+
+	<Transition from="Start2" to="Walk2">
+		<Condition type="timer" dist="u" min="3" max="7" seed="5" per_agent="1" />
+	</Transition>
+
+	<State name="Start2" final="0" >
+		<GoalSelector type="identity" />
+		<VelComponent type="zero" />
+	</State>
+
+	<State name="Walk2" final="0" >
+		<GoalSelector type="explicit" goal_set="1" goal="1" />
+		<VelComponent type="nav_mesh" heading_threshold="0.1" file_name="simple.nav" />
+	</State>
+
+	<State name="Stop2" final="1">
+		<GoalSelector type="identity" />
+		<VelComponent type="zero" />
+	</State>
+
+	<Transition from="Walk2" to="Stop2">
+		<Condition type="timer" dist="u" min="2" max="4" seed="5" per_agent="1" />
+		<Condition type="goal_reached" distance="0.2" />
+	</Transition>
+
+	
+
+
+</BFSM>

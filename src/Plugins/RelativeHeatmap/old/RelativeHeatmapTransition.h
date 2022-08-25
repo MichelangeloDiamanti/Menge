@@ -1,24 +1,6 @@
-/*
- Menge Crowd Simulation Framework
-
- Copyright and trademark 2012-17 University of North Carolina at Chapel Hill
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
- or
-    LICENSE.txt in the root of the Menge repository.
-
- Any questions or comments should be sent to the authors menge@cs.unc.edu
-
- <http://gamma.cs.unc.edu/Menge/>
-*/
-
 /*!
- @file		AircraftTransition.h
- @brief		Definition of actions used in aircraft: loading and unloading.
+ @file		RelativeHeatmapTransition.h
+ @brief		Definition of actions used in relative heatmap.
  */
 #ifndef __RELATIVE_HEATMAP_TRANSITION_H__
 #define __RELATIVE_HEATMAP_TRANSITION_H__
@@ -26,31 +8,30 @@
 #include "RelativeHeatmap.h"
 #include "RelativeHeatmapConfig.h"
 
-#include <map>
 #include "MengeCore/BFSM/FSMEnumeration.h"
 #include "MengeCore/BFSM/Transitions/Condition.h"
 #include "MengeCore/BFSM/Transitions/ConditionFactory.h"
-#include "MengeCore/Math/Geometry2D.h"
 
 #include "MengeCore/Runtime/os.h"
 #include "thirdParty/tinyxml.h"
+
+#define cimg_use_png
+#include "CImg.h"
+#include "png.h"
 
 // forward declaration
 class TiXmlElement;
 
 namespace RelativeHeatmap {
-// forward declaration
 class ColorConditionFactory;
 
-/*!
- @brief		An action that sets agent properties based on the agent's position along the x-axis.
+/**
+ * .
  */
-class RELATIVE_HEATMAP_API ColorCondition : public Menge::BFSM::Condition {
+class RELATIVE_HEATMAP_API ColorCondition : Menge::BFSM::Condition {
  public:
-  /*!
-   @brief		Constructor
-   */
-  ColorCondition() : Menge::BFSM::Condition(), _relativeHeatmap() {}
+  /** default constructor */
+  ColorCondition() : Menge::BFSM::Condition(), _relativeHeatmap(){};
 
   /*!
    @brief		Copy constructor
@@ -58,6 +39,7 @@ class RELATIVE_HEATMAP_API ColorCondition : public Menge::BFSM::Condition {
    @param		cond		The condition to copy from.
    */
   ColorCondition(const ColorCondition& cond);
+
 
  protected:
   /*!
@@ -109,7 +91,7 @@ class RELATIVE_HEATMAP_API ColorConditionFactory : public Menge::BFSM::Condition
   /**
    * Default construcotr for the factory
    */
-  ColorConditionFactory();
+   ColorConditionFactory();
 
   /*!
    @brief		The name of the action.
@@ -119,7 +101,7 @@ class RELATIVE_HEATMAP_API ColorConditionFactory : public Menge::BFSM::Condition
 
    @returns	A string containing the unique action name.
    */
-  const char* name() const { return "testCond"; }
+  const char* name() const { return "color"; }
 
   /*!
    @brief		A description of the action.
