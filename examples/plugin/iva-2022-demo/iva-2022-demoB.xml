@@ -2,21 +2,41 @@
 <BFSM>
   <GoalSet id="0">
     <Goal type="point" id="0" capacity="2147483647" weight="1" x="173" y="420" />
+    <Goal type="point" id="1" capacity="2147483647" weight="1" x="80" y="260" />
+    <Goal type="point" id="2" capacity="2147483647" weight="1" x="235" y="260" />
   </GoalSet>
-  <State name="start" final="0">
+  <State name="start1" final="0">
     <GoalSelector type="explicit" goal_set="0" goal="0" />
-    <VelComponent type="nav_mesh" file_name="iva-2022-demo-navmesh.nav" heading_threshold="1.09" />
-    <VelModifier type="scale" scale="1" />
+    <VelComponent type="nav_mesh" file_name="iva-2022-demo-navmesh.nav" heading_threshold="0" />
+    <VelModifier type="formation" file_name="iva-2022-demo-formation-1.txt" />
   </State>
-  <Transition from="start" to="end">
+  <Transition from="start1" to="end1">
     <Condition type="or">
       <Condition type="timer" per_agent="0" dist="c" value="120" />
       <Condition type="goal_reached" distance="0.5" />
     </Condition>
   </Transition>
-  <State name="end" final="1">
-    <GoalSelector type="identity" />
-    <VelComponent type="zero" />
-    <VelModifier type="scale" scale="1" />
+  <State name="end1" final="1" />
+  <State name="start2" final="0">
+    <GoalSelector type="explicit" goal_set="0" goal="1" />
+    <VelComponent type="nav_mesh" file_name="iva-2022-demo-navmesh.nav" heading_threshold="0" />
   </State>
+  <Transition from="start2" to="end2">
+    <Condition type="or">
+      <Condition type="timer" per_agent="0" dist="c" value="120" />
+      <Condition type="goal_reached" distance="0.5" />
+    </Condition>
+  </Transition>
+  <State name="end2" final="1" />
+  <State name="start3" final="0">
+    <GoalSelector type="explicit" goal_set="0" goal="2" />
+    <VelComponent type="nav_mesh" file_name="iva-2022-demo-navmesh.nav" heading_threshold="0" />
+  </State>
+  <Transition from="start3" to="end3">
+    <Condition type="or">
+      <Condition type="timer" per_agent="0" dist="c" value="120" />
+      <Condition type="goal_reached" distance="0.5" />
+    </Condition>
+  </Transition>
+  <State name="end3" final="1" />
 </BFSM>

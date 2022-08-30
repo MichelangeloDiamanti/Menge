@@ -68,19 +68,55 @@ using Menge::Resource;
 using Menge::ResourceException;
 
 /////////////////////////////////////////////////////////////////////////
-//                   Implementation of ClearAABBCondition
+//                   Implementation of ColorCondition
 /////////////////////////////////////////////////////////////////////////
+
+/*!
+   @brief		Constructor
+*/
+
+ColorCondition::ColorCondition()
+    : Menge::BFSM::Condition(), _relativeHeatmap(), _conditionColorRGB() {
+  _conditionColorRGB = new int[3];
+}
+
+/*!
+   @brief		Copy Constructor
+*/
 
 ColorCondition::ColorCondition(const ColorCondition& cond)
-    : Condition(cond), _relativeHeatmap(cond._relativeHeatmap) {}
+    : Condition(cond),
+      _relativeHeatmap(cond._relativeHeatmap),
+      _conditionColorRGB(cond._conditionColorRGB) {}
 
 /////////////////////////////////////////////////////////////////////////
 
-ColorCondition::~ColorCondition() {}
+ColorCondition::~ColorCondition() { delete[] _conditionColorRGB; }
 
 /////////////////////////////////////////////////////////////////////////
 
-bool ColorCondition::conditionMet(BaseAgent* agent, const Goal* goal) { return true; };
+bool ColorCondition::conditionMet(BaseAgent* agent, const Goal* goal) {
+  // TODO: OPTIMIZE THIS
+  const size_t NUM_AGENT = Menge::SIMULATOR->getNumAgents();
+  for (size_t i = 0; i < NUM_AGENT; ++i) {
+    const BaseAgent* testAgent = Menge::SIMULATOR->getAgent(i);
+    // if this agent is in my box
+    if (testAgent->_id != agent->_id) {
+      Vector2 relativePosition = agent->_pos - testAgent->_pos;
+      int* mapColor = _relativeHeatmap->worldToMapColor(relativePosition);
+      //std::cout << "[" << mapColor[0] << ", " << mapColor[1] << ", " << mapColor[2] << "]"
+      //          << std::endl;
+      // if map color is the same as the one specified in the colorConditionRGB
+      if (mapColor[0] == _conditionColorRGB[0] && mapColor[1] == _conditionColorRGB[1] &&
+          mapColor[2] == _conditionColorRGB[2]) {
+        //std::cout << "conditionMet" << std::endl;
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -93,12 +129,13 @@ void ColorCondition::setRelativeHeatmap(RelativeHeatmapPtr relativeHeatmap) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-//                   Implementation of ClearAABBCondFactory
+//                   Implementation of ColorConditionFactory
 ///////////////////////////////////////////////////////////////////////////
 
 ColorConditionFactory::ColorConditionFactory() : ConditionFactory() {
   // no properties yet
   _fileNameID = _attrSet.addStringAttribute("file_name", true /*required*/);
+  _colorRGB = _attrSet.addStringAttribute("color_rgb", true /*required*/);
 
   _scaleID = _attrSet.addFloatAttribute("scale", false /*required*/, 1.f);
   _offsetXID = _attrSet.addFloatAttribute("offset_x", false /*required*/, 0.f);
@@ -108,7 +145,7 @@ ColorConditionFactory::ColorConditionFactory() : ConditionFactory() {
 /////////////////////////////////////////////////////////////////////////
 
 bool ColorConditionFactory::setFromXML(Condition* condition, TiXmlElement* node,
-                                      const std::string& behaveFldr) const {
+                                       const std::string& behaveFldr) const {
   ColorCondition* cond = dynamic_cast<ColorCondition*>(condition);
   assert(cond != 0x0 &&
          "Trying to set the properties of a Color condition on an incompatible object");
@@ -134,6 +171,32 @@ bool ColorConditionFactory::setFromXML(Condition* condition, TiXmlElement* node,
   }
 
   // Get the specified XML parameters and set it to the heatmap object
+
+  // Set the RGB color which will trigger the transition. It should be specified in the
+  // behavior file as colorRGB = "R G B" with spaces as delimiter and R G B integers
+  std::string colorRGB = _attrSet.getString(_colorRGB);
+  std::string delimiter = " ";
+
+  size_t pos = 0;
+  std::vector<std::string> tokens;
+  while ((pos = colorRGB.find(delimiter)) != std::string::npos) {
+    tokens.insert(tokens.end(), colorRGB.substr(0, pos));
+    colorRGB.erase(0, pos + delimiter.length());
+  }
+
+  tokens.insert(tokens.end(), colorRGB);
+
+  if (tokens.size() != 3) {
+    logger << Logger::ERR_MSG << "Couldn't parse the RGB color specified on line ";
+    logger << node->Row() << ".";
+    return false;
+  }
+
+  cond->_conditionColorRGB[0] = std::stoi(tokens[0]);
+  cond->_conditionColorRGB[1] = std::stoi(tokens[1]);
+  cond->_conditionColorRGB[2] = std::stoi(tokens[2]);
+
+  // set scale and offset for the heatmap
   cond->_relativeHeatmap->_scale = _attrSet.getFloat(_scaleID);
   cond->_relativeHeatmap->_offset =
       Menge::Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID));
@@ -143,7 +206,9 @@ bool ColorConditionFactory::setFromXML(Condition* condition, TiXmlElement* node,
   float centerY = cond->_relativeHeatmap->getHeight() / 2 + cond->_relativeHeatmap->_offset.y();
   cond->_relativeHeatmap->_center = Vector2(centerX, centerY);
 
-  std::cout << "scale: " << cond->_relativeHeatmap->_scale
+  std::cout << "conditionColorRGB: [" << cond->_conditionColorRGB[0] << ", "
+            << cond->_conditionColorRGB[1] << ", " << cond->_conditionColorRGB[0] << "]"
+            << " scale: " << cond->_relativeHeatmap->_scale
             << " offset: " << cond->_relativeHeatmap->_offset
             << " center: " << cond->_relativeHeatmap->_center << std::endl;
 

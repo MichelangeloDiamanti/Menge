@@ -50,7 +50,7 @@ class RELATIVE_HEATMAP_API ColorCondition : public Menge::BFSM::Condition {
   /*!
    @brief		Constructor
    */
-  ColorCondition() : Menge::BFSM::Condition(), _relativeHeatmap() {}
+  ColorCondition();
 
   /*!
    @brief		Copy constructor
@@ -99,10 +99,15 @@ class RELATIVE_HEATMAP_API ColorCondition : public Menge::BFSM::Condition {
    @brief		The underlying relativeHeatmap data.
    */
   RelativeHeatmapPtr _relativeHeatmap;
+
+  /*!
+   @brief		The RGB color which will trigger this condition.
+   */
+  int* _conditionColorRGB;
 };
 
 /*!
- @brief		The factory for creating the ClearAABBCondition
+ @brief		The factory for creating the ColorCondition
  */
 class RELATIVE_HEATMAP_API ColorConditionFactory : public Menge::BFSM::ConditionFactory {
  public:
@@ -119,7 +124,7 @@ class RELATIVE_HEATMAP_API ColorConditionFactory : public Menge::BFSM::Condition
 
    @returns	A string containing the unique action name.
    */
-  const char* name() const { return "testCond"; }
+  const char* name() const { return "match_color"; }
 
   /*!
    @brief		A description of the action.
@@ -171,6 +176,11 @@ class RELATIVE_HEATMAP_API ColorConditionFactory : public Menge::BFSM::Condition
    @brief		The identifier for the "file_name" string attribute.
    */
   size_t _fileNameID;
+
+  /*!
+   @brief		the RGB color which will trigger this transition.
+   */
+  size_t _colorRGB;
 
   /*!
    @brief		The identifier for the "scale" float attribute.

@@ -51,6 +51,11 @@ int* RelativeHeatmap::getValueAt(int x, int y) {
   return rgb;
 }
 
+int* RelativeHeatmap::worldToMapColor(Vector2 worldCoordinate) {
+  Vector2 pixelCoordinate = worldToPixel(worldCoordinate);
+  return getValueAt(pixelCoordinate.x(), pixelCoordinate.y());
+}
+
 // int* RelativeHeatmap::getValueAt(int x, int y) {
 //  int* rgb = new int[3];
 //

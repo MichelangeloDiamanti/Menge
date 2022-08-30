@@ -22,7 +22,7 @@
 
     <Transition from="Walk" to="Stay" >
         <!-- <Condition type="color" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0" /> -->
-        <Condition type="testCond" file_name="kendon_zones_solid_color.png" scale="0.01" offset_x="0" offset_y="0" />
+        <Condition type="match_color" file_name="kendon_zones_solid_color.png" color_rgb="0 255 0" scale="0.01" offset_x="0" offset_y="0" />
     </Transition>
 
 </BFSM>

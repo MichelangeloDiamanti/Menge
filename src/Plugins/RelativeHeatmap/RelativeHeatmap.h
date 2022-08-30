@@ -57,6 +57,8 @@ class RelativeHeatmap : public Menge::Resource {
   */
   int* getValueAt(int x, int y);
 
+  int* worldToMapColor(Vector2 worldCoordinate);
+
   ///*!
   //@brief		reads the rgb value of the underlying relativeHeatmap at position x,y relative
   //from the center of the heatmap

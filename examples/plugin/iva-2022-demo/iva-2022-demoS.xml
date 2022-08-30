@@ -10,17 +10,32 @@
   </AgentProfile>
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="start" />
+    <StateSelector type="const" name="start1" />
     <Generator type="explicit">
-      <Agent p_x="149.476913" p_y="310.5832" />
-      <Agent p_x="202.138428" p_y="315.774" />
-      <Agent p_x="190.908646" p_y="300.3287" />
-      <Agent p_x="162.3127" p_y="302.820221" />
-      <Agent p_x="161.937927" p_y="312.324249" />
-      <Agent p_x="162.778641" p_y="308.506958" />
-      <Agent p_x="191.840424" p_y="306.734863" />
-      <Agent p_x="162.035446" p_y="324.53775" />
-      <Agent p_x="190.455292" p_y="310.9035" />
+      <Agent p_x="192.878357" p_y="306.841125" />
+      <Agent p_x="194.5507" p_y="302.318726" />
+      <Agent p_x="195.899368" p_y="304.477264" />
+      <Agent p_x="194.721451" p_y="309.6782" />
+    </Generator>
+  </AgentGroup>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group1" />
+    <StateSelector type="const" name="start2" />
+    <Generator type="explicit">
+      <Agent p_x="160" p_y="300" />
+      <Agent p_x="160" p_y="302" />
+      <Agent p_x="160" p_y="304" />
+      <Agent p_x="160" p_y="306" />
+    </Generator>
+  </AgentGroup>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group1" />
+    <StateSelector type="const" name="start3" />
+    <Generator type="explicit">
+      <Agent p_x="200" p_y="350" />
+      <Agent p_x="200" p_y="352" />
+      <Agent p_x="200" p_y="354" />
+      <Agent p_x="200" p_y="356" />
     </Generator>
   </AgentGroup>
 </Experiment>
