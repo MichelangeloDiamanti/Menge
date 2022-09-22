@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BFSM>
   <GoalSet id="0">
-    <Goal type="point" id="0" capacity="2147483647" weight="1" x="156" y="390" />
+    <Goal type="point" id="0" capacity="2147483647" weight="1" x="238" y="417" />
     <Goal type="point" id="1" capacity="2147483647" weight="1" x="156" y="350" />
   </GoalSet>
   <State name="walk1" final="0">
     <GoalSelector type="explicit" goal_set="0" goal="0" />
     <VelComponent type="nav_mesh" file_name="relative-heatmap-navmesh.nav" heading_threshold="0.3" />
+    <VelModifier type="absolute_heatmap" file_name="visibility_mapping.png" scale="1.0" />
   </State>
   <State name="stop" final="0" />
   <State name="walk2" final="0">
@@ -14,6 +15,6 @@
     <VelComponent type="nav_mesh" file_name="relative-heatmap-navmesh.nav" heading_threshold="0.3" />
   </State>
   <Transition from="walk1" to="stop">
-    <Condition type="match_color" file_name="kendon_zones_solid_color.png" color_rgb="255 128 0" scale="0.1" offsetX="0" offsetY="0" />
+    <Condition type="goal_reached" distance="0.3" />
   </Transition>
 </BFSM>

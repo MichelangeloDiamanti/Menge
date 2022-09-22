@@ -135,7 +135,7 @@ class MENGE_API Vector2d {
 
   /*!
    @brief    Vector negation.
-   
+   
    Creates a new vector which is the negation of this vector
 
    @returns  The vector in the opposite direction of this vector
@@ -337,6 +337,12 @@ class MENGE_API Vector2d {
     float dx = _x - x;
     float dy = _y - y;
     return dx * dx + dy * dy;
+  }
+
+  inline Vector2d<Type> rotate(float radians) const {
+    float newX = std::cos(radians) * _x - std::sin(radians) * _y;
+    float newY = std::sin(radians) * _x + std::cos(radians) * _y;
+    return Vector2d<Type>(newX, newY);
   }
 
   /*!

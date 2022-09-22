@@ -12,7 +12,7 @@
     <ProfileSelector type="const" name="group1" />
     <StateSelector type="const" name="walk1" />
     <Generator type="explicit">
-      <Agent p_x="156" p_y="350" />
+      <Agent p_x="234" p_y="157" />
     </Generator>
   </AgentGroup>
   <AgentGroup>
