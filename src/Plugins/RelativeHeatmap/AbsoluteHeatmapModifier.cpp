@@ -69,49 +69,77 @@ void AbsoluteHeatmapModifier::unregisterAgent(const BaseAgent* agent) {
 /////////////////////////////////////////////////////////////////////
 
 void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
-  std::map<float, Vector2>
-      sampledPointsScores;  // map containing "vision" points scored according to their color
+  if (!_hasSubGoal) {
+    std::map<float, Vector2>
+        sampledPointsScores;  // map containing "vision" points scored according to their color
 
-  Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
+    //Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
+    Vector2 dir = pVel.getPreferred();  // orientation of the lower body of the agent
 
-  // sample and score a vision point in front of the agent
-  Vector2 samplePoint = agent->_pos + dir * _visionRange;
-  int sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
-  sampledPointsScores.insert({sampledPointScore, samplePoint});
-
-  // sample and score vision points in the fieldview of the agent
-  double degToRad = M_PI / 180;
-  Vector2 sampleDir;
-
-  for (float angle = -(_visionAngle / 2); angle < 0; angle = angle + _visionSampleAngleRate) {
-    sampleDir = dir.rotate(angle * degToRad);
-    samplePoint = agent->_pos + sampleDir * _visionRange;
-    sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+    // sample and score a vision point in front of the agent
+    Vector2 samplePoint = agent->_pos + dir * _visionRange;
+    int sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+    float angleScore = scoreAngle(agent->_orient, samplePoint);
     sampledPointsScores.insert({sampledPointScore, samplePoint});
+
+    // sample and score vision points in the fieldview of the agent
+    double degToRad = M_PI / 180;
+    Vector2 sampleDir;
+
+    for (float angle = -(_visionAngle / 2); angle < 0; angle = angle + _visionSampleAngleRate) {
+      sampleDir = dir.rotate(angle * degToRad);
+      samplePoint = agent->_pos + sampleDir * _visionRange;
+      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+      sampledPointsScores.insert({sampledPointScore, samplePoint});
+    }
+    for (float angle = _visionAngle / 2; angle > 0; angle = angle - _visionSampleAngleRate) {
+      sampleDir = dir.rotate(angle * degToRad);
+      samplePoint = agent->_pos + sampleDir * _visionRange;
+      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+      sampledPointsScores.insert({sampledPointScore, samplePoint});
+    }
+
+    // vision point with highest score
+     //auto pointWithHighestScore = sampledPointsScores.begin();
+    auto pointWithHighestScore = sampledPointsScores.end();
+    pointWithHighestScore--;
+
+    _heatmapSubGoal = pointWithHighestScore->second;
+    _hasSubGoal = true;
+  } else {
+    float distanceToSubGoal = _heatmapSubGoal.distanceSq(agent->_pos);
+    if (distanceToSubGoal < _minDistanceToSubGoal) {
+      _hasSubGoal = false;
+    }
+
+    pVel.setSpeed(agent->_prefSpeed);
+    Vector2 adjustedDir = _heatmapSubGoal - agent->_pos;
+    adjustedDir.normalize();
+    pVel.setSingle(adjustedDir);
   }
-  for (float angle = _visionAngle / 2; angle > 0; angle = angle - _visionSampleAngleRate) {
-    sampleDir = dir.rotate(angle * degToRad);
-    samplePoint = agent->_pos + sampleDir * _visionRange;
-    sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
-    sampledPointsScores.insert({sampledPointScore, samplePoint});
-  }
+  // pVel.setSpeed(agent->_prefSpeed);
 
-  // vision point with highest score
-  auto pointWithHighestScore = sampledPointsScores.begin();
-
-  pVel.setSpeed(agent->_prefSpeed);
-
-  Vector2 adjustedDir = pointWithHighestScore->second - agent->_pos;
-  adjustedDir.normalize();
+  // adjustedDir += pVel.getPreferredVel();
+  // adjustedDir.normalize();
 
   // std::cout << pointWithHighestScore->second << ": " << pointWithHighestScore->first << ": " <<
   // adjustedDir << std::endl;
 
-  pVel.setSingle(adjustedDir);
+  // pVel.setSingle(adjustedDir);
 }
 
 int AbsoluteHeatmapModifier::scoreRGBColor(int* color) {
   return color[0] * _redWeight + color[1] * _greenWeight + color[2] * _blueWeight;
+}
+
+float AbsoluteHeatmapModifier::scoreAngle(Vector2 agentOrientation, Vector2 velocityOrientation) {
+  float dot =
+      agentOrientation._x * velocityOrientation._x +
+      agentOrientation._y * velocityOrientation._y;  // dot product between[x1, y1] and [ x2, y2 ]
+  float det = agentOrientation._x * velocityOrientation._y -
+              agentOrientation._y * velocityOrientation._x;  // determinant
+  float angle = atan2(det, dot);                             // atan2(y, x) or atan2(sin, cos)
+  return angle;
 }
 
 void AbsoluteHeatmapModifier::setAbsoluteHeatmap(AbsoluteHeatmapPtr absoluteHeatmap) {

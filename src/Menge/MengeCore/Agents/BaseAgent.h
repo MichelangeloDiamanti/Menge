@@ -122,6 +122,14 @@ class MENGE_API BaseAgent : public ProximityQuery {
   void update(float timeStep);
 
   /*!
+	@brief    Sets the orientation
+
+	@param    x		Horizontal component of the orientation vector.
+    @param    y		Vertical component of the orientation vector.
+	*/
+  void setOrientation(float x, float y);
+
+  /*!
    @brief    Updates the orientation.
 
    This is guaranteed to be called after the current velocity and position have been integrated.

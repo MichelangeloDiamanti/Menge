@@ -101,6 +101,10 @@ void BaseAgent::update(float timeStep) {
 
 ////////////////////////////////////////////////////////////////
 
+void BaseAgent::setOrientation(float x, float y) { _orient.set(x, y); }
+
+////////////////////////////////////////////////////////////////
+
 void BaseAgent::updateOrient(float timeStep) {
   // This stabilizes orientation
   //  As the agent slows down, the target orientation becomes preferred direction.

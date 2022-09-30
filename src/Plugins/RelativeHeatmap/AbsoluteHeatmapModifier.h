@@ -75,6 +75,8 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapModifier : public Menge::BFSM::VelModi
 
   int scoreRGBColor(int* color);
 
+  float scoreAngle(Vector2 agentOrientation, Vector2 velocityOrientation);
+
   /*!
   @brief		Set the AbsoluteHeatmap data.
   @param		AbsoluteHeatmap		A managed resource pointer to the underlying
@@ -96,6 +98,14 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapModifier : public Menge::BFSM::VelModi
   float _visionSampleAngleRate =
       10.0;                  // each "n" degree the map will be sampled at the vision range distance
   float _visionRange = 5.0;  // how far the agent sees (world units)
+
+  Vector2 _heatmapSubGoal;
+  bool _hasSubGoal = false;
+  float _minDistanceToSubGoal = 0.1f;
+
+  bool _traceBack = false;
+
+  Vector2 _preferredVelocityMovingPoint;
 
   /*!
    @brief		weight of the RED component of the color when sampling the map.
