@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="absoluteHeatmapNightScene/absoluteHeatmapNightScene.xml" 
+	behavior="absoluteHeatmapNightScene/absoluteHeatmapNightSceneB.xml" 
+	view="absoluteHeatmapNightScene/absoluteHeatmapNightSceneV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>
