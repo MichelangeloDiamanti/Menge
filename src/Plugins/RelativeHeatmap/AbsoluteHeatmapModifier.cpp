@@ -73,7 +73,7 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
     std::map<float, Vector2>
         sampledPointsScores;  // map containing "vision" points scored according to their color
 
-    //Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
+    // Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
     Vector2 dir = pVel.getPreferred();  // orientation of the lower body of the agent
 
     // sample and score a vision point in front of the agent
@@ -99,33 +99,35 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
       sampledPointsScores.insert({sampledPointScore, samplePoint});
     }
 
-    // vision point with highest score
-     //auto pointWithHighestScore = sampledPointsScores.begin();
+    // vision point with highest score (map highest is at the end)
     auto pointWithHighestScore = sampledPointsScores.end();
     pointWithHighestScore--;
 
-    _heatmapSubGoal = pointWithHighestScore->second;
+    //std::cout << "agent " << agent->_id << " has highest score " << pointWithHighestScore->first
+    //          << " at point " << pointWithHighestScore->second << std::endl;
+
+    // check if the highest scoring point is in a relevant part of the heatmap
+    //if (pointWithHighestScore->first > 0) {
+      _heatmapSubGoal = pointWithHighestScore->second;
+    //} else {
+      //_heatmapSubGoal = agent->_pos;
+    //}
     _hasSubGoal = true;
+
   } else {
     float distanceToSubGoal = _heatmapSubGoal.distanceSq(agent->_pos);
     if (distanceToSubGoal < _minDistanceToSubGoal) {
       _hasSubGoal = false;
     }
 
-    pVel.setSpeed(agent->_prefSpeed);
-    Vector2 adjustedDir = _heatmapSubGoal - agent->_pos;
-    adjustedDir.normalize();
-    pVel.setSingle(adjustedDir);
+    //if (_heatmapSubGoal != agent->_pos) {
+      pVel.setSpeed(agent->_prefSpeed);
+      Vector2 adjustedDir = _heatmapSubGoal - agent->_pos;
+      adjustedDir.normalize();
+      pVel.setSingle(adjustedDir);
+    //}
   }
-  // pVel.setSpeed(agent->_prefSpeed);
 
-  // adjustedDir += pVel.getPreferredVel();
-  // adjustedDir.normalize();
-
-  // std::cout << pointWithHighestScore->second << ": " << pointWithHighestScore->first << ": " <<
-  // adjustedDir << std::endl;
-
-  // pVel.setSingle(adjustedDir);
 }
 
 int AbsoluteHeatmapModifier::scoreRGBColor(int* color) {
