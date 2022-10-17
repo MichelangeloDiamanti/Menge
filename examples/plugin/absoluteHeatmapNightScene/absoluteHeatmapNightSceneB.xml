@@ -7,7 +7,8 @@
   <State name="walk1" final="0">
     <GoalSelector type="explicit" goal_set="0" goal="0" />
     <VelComponent type="nav_mesh" file_name="relative-heatmap-navmesh.nav" heading_threshold="0.3" />
-    <VelModifier type="absolute_heatmap" file_name="StreetLightsMapping.renderTexture.png" scale="0.1" />
+    <!-- <VelModifier type="absolute_heatmap" file_name="street_lights_mapping_inverted.png" scale="1.0" /> -->
+    <VelModifier type="absolute_heatmap" file_name="street_lights_mapping.png" scale="1.0" />
   </State>
   <State name="stop" final="0" />
   <Transition from="walk1" to="stop">

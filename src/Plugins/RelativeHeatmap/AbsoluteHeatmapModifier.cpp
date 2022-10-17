@@ -69,6 +69,11 @@ void AbsoluteHeatmapModifier::unregisterAgent(const BaseAgent* agent) {
 /////////////////////////////////////////////////////////////////////
 
 void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelocity& pVel) {
+  //const auto p1 = std::chrono::system_clock::now();
+
+  //std::cout << std::chrono::duration_cast<std::chrono::seconds>(p1.time_since_epoch()).count()
+  //          << "_hasSubGoal: " << _hasSubGoal;
+
   if (!_hasSubGoal) {
     std::map<float, Vector2>
         sampledPointsScores;  // map containing "vision" points scored according to their color
@@ -79,7 +84,10 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
     // sample and score a vision point in front of the agent
     Vector2 samplePoint = agent->_pos + dir * _visionRange;
     int sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
-    float angleScore = scoreAngle(agent->_orient, samplePoint);
+
+    // TODO: maybe we want to prefer the direction close to the agent's orientation
+    // float angleScore = scoreAngle(agent->_orient, samplePoint);
+
     sampledPointsScores.insert({sampledPointScore, samplePoint});
 
     // sample and score vision points in the fieldview of the agent
@@ -99,35 +107,35 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
       sampledPointsScores.insert({sampledPointScore, samplePoint});
     }
 
+    auto firstPoint = sampledPointsScores.begin();
+
     // vision point with highest score (map highest is at the end)
     auto pointWithHighestScore = sampledPointsScores.end();
     pointWithHighestScore--;
 
-    //std::cout << "agent " << agent->_id << " has highest score " << pointWithHighestScore->first
-    //          << " at point " << pointWithHighestScore->second << std::endl;
+    // std::cout << "agent " << agent->_id << " has highest score " << pointWithHighestScore->first
+    //           << " at point " << pointWithHighestScore->second << std::endl;
 
-    // check if the highest scoring point is in a relevant part of the heatmap
-    //if (pointWithHighestScore->first > 0) {
-      _heatmapSubGoal = pointWithHighestScore->second;
-    //} else {
-      //_heatmapSubGoal = agent->_pos;
-    //}
-    _hasSubGoal = true;
+    _heatmapSubGoal = pointWithHighestScore->second;
+    _heatmapSubGoalScore = pointWithHighestScore->first;
 
+    if (_heatmapSubGoalScore > 0.0) _hasSubGoal = true;
+    //std::cout << "_heatmapSubGoalScore: " << _heatmapSubGoalScore << "firstPointScore" << firstPoint->first;
   } else {
     float distanceToSubGoal = _heatmapSubGoal.distanceSq(agent->_pos);
+
     if (distanceToSubGoal < _minDistanceToSubGoal) {
       _hasSubGoal = false;
     }
-
-    //if (_heatmapSubGoal != agent->_pos) {
-      pVel.setSpeed(agent->_prefSpeed);
-      Vector2 adjustedDir = _heatmapSubGoal - agent->_pos;
-      adjustedDir.normalize();
-      pVel.setSingle(adjustedDir);
-    //}
   }
 
+  if (_hasSubGoal) {
+    pVel.setSpeed(agent->_prefSpeed);
+    Vector2 adjustedDir = _heatmapSubGoal - agent->_pos;
+    adjustedDir.normalize();
+    pVel.setSingle(adjustedDir);
+  }
+  //std::cout << std::endl;
 }
 
 int AbsoluteHeatmapModifier::scoreRGBColor(int* color) {

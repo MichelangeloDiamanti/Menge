@@ -13,6 +13,8 @@
 #include "MengeCore/Runtime/os.h"
 #include "thirdParty/tinyxml.h"
 
+#include <chrono>
+
 #define cimg_use_png
 #include <map>
 #include "CImg.h"
@@ -100,6 +102,8 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapModifier : public Menge::BFSM::VelModi
   float _visionRange = 5.0;  // how far the agent sees (world units)
 
   Vector2 _heatmapSubGoal;
+  float _heatmapSubGoalScore;
+
   bool _hasSubGoal = false;
   float _minDistanceToSubGoal = 0.1f;
 
