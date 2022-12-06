@@ -36,52 +36,53 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
 
-/*!
- *	@file		RelativeHeatmapPlugin.cpp
- *	@brief		Plugin for RelativeHeatmap
- */
-
-#include "AbsoluteHeatmapModifier.h"
+#include "MengeCore/Agents/PrefVelocity.h"
+#include "MengeCore/BFSM/Goals/GoalPoint.h"
 #include "AbsoluteHeatmapGoal.h"
-#include "MengeCore/PluginEngine/CorePluginEngine.h"
-#include "RelativeHeatmap.h"
-#include "RelativeHeatmapConfig.h"
-#include "RelativeHeatmapModifier.h"
-#include "RelativeHeatmapTransition.h"
 
-using Menge::PluginEngine::CorePluginEngine;
+namespace RelativeHeatmap {
 
-extern "C" {
-/*!
- *	@brief		Retrieves the name of the plug-in.
- *
- *	@returns	The name of the plug in.
- */
-RELATIVE_HEATMAP_API const char* getName() { return "relative_heatmap"; }
+/////////////////////////////////////////////////////////////////////
+//              Implementation of AbsoluteHeatmapGoal
+/////////////////////////////////////////////////////////////////////
 
-/*!
- *	@brief		Description of the plug-in.
- *
- *	@returns	A description of the plugin.
- */
-RELATIVE_HEATMAP_API const char* getDescription() {
-  return "Utilities for adding relative heatmaps to ped sims "
-         "including the following:\n"
-         "\tModifier \"RelativeHeatmap\" - Sets agents velocity according to a RelativeHeatmap: "
-         "spots with \"hot "
-         "colors\" are more likely "
-         "to be selected.";
+const std::string AbsoluteHeatmapGoal::NAME = "AbsoluteHeatmapGoal";
+
+/////////////////////////////////////////////////////////////////////
+
+AbsoluteHeatmapGoal::AbsoluteHeatmapGoal() : Goal() {}
+
+/////////////////////////////////////////////////////////////////////
+
+AbsoluteHeatmapGoal::AbsoluteHeatmapGoal(const AbsoluteHeatmap& heatmap) : Goal() {
+  _geometry = NULL;  // TODO: set the geometry according to the heatmap
 }
 
-/*!
- *	@brief		Registers the plug-in with the PluginEngine
- *
- *	@param		engine		A pointer to the plugin engine.
- */
-RELATIVE_HEATMAP_API void registerCorePlugin(CorePluginEngine* engine) {
-  engine->registerVelModFactory(new RelativeHeatmap::RelativeHeatmapModifierFactory());
-  engine->registerVelModFactory(new RelativeHeatmap::AbsoluteHeatmapModifierFactory());
-  engine->registerConditionFactory(new RelativeHeatmap::ColorConditionFactory());
-  engine->registerGoalFactory(new RelativeHeatmap::AbsoluteHeatmapGoalFactory());
+/////////////////////////////////////////////////////////////////////
+//                   Implementation of PointGoalFactory
+/////////////////////////////////////////////////////////////////////
+
+AbsoluteHeatmapGoalFactory::AbsoluteHeatmapGoalFactory() : GoalFactory(){
+    //TODO: set stuff;
 }
+
+bool AbsoluteHeatmapGoalFactory::setFromXML(Menge::BFSM::Goal* goal, TiXmlElement* node,
+                                            const std::string& behaveFldr) const {
+  AbsoluteHeatmapGoal* absHGoal = dynamic_cast<AbsoluteHeatmapGoal*>(goal);
+  assert(absHGoal != 0x0 && "Trying to set point goal attributes on an incompatible object.");
+
+  if (!GoalFactory::setFromXML(absHGoal, node, behaveFldr)) return false;
+
+  //// rely on createPoint to parse errors
+  //PointShape* geometry = createPoint(node);
+  //if (geometry != 0x0) {
+  //  goal->setGeometry(geometry);
+  //  return true;
+  //}
+
+  // TODO: set the geometry according to the heatmap
+
+  return false;
 }
+
+}  // namespace RelativeHeatmap 

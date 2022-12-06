@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapModifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmap.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapModifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
