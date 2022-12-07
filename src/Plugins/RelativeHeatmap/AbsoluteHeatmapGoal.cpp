@@ -10,6 +10,11 @@ using Menge::Logger;
 using Menge::Resource;
 using Menge::ResourceException;
 
+using std::chrono::duration;
+using std::chrono::duration_cast;
+using std::chrono::high_resolution_clock;
+using std::chrono::milliseconds;
+
 /////////////////////////////////////////////////////////////////////
 //                   Implementation of AbsoluteHeatmapGoal
 /////////////////////////////////////////////////////////////////////
@@ -41,6 +46,8 @@ void AbsoluteHeatmapGoal::setAbsoluteHeatmap(AbsoluteHeatmapPtr absoluteHeatmap)
 }
 
 Menge::Math::Vector2 AbsoluteHeatmapGoal::getGoalPosition() {
+  //auto t1 = high_resolution_clock::now();
+
   int highestPixelValue = 0.0f;
   int x = 0;
   int y = 0;
@@ -57,6 +64,13 @@ Menge::Math::Vector2 AbsoluteHeatmapGoal::getGoalPosition() {
       }
     }
   }
+
+  ////----------- execution time: ~64 ms ----------- 
+  //auto t2 = high_resolution_clock::now();
+  ///* Getting number of milliseconds as an integer. */
+  //auto ms_int = duration_cast<milliseconds>(t2 - t1);
+
+  //std::cout << "time for getGoalPosition: " << ms_int.count();
 
   return Menge::Math::Vector2(x, y);
 }

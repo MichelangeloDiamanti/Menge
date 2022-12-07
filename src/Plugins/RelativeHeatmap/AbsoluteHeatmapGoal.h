@@ -8,6 +8,8 @@
 #include "MengeCore/Runtime/os.h"
 #include "RelativeHeatmapConfig.h"
 
+#include <chrono>
+
 namespace RelativeHeatmap {
 
 // forward declaration
