@@ -47,6 +47,8 @@ class AbsoluteHeatmap : public Menge::Resource {
 
   Vector2 worldToPixel(Vector2 worldCoordinate);
 
+  Vector2 pixelToWorld(Vector2 pixelCoordinate);
+
   /*!
   @brief		reads the rgb value of the underlying AbsoluteHeatmap at position x,y
   relative from the center of the heatmap

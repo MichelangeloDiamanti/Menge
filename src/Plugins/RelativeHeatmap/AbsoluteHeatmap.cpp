@@ -39,6 +39,18 @@ Vector2 AbsoluteHeatmap::worldToPixel(Vector2 worldCoordinate) {
   return pixelCoordinate;
 }
 
+// TODO: check this!! not sure if the scaling is correct, but otherwise it would be the same as worldToPixel?
+Vector2 AbsoluteHeatmap::pixelToWorld(Vector2 pixelCoordinate) {
+  // apply the scale i.e. 0.01 -> 1 world unit = 100 pixels, so we multiply
+  Vector2 scaledPixelCoordinate = pixelCoordinate * _scale;
+
+  // compute the world coordinate, the y grows in the opposite direction
+  Vector2 worldCoordinate =
+      Vector2(scaledPixelCoordinate.x(), _image.height() - scaledPixelCoordinate.y());
+
+  return worldCoordinate;
+}
+
 int* AbsoluteHeatmap::getValueAt(int x, int y) {
   int* rgb = new int[3]{0, 0, 0};
 

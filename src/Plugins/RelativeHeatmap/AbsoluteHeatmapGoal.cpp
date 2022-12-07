@@ -1,88 +1,119 @@
-/*
-
-License
-
-Menge
-Copyright © and trademark ™ 2012-14 University of North Carolina at Chapel Hill.
-All rights reserved.
-
-Permission to use, copy, modify, and distribute this software and its documentation
-for educational, research, and non-profit purposes, without fee, and without a
-written agreement is hereby granted, provided that the above copyright notice,
-this paragraph, and the following four paragraphs appear in all copies.
-
-This software program and documentation are copyrighted by the University of North
-Carolina at Chapel Hill. The software program and documentation are supplied "as is,"
-without any accompanying services from the University of North Carolina at Chapel
-Hill or the authors. The University of North Carolina at Chapel Hill and the
-authors do not warrant that the operation of the program will be uninterrupted
-or error-free. The end-user understands that the program was developed for research
-purposes and is advised not to rely exclusively on the program for any reason.
-
-IN NO EVENT SHALL THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE AUTHORS
-BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
-DOCUMENTATION, EVEN IF THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL OR THE
-AUTHORS HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS SPECIFICALLY
-DISCLAIM ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND ANY STATUTORY WARRANTY
-OF NON-INFRINGEMENT. THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND
-THE UNIVERSITY OF NORTH CAROLINA AT CHAPEL HILL AND THE AUTHORS HAVE NO OBLIGATIONS
-TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
-
-*/
-
-#include "MengeCore/Agents/PrefVelocity.h"
-#include "MengeCore/BFSM/Goals/GoalPoint.h"
 #include "AbsoluteHeatmapGoal.h"
+
+#include "MengeCore/BFSM/Goals/GoalPoint.h"
 
 namespace RelativeHeatmap {
 
+using Menge::logger;
+using Menge::Logger;
+
+using Menge::Resource;
+using Menge::ResourceException;
+
 /////////////////////////////////////////////////////////////////////
-//              Implementation of AbsoluteHeatmapGoal
+//                   Implementation of AbsoluteHeatmapGoal
 /////////////////////////////////////////////////////////////////////
 
-const std::string AbsoluteHeatmapGoal::NAME = "AbsoluteHeatmapGoal";
+const std::string AbsoluteHeatmapGoal::NAME = "heatmap";
 
 /////////////////////////////////////////////////////////////////////
 
 AbsoluteHeatmapGoal::AbsoluteHeatmapGoal() : Goal() {}
 
+AbsoluteHeatmapGoal::~AbsoluteHeatmapGoal() {}
+
 /////////////////////////////////////////////////////////////////////
 
-AbsoluteHeatmapGoal::AbsoluteHeatmapGoal(const AbsoluteHeatmap& heatmap) : Goal() {
-  _geometry = NULL;  // TODO: set the geometry according to the heatmap
+AbsoluteHeatmapGoal::AbsoluteHeatmapGoal(const Menge::Math::Vector2& p) : Goal() {
+  _geometry = new Menge::Math::PointShape(p);
 }
 
 /////////////////////////////////////////////////////////////////////
-//                   Implementation of PointGoalFactory
+
+AbsoluteHeatmapGoal::AbsoluteHeatmapGoal(float x, float y) : Goal() {
+  _geometry = new Menge::Math::PointShape(Menge::Math::Vector2(x, y));
+}
+
 /////////////////////////////////////////////////////////////////////
 
-AbsoluteHeatmapGoalFactory::AbsoluteHeatmapGoalFactory() : GoalFactory(){
-    //TODO: set stuff;
+void AbsoluteHeatmapGoal::setAbsoluteHeatmap(AbsoluteHeatmapPtr absoluteHeatmap) {
+  _absoluteHeatmap = absoluteHeatmap;
+}
+
+Menge::Math::Vector2 AbsoluteHeatmapGoal::getGoalPosition() {
+  int highestPixelValue = 0.0f;
+  int x = 0;
+  int y = 0;
+
+  // simple for loop to get the brightest spot in the heatmap, and return the corresponding point in
+  // the map TODO: we're checking for the [0] which is the Red channel. It's ok as long as it is
+  // grayscale but should we adopt some other metric?
+  for (int i = 0; i < _absoluteHeatmap->getWidth(); i++) {
+    for (int j = 0; j < _absoluteHeatmap->getHeight(); j++) {
+      if (highestPixelValue < _absoluteHeatmap->getValueAt(i, j)[0]) {
+        highestPixelValue = _absoluteHeatmap->getValueAt(i, j)[0];
+        x = i;
+        y = j;
+      }
+    }
+  }
+
+  return Menge::Math::Vector2(x, y);
+}
+
+/////////////////////////////////////////////////////////////////////
+//                   Implementation of AbsoluteHeatmapGoalFactory
+/////////////////////////////////////////////////////////////////////
+
+AbsoluteHeatmapGoalFactory::AbsoluteHeatmapGoalFactory() {
+  // no properties yet
+  _fileNameID = _attrSet.addStringAttribute("file_name", true /*required*/);
+
+  _scaleID = _attrSet.addFloatAttribute("scale", false /*required*/, 1.f);
 }
 
 bool AbsoluteHeatmapGoalFactory::setFromXML(Menge::BFSM::Goal* goal, TiXmlElement* node,
                                             const std::string& behaveFldr) const {
-  AbsoluteHeatmapGoal* absHGoal = dynamic_cast<AbsoluteHeatmapGoal*>(goal);
-  assert(absHGoal != 0x0 && "Trying to set point goal attributes on an incompatible object.");
+  AbsoluteHeatmapGoal* absHMGoal = dynamic_cast<AbsoluteHeatmapGoal*>(goal);
+  assert(absHMGoal != 0x0 &&
+         "Trying to set AbsoluteHeatmapGoal attributes on an incompatible object.");
 
-  if (!GoalFactory::setFromXML(absHGoal, node, behaveFldr)) return false;
+  if (!GoalFactory::setFromXML(absHMGoal, node, behaveFldr)) return false;
 
-  //// rely on createPoint to parse errors
-  //PointShape* geometry = createPoint(node);
-  //if (geometry != 0x0) {
-  //  goal->setGeometry(geometry);
-  //  return true;
-  //}
+  // get the absolute path to the file name
 
-  // TODO: set the geometry according to the heatmap
+  std::string fName;
+  std::string path =
+      Menge::os::path::join(2, behaveFldr.c_str(), _attrSet.getString(_fileNameID).c_str());
+  Menge::os::path::absPath(path, fName);
+
+  logger << Logger::INFO_MSG << "AbsoluteHeatmap file: " << fName;
+
+  // Try to instantiate a heatmap from the specified image file
+  try {
+    absHMGoal->setAbsoluteHeatmap(loadAbsoluteHeatmap(fName));
+  } catch (ResourceException) {
+    logger << Logger::ERR_MSG << "Couldn't instantiate the absolute heatmap referenced on line ";
+    logger << node->Row() << ".";
+    return false;
+  }
+
+  // Get the specified XML parameters and set it to the heatmap object
+  absHMGoal->_absoluteHeatmap->_scale = _attrSet.getFloat(_scaleID);
+  std::cout << "scale: " << absHMGoal->_absoluteHeatmap->_scale << std::endl;
+
+  // read the heatmap and find the brightest spot.
+  // the corresponding point is the goal
+  Menge::Math::Vector2 goalPoint =
+      absHMGoal->getAbsoluteHeatmap()->pixelToWorld(absHMGoal->getGoalPosition());
+  Menge::Math::PointShape* geometry = new Menge::Math::PointShape(goalPoint);
+
+  if (geometry != 0x0) {
+    goal->setGeometry(geometry);
+    return true;
+  }
 
   return false;
 }
 
-}  // namespace RelativeHeatmap 
+}  // namespace RelativeHeatmap

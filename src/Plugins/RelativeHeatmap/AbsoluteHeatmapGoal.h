@@ -1,48 +1,42 @@
 #ifndef __ABSOLUTE_HEATMAP_GOAL_H__
 #define __ABSOLUTE_HEATMAP_GOAL_H__
 
-#define _USE_MATH_DEFINES
-
-#include <chrono>
-
 #include "AbsoluteHeatmap.h"
 #include "MengeCore/BFSM/Goals/Goal.h"
 #include "MengeCore/BFSM/Goals/GoalFactory.h"
+#include "MengeCore/BFSM/fsmCommon.h"
+#include "MengeCore/Runtime/os.h"
 #include "RelativeHeatmapConfig.h"
-#include "thirdParty/tinyxml.h"
-
-#define cimg_use_png
-
-#include "CImg.h"
-#include "math.h"
-#include "png.h"
-
-#if defined(_MSC_VER)
-// Visual Studio spews warnings about some members.
-// It wants them to be exposed in the dll IN CASE a client uses it.
-// TODO: remove this warning supression, correct the problem
-#pragma warning(disable : 4251)
-#endif
-
-// forward declaration
-class TiXmlElement;
 
 namespace RelativeHeatmap {
 
 // forward declaration
 class AbsoluteHeatmapGoalFactory;
 
+/*!
+ @brief    A simple point goal.  The goal is trivially this point.
+ */
 class RELATIVE_HEATMAP_API AbsoluteHeatmapGoal : public Menge::BFSM::Goal {
  public:
   /*! Default constructor */
   AbsoluteHeatmapGoal();
 
-  /*!
-       @brief    Full constructor.
+  virtual ~AbsoluteHeatmapGoal();
 
-       @param    heatmap    The heatmap of the goal.
+  /*!
+   @brief    Full constructor.
+
+   @param    p    The position of the goal.
    */
-  AbsoluteHeatmapGoal(const AbsoluteHeatmap& heatmap);
+  AbsoluteHeatmapGoal(const Menge::Math::Vector2& p);
+
+  /*!
+   @brief    Full constructor - component-wise.
+
+   @param    x    The x-position of the goal.
+   @param    y    The x-position of the goal.
+   */
+  AbsoluteHeatmapGoal(float x, float y);
 
   /*!
    @brief    Used by the plugin system to know what artifacts to associate with agents of this type.
@@ -52,17 +46,34 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoal : public Menge::BFSM::Goal {
    */
   virtual std::string getStringId() const { return NAME; }
 
+  /*!
+  @brief		Set the AbsoluteHeatmap data.
+  @param		AbsoluteHeatmap		A managed resource pointer to the underlying
+  AbsoluteHeatmap data.
+  */
+  void setAbsoluteHeatmap(AbsoluteHeatmapPtr AbsoluteHeatmap);
+
+  AbsoluteHeatmapPtr getAbsoluteHeatmap() { return _absoluteHeatmap; };
+
+  /*
+      @brief iterates over the heatmap, get the highest value, and return the point as a goal
+  */
+  Menge::Math::Vector2 getGoalPosition();
+
   /*! The unique identifier used to register this type with run-time components. */
   static const std::string NAME;
+
+  /*!
+   @brief		The underlying AbsoluteHeatmap data.
+   */
+  AbsoluteHeatmapPtr _absoluteHeatmap;
 };
 
 /*!
- @brief    Factory for the AbsoluteHeatmapGoal.
+ @brief    Factory for the PointGoal.
  */
-class MENGE_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::GoalFactory {
+class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::GoalFactory {
  public:
-	
-  // constructor
   AbsoluteHeatmapGoalFactory();
 
   /*!
@@ -83,7 +94,7 @@ class MENGE_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::GoalFactory {
    @returns  A string containing the goal description.
    */
   virtual const char* description() const {
-    return "An agent goal consisting of a single point based on the brightest pixel in a heatmap.";
+    return "An agent goal consisting of a single point in two-dimensional space";
   };
 
  protected:
@@ -107,8 +118,18 @@ class MENGE_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::GoalFactory {
    */
   virtual bool setFromXML(Menge::BFSM::Goal* goal, TiXmlElement* node,
                           const std::string& behaveFldr) const;
+
+  /*!
+   @brief		The identifier for the "file_name" string attribute.
+   */
+  size_t _fileNameID;
+
+  /*!
+   @brief		The identifier for the "scale" float attribute.
+   */
+  size_t _scaleID;
 };
 
 }  // namespace RelativeHeatmap
 
-#endif
+#endif  // __GOAL_POINT_H__

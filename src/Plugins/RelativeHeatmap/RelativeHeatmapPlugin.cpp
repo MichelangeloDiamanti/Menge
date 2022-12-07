@@ -42,12 +42,12 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
  */
 
 #include "AbsoluteHeatmapModifier.h"
-#include "AbsoluteHeatmapGoal.h"
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 #include "RelativeHeatmap.h"
 #include "RelativeHeatmapConfig.h"
 #include "RelativeHeatmapModifier.h"
 #include "RelativeHeatmapTransition.h"
+#include "AbsoluteHeatmapGoal.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
