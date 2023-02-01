@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Experiment xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <Common time_step="0.1" />
+  <SpatialQuery type="nav_mesh" test_visibility="false" file_name="simple.nav" />
+  <Elevation type="nav_mesh" file_name="simple.nav" />
+  <ObstacleSet type="nav_mesh" file_name="simple.nav" class="1" />
+  <AgentProfile name="group1">
+    <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="1.04" max_speed="2" max_accel="5" />
+    <ORCA tau="3" tauObst="0.15" />
+  </AgentProfile>
+  <AgentProfile name="group2">
+    <Common max_angle_vel="360" max_neighbors="10" obstacleSet="1" neighbor_dist="5" r="0.19" class="1" pref_speed="0.8" max_speed="1.8" max_accel="4" />
+    <ORCA tau="3" tauObst="0.15" />
+  </AgentProfile>
+  <AgentGroup>
+    <ProfileSelector type="const" name="group1" />
+    <StateSelector type="const" name="Walk1" />
+    <Generator type="explicit">
+      <Agent p_x="64" p_y="-165" />
+    </Generator>
+  </AgentGroup>
+</Experiment>

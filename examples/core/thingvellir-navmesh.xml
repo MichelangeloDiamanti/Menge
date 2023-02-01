@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="thingvellir-navmesh/thingvellir-navmeshS.xml" 
+	behavior="thingvellir-navmesh/thingvellir-navmeshB.xml" 
+	view="thingvellir-navmesh/thingvellir-navmeshV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

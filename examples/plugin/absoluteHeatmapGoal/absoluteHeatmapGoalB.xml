@@ -1,15 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BFSM>
-  <GoalSet id="0">
-    <!-- <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="absolute_heatmap_goal.png" x="238" y="417" /> -->
-    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="visibility_mapping_grayscale.png" x="238" y="417" />
+  <GoalSet id="4">
+    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="klambratun-heatmap-example-building-edges.png" scale="1" />
   </GoalSet>
   <State name="walk1" final="0">
-    <GoalSelector type="explicit" goal_set="0" goal="0" />
+    <GoalSelector type="explicit" goal_set="4" goal="0" />
     <VelComponent type="nav_mesh" file_name="relative-heatmap-navmesh.nav" heading_threshold="0.3" />
   </State>
   <State name="stop" final="0" />
-  <Transition from="walk1" to="stop">
-    <Condition type="goal_reached" distance="0.3" />
-  </Transition>
-</BFSM>
