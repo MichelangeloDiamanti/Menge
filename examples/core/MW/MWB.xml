@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BFSM>
+	<GoalSet id="0">
+		<Goal angle="151.17216110229492" capacity="1000" height="5.383431625366211" id="0" type="OBB" weight="1.0" width="10.184172821044923" x="18.96744424653473" y="12.23380828744681" />
+		<Goal angle="180.0" capacity="1000" height="7.7" id="1" type="OBB" weight="1.0" width="1.8" x="10.700000000000001" y="26.700000000000003" />
+		<Goal angle="90.0" capacity="1000" height="4.899999237060547" id="2" type="OBB" weight="1.0" width="5.499999237060547" x="39.99999656677246" y="36.10001258850098" />
+		<Goal angle="122.47119140625" capacity="1000" height="2.799422073364258" id="3" type="OBB" weight="1.0" width="5.694715118408204" x="70.85646427874208" y="41.45412299384772" />
+		<Goal angle="122.47119140625" capacity="1000" height="2.7955873489379885" id="4" type="OBB" weight="1.0" width="5.694715118408204" x="31.86588183031893" y="43.646465191122054" />
+		<Goal angle="90.0" capacity="1000" height="5.0" id="5" type="OBB" weight="1.0" width="3.7" x="67.5" y="48.800000000000004" />
+		<Goal angle="90.0" capacity="1000" height="3.3000000000000003" id="6" type="OBB" weight="1.0" width="3.2" x="76.2" y="62.1" />
+		<Goal angle="90.0" capacity="1000" height="4.7" id="7" type="OBB" weight="1.0" width="4.1000000000000005" x="89.7" y="72.7" />
+		<Goal angle="130.23635482788086" capacity="1000" height="8.406056976318359" id="8" type="OBB" weight="1.0" width="1.3271175384521485" x="81.39275810514255" y="77.41309808574917" />
+		<Goal angle="130.42607498168945" capacity="1000" height="0.67947998046875" id="9" type="OBB" weight="1.0" width="2.478269577026367" x="112.33199849036573" y="77.5124273388273" />
+		<Goal angle="130.60129928588867" capacity="1000" height="1.1280384063720703" id="10" type="OBB" weight="1.0" width="2.755016899108887" x="75.8300099297745" y="82.18999979624577" />
+		<Goal angle="180.0" capacity="1000" height="4.4" id="11" type="OBB" weight="1.0" width="4.2" x="110.7" y="88.00000000000001" />
+		<Goal angle="90.0" capacity="1000" height="3.9000000000000004" id="12" type="OBB" weight="1.0" width="4.3" x="124.9" y="100.7" />
+		<Goal angle="122.42755508422852" capacity="1000" height="2.802809715270996" id="13" type="OBB" weight="1.0" width="5.694494247436523" x="159.75666833438964" y="109.35247238800521" />
+		<Goal angle="122.39983749389648" capacity="1000" height="2.799276733398438" id="14" type="OBB" weight="1.0" width="5.691104888916016" x="123.35659438790988" y="113.34264339517091" />
+		<Goal angle="90.0" capacity="1000" height="3.9000000000000004" id="15" type="OBB" weight="1.0" width="4.4" x="155.8" y="119.0" />
+		<Goal angle="122.38067626953125" capacity="1000" height="2.794087600708008" id="16" type="OBB" weight="1.0" width="5.6921936035156255" x="172.55166392089833" y="143.74739343044732" />
+	</GoalSet>
+
+	<State final="0" name="Walk">
+		<GoalSelector goal_set="0" per_agent="1" type="random" />
+		<VelComponent file_name="MWmesh.nav" heading_threshold="5" type="nav_mesh" />
+		<Action dist="c" exit_reset="0" property="priority" type="offset_property" value="0.0" />
+	</State>
+	<State final="0" name="Arrive">
+		<VelComponent type="zero" />
+		<Action dist="c" exit_reset="0" property="priority" type="offset_property" value="1.0" />
+	</State>
+	<State final="0" name="Decide">
+		<VelComponent type="zero" />
+	</State>
+	<State final="0" name="Happy">
+		<VelComponent type="zero" />
+	</State>
+	<State final="0" name="Angry">
+		<VelComponent type="zero" />
+	</State>
+
+	<Transition from="Walk" to="Arrive">
+		<Condition distance="0.4" type="goal_reached" />
+	</Transition>
+	<Transition from="Arrive" to="Decide">
+		<Condition dist="u" max="4" min="2" per_agent="1" seed="5" type="timer" />
+	</Transition>
+	<Transition from="Decide">
+		<Condition type="auto" />
+		<Target type="prob">
+			<State name="Happy" weight="1.0" />
+			<State name="Angry" weight="1.0" />
+		</Target>
+	</Transition>
+	<Transition from="Happy" to="Walk">
+		<Condition dist="u" max="6" min="4" per_agent="1" seed="6" type="timer" />
+	</Transition>
+	<Transition from="Angry" to="Walk">
+		<Condition dist="u" max="2" min="1" per_agent="1" seed="7" type="timer" />
+	</Transition>
+</BFSM>

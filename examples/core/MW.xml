@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project 
+    behavior="MW/MWB.xml"
+    dumpPath="MW/images"
+    model="pedvo" 
+    navmesh="MW/MWmesh.nav" 
+    scene="MW/MWS.xml"
+    view="MW/MWV.xml"
+/>
