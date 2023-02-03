@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 
 <View width="640" height="480" z_up="1" >
-    <Camera xpos="348.104" ypos="455.988" zpos="10.5165" xtgt="342.914" ytgt="430.367" ztgt="4.92171" far="20000" near="0.001" fov="45" />
-    <Camera xpos="341.33331" ypos="431.66669" zpos="1.72359" xtgt="341.2239" ytgt="431.1276" ztgt="5.356545" far="200" near="0.01" fov="45" />
-    <Camera xpos="-1.27741" ypos="1.46801" zpos="17.2774" xtgt="-1.27741" ytgt="1.46974" ztgt="2.6159" far="20000" near="0.01" fov="0.0" orthoScale="0.999998" />
+    <Camera xpos="133.899" ypos="-192.819" zpos="557.821" xtgt="133.899" ytgt="-192.815" ztgt="1.46126" far="20000" near="0.001" fov="45" />
 	
     <Light x="1" y="0" z="-1" type="directional" space="camera" diffR="1" diffG="0.8" diffB="0.8"/>
     <Light x="-1" y="0" z="-1" type="directional" space="camera" diffR="0.8" diffG="0.8" diffB="1"/>
