@@ -71,7 +71,11 @@ class RelativeHeatmap : public Menge::Resource {
 
   /*!
   @brief		provides the width of the heatmap
- 
+ 
+
+
+
+
   @returns	The width of the heatmap.
   */
   int getWidth() { return _image.width(); };

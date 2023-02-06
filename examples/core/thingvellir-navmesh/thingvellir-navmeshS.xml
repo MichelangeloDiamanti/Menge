@@ -40,13 +40,13 @@
 			<Agent p_x="-0.10" p_y="-1.10" />
 			<Agent p_x="-0.50" p_y="-1.10" />
 			<Agent p_x="0.30" p_y="-1.10" />
-		-->
 			<Agent p_x="67" p_y="-168" />
 			<Agent p_x="156" p_y="-18" />
+		-->
+			<Agent p_x="69" p_y="-171" />
 		</Generator>
 		<!-- -->
     </AgentGroup>
-
 <!-- 
     <ObstacleSet type="nav_mesh" file_name="simple.nav" class="1" />    
     <ObstacleSet class="1" type="explicit">

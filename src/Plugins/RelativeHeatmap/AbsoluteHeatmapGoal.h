@@ -130,6 +130,12 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::Goal
    @brief		The identifier for the "scale" float attribute.
    */
   size_t _scaleID;
+
+  /*!
+   @brief		The identifiers for the "offset" Vector2 attribute.
+   */
+  size_t _offsetXID;
+  size_t _offsetYID;
 };
 
 }  // namespace RelativeHeatmap

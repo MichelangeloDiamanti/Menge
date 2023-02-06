@@ -84,6 +84,8 @@ AbsoluteHeatmapGoalFactory::AbsoluteHeatmapGoalFactory() {
   _fileNameID = _attrSet.addStringAttribute("file_name", true /*required*/);
 
   _scaleID = _attrSet.addFloatAttribute("scale", false /*required*/, 1.f);
+  _offsetXID = _attrSet.addFloatAttribute("offset_x", false /*required*/, 0.f);
+  _offsetYID = _attrSet.addFloatAttribute("offset_y", false /*required*/, 0.f);
 }
 
 bool AbsoluteHeatmapGoalFactory::setFromXML(Menge::BFSM::Goal* goal, TiXmlElement* node,
@@ -115,6 +117,8 @@ bool AbsoluteHeatmapGoalFactory::setFromXML(Menge::BFSM::Goal* goal, TiXmlElemen
   // Get the specified XML parameters and set it to the heatmap object
   absHMGoal->_absoluteHeatmap->_scale = _attrSet.getFloat(_scaleID);
   std::cout << "scale: " << absHMGoal->_absoluteHeatmap->_scale << std::endl;
+  absHMGoal->_absoluteHeatmap->_offset =
+      Menge::Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID));
 
   // read the heatmap and find the brightest spot.
   // the corresponding point is the goal

@@ -6,8 +6,9 @@
 		<Goal type="point" id="0" x="-3" y="5.0"/>
 		<Goal type="point" id="1" x="3" y="5.0"/>
 		<Goal type="AABB" id="2" min_x="-0.5" max_x="0.5" min_y="4.5" max_y="5.5" />
+		<Goal type="point" id="0" x="268" y="-147" capacity="100"/>
 		-->
-		<Goal type="point" id="0" x="663" y="1026" capacity="100"/>
+	    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
 	</GoalSet>
 	
 	<State name="Walk1" final="0" >

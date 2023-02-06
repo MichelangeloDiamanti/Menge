@@ -99,6 +99,12 @@ class AbsoluteHeatmap : public Menge::Resource {
  */
   float _scale;
 
+  /*!
+   @brief		The difference between the zero point of the heatmap and the zero point of
+   the world.
+   */
+  Vector2 _offset;
+
  protected:
   /*!
    @brief		Sets the AbsoluteHeatmap.

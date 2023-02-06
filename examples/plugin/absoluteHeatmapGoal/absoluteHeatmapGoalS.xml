@@ -10,7 +10,7 @@
   </AgentProfile>
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="walk1" />
+    <StateSelector type="const" name="Walk1" />
     <Generator type="explicit">
       <Agent p_x="234" p_y="157" />
     </Generator>
