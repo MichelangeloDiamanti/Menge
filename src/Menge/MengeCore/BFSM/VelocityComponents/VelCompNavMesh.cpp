@@ -87,6 +87,8 @@ void NavMeshVelComponent::setPrefVelocity(const Agents::BaseAgent* agent, const 
       throw VelCompFatalException(
           "Can't compute a path to a goal outside of the "
           "navigation mesh.  Bad NavMeshVelComponent!");
+      //pVel.setSpeed(0.f);
+      //return;
     }
     unsigned int agtNode = _localizer->getNode(agent);
     PortalRoute* route =

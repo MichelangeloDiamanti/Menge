@@ -23,6 +23,113 @@ AbsoluteHeatmapGoalSelector::AbsoluteHeatmapGoalSelector() : GoalSelector() {}
 /////////////////////////////////////////////////////////////////////
 
 Goal* AbsoluteHeatmapGoalSelector::getGoal(const BaseAgent* agent) const {
+  // return computeGoalBasedOnCircleAroundAgent(agent);
+  return computeGoalBasedOnfieldView(agent);
+}
+
+Menge::BFSM::Goal* AbsoluteHeatmapGoalSelector::computeGoalBasedOnfieldView(
+    const Menge::Agents::BaseAgent* agent) const {
+  std::map<float, Vector2>
+      sampledPointsScores;  // map containing "vision" points scored according to their color
+
+  // Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
+  // Vector2 dir = agent->_velPref.getPreferred();  // orientation of the lower body of the agent
+  Vector2 dir = agent->_orient;  // orientation of the lower body of the agent
+
+  // sample and score a vision point in front of the agent
+  Vector2 samplePoint = agent->_pos + dir * _lookMaxDist;
+  int* rgb = new int[3]{0, 0, 0};
+  int sampledPointScore =
+      scoreRGBColor(samplePoint, _absoluteHeatmap->worldToMapColor(rgb, samplePoint), agent);
+
+  // TODO: maybe we want to prefer the direction close to the agent's orientation
+  // float angleScore = scoreAngle(agent->_orient, samplePoint);
+
+  sampledPointsScores.insert({sampledPointScore, samplePoint});
+
+  // sample and score vision points in the fieldview of the agent
+  double degToRad = PI / 180;
+  Vector2 sampleDir;
+
+  for (float angle = -(_visionAngle / 2); angle < 0; angle = angle + _visionSampleAngleRate) {
+    sampleDir = dir.rotate(angle * degToRad);
+    float sampleDistIncrement = 0.1f;
+    for (float sampleDist = 0.01f; sampleDist <= _visionRange; sampleDist += sampleDistIncrement) {
+      samplePoint = agent->_pos + sampleDir * sampleDist;
+      sampledPointScore =
+          scoreRGBColor(samplePoint, _absoluteHeatmap->worldToMapColor(rgb, samplePoint), agent);
+      sampledPointsScores.insert({sampledPointScore, samplePoint});
+    }
+  }
+  for (float angle = _visionAngle / 2; angle > 0; angle = angle - _visionSampleAngleRate) {
+    sampleDir = dir.rotate(angle * degToRad);
+    float sampleDistIncrement = 0.1f;
+    for (float sampleDist = 0.01f; sampleDist <= _visionRange; sampleDist += sampleDistIncrement) {
+      samplePoint = agent->_pos + sampleDir * sampleDist;
+      sampledPointScore =
+          scoreRGBColor(samplePoint, _absoluteHeatmap->worldToMapColor(rgb, samplePoint), agent);
+      sampledPointsScores.insert({sampledPointScore, samplePoint});
+    }
+  }
+
+  auto firstPoint = sampledPointsScores.begin();
+
+  // vision point with highest score (map highest is at the end)
+  auto pointWithHighestScore = sampledPointsScores.end();
+  pointWithHighestScore--;
+
+  PointGoal* newGoal = new PointGoal(agent->_pos);
+
+  // Vector2 goalPoint = _absoluteHeatmap->pixelToWorld(pointWithHighestScore->second);
+  if (pointWithHighestScore->first > 0.f) {
+    newGoal = new PointGoal(pointWithHighestScore->second);
+    newGoal->setID(INT_MAX - _goals_count);
+    _goals_count++;
+  }
+
+  delete rgb;
+
+  return newGoal;
+}
+
+float AbsoluteHeatmapGoalSelector::scoreRGBColor(Vector2 point, int* color,
+                                                 const BaseAgent* agent) const {
+  float score = 0.f;
+  score += (color[0] + color[1] + color[2]) / (255.0 * 3);
+  if (score <= 0.f) return 0.f;
+  
+  score += angleToPoint(point, agent);
+  score += distanceToPoint(point, agent);
+  return score;
+  // return color[0] * _redWeight + color[1] * _greenWeight + color[2] * _blueWeight;
+  // return color[0] + color[1] + color[2];
+  // return color[0];
+}
+
+float AbsoluteHeatmapGoalSelector::distanceToPoint(Vector2 point, const BaseAgent* agent) const {
+  return clip((point - agent->_pos).Length(), 0, 1);
+}
+
+/** The angle to a point from the forward vector
+ * of the agent */
+float AbsoluteHeatmapGoalSelector::angleToPoint(Vector2 point, const BaseAgent* agent) const {
+  Vector2 toPoint = point - agent->_pos;
+  toPoint.normalize();
+  Vector2 agentOrientationNormalized = agent->_orient;
+  agentOrientationNormalized.normalize();
+
+  float dotProduct = toPoint * agentOrientationNormalized;
+  dotProduct = clip(dotProduct, -1.f, 1.f);
+
+  return 1.f - (acosf(dotProduct) / (PI));
+}
+
+float AbsoluteHeatmapGoalSelector::clip(float n, float lower, float upper) const {
+  return std::max(lower, std::min(n, upper));
+}
+
+Menge::BFSM::Goal* AbsoluteHeatmapGoalSelector::computeGoalBasedOnCircleAroundAgent(
+    const Menge::Agents::BaseAgent* agent) const {
   cout << "ExplicitGoalSelector::getGoal()" << endl;
 
   // Vector2 goalPoint = getAbsoluteHeatmap()->pixelToWorld();
@@ -39,7 +146,19 @@ Goal* AbsoluteHeatmapGoalSelector::getGoal(const BaseAgent* agent) const {
     for (int j = 0; j < _absoluteHeatmap->getHeight(); j++) {
       float dist_to_point =
           _absoluteHeatmap->pixelToWorld(Menge::Math::Vector2(i, j)).distanceSq(agent->_pos);
-      if (dist_to_point < 1000.f && dist_to_point > 300.0f) {
+      if (_lookMaxDist > 0.f && _lookMinDist > 0.f) {
+        if (dist_to_point < _lookMaxDist && dist_to_point > _lookMinDist) {
+          _absoluteHeatmap->getValueAt(rgb, i, j);
+          if (rgb[0] > 0) {
+            goalScore = scoreGoal(i, j, agent, rgb);
+            if (highestGoalScore < goalScore) {
+              highestGoalScore = goalScore;
+              x = i;
+              y = j;
+            }
+          }
+        }
+      } else {
         _absoluteHeatmap->getValueAt(rgb, i, j);
         if (rgb[0] > 0) {
           goalScore = scoreGoal(i, j, agent, rgb);
@@ -132,7 +251,8 @@ AbsoluteHeatmapGoalSelectorFactory::AbsoluteHeatmapGoalSelectorFactory() : GoalS
   _scaleID = _attrSet.addFloatAttribute("scale", false /*required*/, 1.f);
   _offsetXID = _attrSet.addFloatAttribute("offset_x", false /*required*/, 0.f);
   _offsetYID = _attrSet.addFloatAttribute("offset_y", false /*required*/, 0.f);
-  _look_radiusID = _attrSet.addFloatAttribute("_look_radius", false /*required*/, -1.f);
+  _lookMinDistID = _attrSet.addFloatAttribute("look_min", false /*required*/, -1.f);
+  _lookMaxDistID = _attrSet.addFloatAttribute("look_max", false /*required*/, -1.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -175,7 +295,8 @@ bool AbsoluteHeatmapGoalSelectorFactory::setFromXML(GoalSelector* selector, TiXm
       Menge::Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID));
 
   // look radius
-  gs->_look_radius = _attrSet.getFloat(_look_radiusID);
+  gs->_lookMinDist = _attrSet.getFloat(_lookMinDistID);
+  gs->_lookMaxDist = _attrSet.getFloat(_lookMaxDistID);
 
   return true;
 }

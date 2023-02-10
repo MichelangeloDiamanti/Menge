@@ -31,6 +31,19 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalSelector : public Menge::BFSM::Goa
 
   Menge::BFSM::Goal* getGoal(const Menge::Agents::BaseAgent* agent) const;
 
+  Menge::BFSM::Goal* computeGoalBasedOnfieldView(const Menge::Agents::BaseAgent* agent) const;
+
+  float scoreRGBColor(Vector2 point, int* color, const Menge::Agents::BaseAgent* agent) const;
+
+  float distanceToPoint(Vector2 point, const Menge::Agents::BaseAgent* agent) const;
+
+  float angleToPoint(Vector2 point, const Menge::Agents::BaseAgent* agent) const;
+
+  float clip(float n, float lower, float upper) const;
+
+  Menge::BFSM::Goal* computeGoalBasedOnCircleAroundAgent(
+      const Menge::Agents::BaseAgent* agent) const;
+
   float scoreGoal(int x, int y, const Menge::Agents::BaseAgent* agent, int* rgb) const;
 
   /*!
@@ -66,11 +79,22 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalSelector : public Menge::BFSM::Goa
    */
   AbsoluteHeatmapPtr _absoluteHeatmap;
 
+  float _visionAngle = 120.0;  // degrees of the vision angle
+  float _visionSampleAngleRate =
+      10.0;                  // each "n" degree the map will be sampled at the vision range distance
+  float _visionRange = 5.0;  // how far the agent sees (world units)
+  
   /*!
-   @brief		how far (ardoun the agent) to look for the goal. If its -1 then the whole
+   @brief		minimum distance to look for the goal. If its -1 then the whole
    map will be scanned.
    */
-  float _look_radius;
+  float _lookMinDist;
+
+  /*!
+   @brief		maximum distance to look for the goal. If its -1 then the whole
+   map will be scanned.
+   */
+  float _lookMaxDist;
 
   /*!
    @brief		how many goals has this selector instantiated
@@ -177,9 +201,13 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalSelectorFactory
   size_t _offsetYID;
 
   /*!
-   @brief		The identifier for the "look_radius" float attribute.
+   @brief		The identifier for the "lookMinDist" float attribute.
    */
-  size_t _look_radiusID;
+  size_t _lookMinDistID;
+  /*!
+   @brief		The identifier for the "lookMaxDist" float attribute.
+   */
+  size_t _lookMaxDistID;
 };
 
 }  // namespace RelativeHeatmap

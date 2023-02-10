@@ -16,7 +16,7 @@
 	</GoalSet>
 	
 	<State name="Walk1" final="0" >
-		<GoalSelector type="absolute_heatmap" goal_set="0" goal="0" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
+		<GoalSelector type="absolute_heatmap" goal_set="0" goal="0" file_name="thingv_visibility_mapping.png" scale="1" offset_x="233" offset_y="445" look_min="2" look_max="10"/>
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
 	<State name="Stop1" final="0">

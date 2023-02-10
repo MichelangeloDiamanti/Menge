@@ -34,7 +34,7 @@ Vector2 AbsoluteHeatmap::worldToPixel(Vector2 worldCoordinate) {
 
   // compute the pixel coordinate, the y grows in the opposite direction
   Vector2 pixelCoordinate = Vector2(scaledWorldCoordinate.x() + _offset.x(),
-                                    _image.height() - scaledWorldCoordinate.y() + _offset.y());
+                                    _image.height() - (scaledWorldCoordinate.y() + _offset.y()));
 
   return pixelCoordinate;
 }
@@ -45,8 +45,8 @@ Vector2 AbsoluteHeatmap::pixelToWorld(Vector2 pixelCoordinate) {
   Vector2 scaledPixelCoordinate = pixelCoordinate * _scale;
 
   // compute the world coordinate, the y grows in the opposite direction
-  Vector2 worldCoordinate = Vector2(scaledPixelCoordinate.x() + _offset.x(),
-                                    _image.height() - scaledPixelCoordinate.y() + _offset.y());
+  Vector2 worldCoordinate = Vector2(scaledPixelCoordinate.x() - _offset.x(),
+                                    _image.height() - (scaledPixelCoordinate.y() - _offset.y()));
 
   return worldCoordinate;
 }
