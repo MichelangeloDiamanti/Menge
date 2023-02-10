@@ -51,8 +51,8 @@ Vector2 AbsoluteHeatmap::pixelToWorld(Vector2 pixelCoordinate) {
   return worldCoordinate;
 }
 
-int* AbsoluteHeatmap::getValueAt(int x, int y) {
-  int* rgb = new int[3]{0, 0, 0};
+void AbsoluteHeatmap::getValueAt(int* rgb, int x, int y) {
+  //int* rgb = new int[3]{0, 0, 0};
 
   if (x >= 0 && y >= 0 && x <= _image.width() && y <= _image.height()) {
     rgb[0] = (int)_image(x, y, 0, 0);
@@ -60,12 +60,13 @@ int* AbsoluteHeatmap::getValueAt(int x, int y) {
     rgb[2] = (int)_image(x, y, 0, 2);
   }
 
-  return rgb;
+  //return rgb;
 }
 
-int* AbsoluteHeatmap::worldToMapColor(Vector2 worldCoordinate) {
+int* AbsoluteHeatmap::worldToMapColor(int* rgb, Vector2 worldCoordinate) {
   Vector2 pixelCoordinate = worldToPixel(worldCoordinate);
-  return getValueAt(pixelCoordinate.x(), pixelCoordinate.y());
+  getValueAt(rgb, pixelCoordinate.x(), pixelCoordinate.y());
+  return rgb;
 }
 
 AbsoluteHeatmapPtr loadAbsoluteHeatmap(const std::string& fileName) throw(

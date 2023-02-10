@@ -48,6 +48,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "RelativeHeatmapModifier.h"
 #include "RelativeHeatmapTransition.h"
 #include "AbsoluteHeatmapGoal.h"
+#include "AbsoluteHeatmapGoalSelector.h"
 
 using Menge::PluginEngine::CorePluginEngine;
 
@@ -83,5 +84,6 @@ RELATIVE_HEATMAP_API void registerCorePlugin(CorePluginEngine* engine) {
   engine->registerVelModFactory(new RelativeHeatmap::AbsoluteHeatmapModifierFactory());
   engine->registerConditionFactory(new RelativeHeatmap::ColorConditionFactory());
   engine->registerGoalFactory(new RelativeHeatmap::AbsoluteHeatmapGoalFactory());
+  engine->registerGoalSelectorFactory(new RelativeHeatmap::AbsoluteHeatmapGoalSelectorFactory());
 }
 }

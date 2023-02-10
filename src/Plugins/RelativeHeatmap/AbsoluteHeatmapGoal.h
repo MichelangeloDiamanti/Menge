@@ -2,6 +2,7 @@
 #define __ABSOLUTE_HEATMAP_GOAL_H__
 
 #include "AbsoluteHeatmap.h"
+#include "MengeCore/BFSM/GoalSet.h"
 #include "MengeCore/BFSM/Goals/Goal.h"
 #include "MengeCore/BFSM/Goals/GoalFactory.h"
 #include "MengeCore/BFSM/fsmCommon.h"
@@ -48,6 +49,12 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoal : public Menge::BFSM::Goal {
    */
   virtual std::string getStringId() const { return NAME; }
 
+  
+  
+  void assign(const Menge::Agents::BaseAgent* agent);
+
+  void free();
+  
   /*!
   @brief		Set the AbsoluteHeatmap data.
   @param		AbsoluteHeatmap		A managed resource pointer to the underlying
@@ -60,7 +67,7 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoal : public Menge::BFSM::Goal {
   /*
       @brief iterates over the heatmap, get the highest value, and return the point as a goal
   */
-  Menge::Math::Vector2 getGoalPosition();
+  Menge::Math::Vector2 getGoalPosition(const Menge::Agents::BaseAgent* agent);
 
   /*! The unique identifier used to register this type with run-time components. */
   static const std::string NAME;
@@ -69,6 +76,11 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoal : public Menge::BFSM::Goal {
    @brief		The underlying AbsoluteHeatmap data.
    */
   AbsoluteHeatmapPtr _absoluteHeatmap;
+  
+  /*!
+   @brief		how far (ardoun the agent) to look for the goal. If its -1 then the whole map will be scanned.
+   */
+  float _look_radius;
 };
 
 /*!
@@ -136,6 +148,11 @@ class RELATIVE_HEATMAP_API AbsoluteHeatmapGoalFactory : public Menge::BFSM::Goal
    */
   size_t _offsetXID;
   size_t _offsetYID;
+
+  /*!
+   @brief		The identifier for the "look_radius" float attribute.
+   */
+  size_t _look_radiusID;
 };
 
 }  // namespace RelativeHeatmap

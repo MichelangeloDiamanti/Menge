@@ -9,7 +9,7 @@
 	<Elevation type="nav_mesh" file_name="simple.nav" />
 
     <OpenSteer max_force="8" leak_through="0.1" reaction_time="0.5" />
-    <Common time_step="0.1"  />
+    <Common time_step="0.01"  />
     <GCF reaction_time="0.5" max_agent_dist="2" max_agent_force="3" agent_interp_width="0.1" agent_force_strength="0.35" />
     <Helbing agent_scale="2000" obstacle_scale="4000" reaction_time="0.5" body_force="1200" friction="2400" force_distance="0.015" />
     <Johansson agent_scale="25" obstacle_scale="35" reaction_time="0.5" force_distance="0.15" stride_time="0.5" />
@@ -44,6 +44,8 @@
 			<Agent p_x="156" p_y="-18" />
 		-->
 			<Agent p_x="69" p_y="-171" />
+
+      <Agent p_x="75" p_y="-171" />
 		</Generator>
 		<!-- -->
     </AgentGroup>

@@ -205,6 +205,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
   <ItemGroup>
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmap.h" />
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoal.h" />
+    <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoalSelector.h" />
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapModifier.h" />
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmap.h" />
     <ClInclude Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapModifier.h" />
@@ -214,6 +215,7 @@ xcopy /y $(TargetPath) $(ExeDir)\plugins\
   <ItemGroup>
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmap.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoal.cpp" />
+    <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapGoalSelector.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\AbsoluteHeatmapModifier.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmap.cpp" />
     <ClCompile Include="..\..\..\src\Plugins\RelativeHeatmap\RelativeHeatmapModifier.cpp" />

@@ -234,12 +234,12 @@ class MENGE_API Goal : public Element {
 
    @param    agent    The agent that has been assigned to this goal.
    */
-  void assign(const Agents::BaseAgent* agent);
+  virtual void assign(const Agents::BaseAgent* agent);
 
   /*!
    @brief    Inform the goal that an assignment has been removed.
    */
-  void free();
+  virtual void free();
 
   /*!
    @brief    Sets the goal's geometry.

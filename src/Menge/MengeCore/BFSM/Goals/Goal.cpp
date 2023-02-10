@@ -43,6 +43,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/fsmCommon.h"
 #include "MengeCore/Math/consts.h"
 
+#include "MengeCore/Agents/BaseAgent.h"
+
 #include <cassert>
 #include <cmath>
 
@@ -82,6 +84,7 @@ bool Goal::hasCapacity() const {
 
 void Goal::assign(const Agents::BaseAgent* agent) {
   _lock.lockWrite();
+  std::cout << "Agent " << agent->_id << " assigned to goal " << _id << std::endl;
   ++_population;
   if (_population > _capacity) throw GoalException();
   if (_population >= _capacity && _goalSet) _goalSet->setGoalFull(this);

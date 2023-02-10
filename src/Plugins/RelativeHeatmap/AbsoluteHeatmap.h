@@ -57,9 +57,9 @@ class AbsoluteHeatmap : public Menge::Resource {
   @param		y y coordinate
   @returns	A pointer to an RGB array.
   */
-  int* getValueAt(int x, int y);
+  void getValueAt(int* rgb, int x, int y);
 
-  int* worldToMapColor(Vector2 worldCoordinate);
+  int* worldToMapColor(int* rgb, Vector2 worldCoordinate);
 
   ///*!
   //@brief		reads the rgb value of the underlying AbsoluteHeatmap at position x,y relative

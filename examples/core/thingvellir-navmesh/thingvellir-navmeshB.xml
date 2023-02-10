@@ -10,18 +10,26 @@
 		-->
 	    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
 	</GoalSet>
+
+	<GoalSet id="1">
+		<Goal type="point" id="0" x="268" y="-147" capacity="100"/>
+	</GoalSet>
 	
 	<State name="Walk1" final="0" >
-		<GoalSelector type="explicit" goal_set="0" goal="0" />
-		<VelComponent type="nav_mesh" heading_threshold="15" file_name="simple.nav" />
+		<GoalSelector type="absolute_heatmap" goal_set="0" goal="0" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
+		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
-	<State name="Stop1" final="1">
+	<State name="Stop1" final="0">
 		<GoalSelector type="identity" />
 		<VelComponent type="zero" />
 	</State>
 
 	<Transition from="Walk1" to="Stop1">
 		<Condition type="goal_reached" distance="0.25" />
+	</Transition>
+
+	<Transition from="Stop1" to="Walk1">
+		<Condition type="timer" per_agent="1" dist="c" value="1" />
 	</Transition>
 	<!-- -->
 </BFSM>

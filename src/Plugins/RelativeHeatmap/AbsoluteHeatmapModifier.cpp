@@ -83,7 +83,8 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
 
     // sample and score a vision point in front of the agent
     Vector2 samplePoint = agent->_pos + dir * _visionRange;
-    int sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+    int* rgb = new int[3]{0, 0, 0}; 
+    int sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(rgb, samplePoint));
 
     // TODO: maybe we want to prefer the direction close to the agent's orientation
     // float angleScore = scoreAngle(agent->_orient, samplePoint);
@@ -97,13 +98,13 @@ void AbsoluteHeatmapModifier::adaptPrefVelocity(const BaseAgent* agent, PrefVelo
     for (float angle = -(_visionAngle / 2); angle < 0; angle = angle + _visionSampleAngleRate) {
       sampleDir = dir.rotate(angle * degToRad);
       samplePoint = agent->_pos + sampleDir * _visionRange;
-      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(rgb, samplePoint));
       sampledPointsScores.insert({sampledPointScore, samplePoint});
     }
     for (float angle = _visionAngle / 2; angle > 0; angle = angle - _visionSampleAngleRate) {
       sampleDir = dir.rotate(angle * degToRad);
       samplePoint = agent->_pos + sampleDir * _visionRange;
-      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(samplePoint));
+      sampledPointScore = scoreRGBColor(_absoluteHeatmap->worldToMapColor(rgb, samplePoint));
       sampledPointsScores.insert({sampledPointScore, samplePoint});
     }
 
