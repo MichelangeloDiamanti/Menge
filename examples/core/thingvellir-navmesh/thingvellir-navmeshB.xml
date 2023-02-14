@@ -6,9 +6,9 @@
 		<Goal type="point" id="0" x="-3" y="5.0"/>
 		<Goal type="point" id="1" x="3" y="5.0"/>
 		<Goal type="AABB" id="2" min_x="-0.5" max_x="0.5" min_y="4.5" max_y="5.5" />
-		<Goal type="point" id="0" x="268" y="-147" capacity="100"/>
-		-->
 	    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
+		-->
+		<Goal type="point" id="42" x="268" y="-147" capacity="100"/>
 	</GoalSet>
 
 	<GoalSet id="1">
@@ -16,7 +16,11 @@
 	</GoalSet>
 	
 	<State name="Walk1" final="0" >
+		<!--		
 		<GoalSelector type="absolute_heatmap" goal_set="0" goal="0" file_name="thingv_visibility_mapping.png" scale="1" offset_x="233" offset_y="445" look_min="2" look_max="10"/>
+		<GoalSelector type="explicit" goal_set="0" goal="42"/>
+		-->
+		<GoalSelector type="external" goal_set="0" goal="42"/>
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
 	<State name="Stop1" final="0">

@@ -258,6 +258,25 @@ MENGE_API bool GetObstacleP1(size_t i, float* x1, float* y1, float* z1);
 
 
 MENGE_API int TestNewFunction();
+
+/*!
+ @brief   Reports the id of the goal the indicated agent is currently in.
+
+ @param[in]   i         The index of the desired agent.
+ @param[out]  state_id  The id of the goal the agent is currently in.
+ @returns     True if the values were successfully set.
+ */
+MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id);
+
+/*!
+ @brief   Reports the id of the goal the indicated agent is currently in.
+
+ @param[in]   i         The index of the desired agent.
+ @returns     True if the values were successfully set.
+ */
+MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y);
+
+
 }
 
 #endif  // __MENGE_C_API__

@@ -7,10 +7,15 @@
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"
 #include "MengeCore/BFSM/FSM.h"
+#include "MengeCore/BFSM/GoalSelectors/GoalSelector.h";
+#include "MengeCore/BFSM/GoalSelectors/GoalSelectorExternal.h";
+#include "MengeCore/BFSM/Goals/Goal.h";
+#include "MengeCore/BFSM/Goals/GoalPoint.h";
 #include "MengeCore/BFSM/State.h"
 #include "MengeCore/Core.h"
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 #include "MengeCore/Runtime/SimulatorDB.h"
+//#include "Plugins/RelativeHeatmap/ExternalGoalSelector.h"
 
 /////////////////////////////////////////////////////////////////////
 //          Local Variables
@@ -37,7 +42,7 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
   // if (_simulator != 0x0) delete _simulator;
   Menge::SimulatorDB simDB;
   // TODO: Plugin engine is *not* public.  I can't get plugins.
-  //if (_engine != 0x0) delete _engine;
+  // if (_engine != 0x0) delete _engine;
   _engine = new Menge::PluginEngine::CorePluginEngine(&simDB);
   if (pluginPath != 0x0) {
     _engine->loadPlugins(pluginPath);
@@ -56,6 +61,8 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
                                         sceneFile, outFile, scbVersion, verbose);
   return _simulator != 0x0;
 }
+
+/////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
 
@@ -290,5 +297,46 @@ bool GetObstacleP1(size_t i, float* x1, float* y1, float* z1) {
   return true;
 }
 
+/////////////////////////////////////////////////////////////////////
+
 MENGE_API int TestNewFunction() { return 44; }
+
+/////////////////////////////////////////////////////////////////////
+
+MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id) {
+  assert(_simulator != nullptr);
+  Menge::Agents::BaseAgent* agt = _simulator->getAgent(i);
+  if (agt != nullptr) {
+    const auto* bfsm = _simulator->getBFSM();
+    *goal_id = bfsm->getCurrentState(agt)->getGoalSelector()->getGoal(agt)->getID();
+
+    return true;
+  }
+  return false;
+}
+
+MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y) {
+  assert(_simulator != nullptr);
+  
+  bool res = false;
+  
+  Menge::Agents::BaseAgent* agt = _simulator->getAgent(agentId);
+  if (agt != nullptr) {
+    const auto* bfsm = _simulator->getBFSM();
+    Menge::BFSM::GoalSelector* selector = bfsm->getCurrentState(agt)->getGoalSelector();
+    Menge::BFSM::ExternalGoalSelector* gs =
+        dynamic_cast<Menge::BFSM::ExternalGoalSelector*>(selector);
+    //assert(gs != 0x0 &&
+    //       "Trying to cast an incompatible object to ExternalGoalSelector.");
+
+    if (gs != 0x0) {
+      gs->freeGoal(agt, gs->getGoal(agt));
+      res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y)); 
+      gs->assignGoal(agt);
+    }
+
+  }
+  return res;
+}
+
 }  // extern"C"

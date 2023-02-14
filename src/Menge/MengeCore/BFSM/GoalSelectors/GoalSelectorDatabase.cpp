@@ -50,6 +50,8 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/BFSM/GoalSelectors/GoalSelectorShared.h"
 #include "MengeCore/BFSM/GoalSelectors/GoalSelectorWeighted.h"
 
+#include "MengeCore/BFSM/GoalSelectors/GoalSelectorExternal.h"
+
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 namespace Menge {
@@ -73,6 +75,8 @@ void ElementDB<BFSM::GoalSelectorFactory, BFSM::GoalSelector>::addBuiltins() {
   addFactory(new BFSM::NearestNMGoalSelectorFactory());
   addFactory(new BFSM::FarthestNMGoalSelectorFactory());
   addFactory(new BFSM::SharedGoalSelectorFactory());
+
+  addFactory(new BFSM::ExternalGoalSelectorFactory());
 }
 }  // namespace Menge
 
