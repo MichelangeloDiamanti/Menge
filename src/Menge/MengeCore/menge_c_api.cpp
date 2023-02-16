@@ -15,7 +15,7 @@
 #include "MengeCore/Core.h"
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 #include "MengeCore/Runtime/SimulatorDB.h"
-//#include "Plugins/RelativeHeatmap/ExternalGoalSelector.h"
+// #include "Plugins/RelativeHeatmap/ExternalGoalSelector.h"
 
 /////////////////////////////////////////////////////////////////////
 //          Local Variables
@@ -317,24 +317,43 @@ MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id) {
 
 MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y) {
   assert(_simulator != nullptr);
-  
+
   bool res = false;
-  
+
   Menge::Agents::BaseAgent* agt = _simulator->getAgent(agentId);
   if (agt != nullptr) {
     const auto* bfsm = _simulator->getBFSM();
     Menge::BFSM::GoalSelector* selector = bfsm->getCurrentState(agt)->getGoalSelector();
     Menge::BFSM::ExternalGoalSelector* gs =
         dynamic_cast<Menge::BFSM::ExternalGoalSelector*>(selector);
-    //assert(gs != 0x0 &&
-    //       "Trying to cast an incompatible object to ExternalGoalSelector.");
+    // assert(gs != 0x0 &&
+    //        "Trying to cast an incompatible object to ExternalGoalSelector.");
 
     if (gs != 0x0) {
       gs->freeGoal(agt, gs->getGoal(agt));
-      res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y)); 
+      res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
       gs->assignGoal(agt);
     }
+  }
+  return res;
+}
 
+MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, float x, float y) {
+  assert(_simulator != nullptr);
+  bool res = false;
+  const auto* bfsm = _simulator->getBFSM();
+  if (bfsm != nullptr) {
+    Menge::BFSM::GoalSelector* selector = bfsm->getState(stateName)->getGoalSelector();
+    Menge::BFSM::ExternalGoalSelector* gs =
+        dynamic_cast<Menge::BFSM::ExternalGoalSelector*>(selector);
+
+    Menge::Agents::BaseAgent* agt = _simulator->getAgent(agentId);
+
+    if (gs != 0x0 && agt != 0x0) {
+      //gs->freeGoal(agt, gs->getGoal(agt));
+      res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
+      //gs->assignGoal(agt);
+    }
   }
   return res;
 }

@@ -276,6 +276,13 @@ MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id);
  */
 MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y);
 
+/*!
+ @brief   Reports the id of the goal the indicated agent is currently in.
+
+ @param[in]   i         The index of the desired agent.
+ @returns     True if the values were successfully set.
+ */
+MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, float x, float y);
 
 }
 

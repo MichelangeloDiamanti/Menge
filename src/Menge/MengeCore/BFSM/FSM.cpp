@@ -240,6 +240,16 @@ void FSM::setCurrentState(Agents::BaseAgent* agent, size_t currNode) {
 
 State* FSM::getCurrentState(const Agents::BaseAgent* agt) const { return _currNode[agt->_id]; }
 
+State* FSM::getState(const char* stateName) const {
+  // iterate the nodes and return the one with the matching name
+  for (size_t i = 0; i < _nodes.size(); ++i) {
+    if (_nodes[i]->getName() == stateName) {
+      return _nodes[i];
+    }
+  }
+  return 0x0;
+}
+
 /////////////////////////////////////////////////////////////////////
 
 size_t FSM::getAgentStateID(const Agents::BaseAgent* agent) const {

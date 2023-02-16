@@ -261,6 +261,14 @@ class MENGE_API FSM {
   State* getCurrentState(const Agents::BaseAgent* agt) const;
 
   /*!
+   @brief    Gets a pointer to the state with a name matching the input.
+
+   @param    stateName      The name of the state to retrieve.
+   @returns  A pointer to the matching state.
+   */
+  State* getState(const char* stateName) const;
+
+  /*!
    @brief    Reports the state the given agent is currently in.
 
    @param    agent    A pointer to the agent whose state id is returned.
