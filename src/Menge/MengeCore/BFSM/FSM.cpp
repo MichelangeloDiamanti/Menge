@@ -132,6 +132,8 @@ void FSM::advance(Agents::BaseAgent* agent) {
   // Evaluate the current state's transitions
   State* newNode = _currNode[ID]->testTransitions(agent);
   if (newNode) {
+    if (agentChangedStateCallbackFunction != 0x0)
+      agentChangedStateCallbackFunction(agent->_id);
     _currNode[ID] = newNode;
   }
 }

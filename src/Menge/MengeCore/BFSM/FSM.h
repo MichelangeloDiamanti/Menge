@@ -27,13 +27,13 @@
 // Finite-state machine used to compute preferred velocity
 //  according to varying conditions
 
-#include "MengeCore/BFSM/FSMDescrip.h"
-#include "MengeCore/BFSM/fsmCommon.h"
-#include "MengeCore/MengeException.h"
-
 #include <cassert>
 #include <map>
 #include <vector>
+
+#include "MengeCore/BFSM/FSMDescrip.h"
+#include "MengeCore/BFSM/fsmCommon.h"
+#include "MengeCore/MengeException.h"
 #ifndef _MSC_VER
 #include <string.h>
 #endif
@@ -98,7 +98,7 @@ class FSMFatalException : public FSMException, public MengeFatalException {
 };
 
 /////////////////////////////////////////////////////////////////////
-
+typedef void (*AgentChangedStateCallback)(int agentId);
 /*!
  @brief    Templated class for the behavior finite state machine.
  */
@@ -344,6 +344,9 @@ class MENGE_API FSM {
   void addVelModifier(VelModifier* v) { _velModifiers.push_back(v); }
 
   friend FSM* buildFSM(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim, bool VERBOSE);
+
+  //typedef void (*AgentChangedStateCallback)(int agentId);
+  AgentChangedStateCallback agentChangedStateCallbackFunction = 0x0;
 
  protected:
   /*!

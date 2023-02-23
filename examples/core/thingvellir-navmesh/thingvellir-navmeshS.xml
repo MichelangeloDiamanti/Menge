@@ -31,7 +31,7 @@
 
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
-		<StateSelector type="const" name="Stop1" />
+		<StateSelector type="const" name="Wait1" />
 		<Generator type="explicit" >
 		<!--
 			<Agent p_x="-0.55" p_y="4.0"/>

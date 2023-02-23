@@ -64,6 +64,12 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
 
 /////////////////////////////////////////////////////////////////////
 
+void SubscribeToAgentChangedStateEvent(
+    Menge::BFSM::AgentChangedStateCallback agentChangedStateCallbackFunction) {
+  Menge::BFSM::FSM* bfsm = _simulator->getBFSM();
+  bfsm->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
+}
+
 /////////////////////////////////////////////////////////////////////
 
 size_t UnloadPlugins() {
@@ -82,6 +88,7 @@ void SetTimeStep(float timeStep) {
 
 bool DoStep() {
   assert(_simulator != 0x0);
+  //if (gCBF != 0x0) gCBF();
   return _simulator->step();
 }
 
@@ -350,9 +357,9 @@ MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, 
     Menge::Agents::BaseAgent* agt = _simulator->getAgent(agentId);
 
     if (gs != 0x0 && agt != 0x0) {
-      //gs->freeGoal(agt, gs->getGoal(agt));
+      // gs->freeGoal(agt, gs->getGoal(agt));
       res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
-      //gs->assignGoal(agt);
+      // gs->assignGoal(agt);
     }
   }
   return res;

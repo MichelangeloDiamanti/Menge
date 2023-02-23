@@ -25,6 +25,8 @@
 #define __MENGE_C_API__
 
 #include "MengeCore/CoreConfig.h"
+#include "MengeCore/BFSM/FSM.h"
+//#include <string>
 #ifndef _WIN32
 #include <cstddef>
 #endif
@@ -48,6 +50,12 @@ extern "C" {
  */
 MENGE_API bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                              const char* pluginPath = 0x0);
+
+//typedef void (*AgentChangedStateCallback)(int agentId);
+// callback_function gCBF = 0x0;
+
+MENGE_API void SubscribeToAgentChangedStateEvent(
+    Menge::BFSM::AgentChangedStateCallback agentChangedStateCallbackFunction);
 
 /*!
  @brief    Unloads the plugins from the simulator.
@@ -212,7 +220,7 @@ MENGE_API size_t ObstacleCount();
 
 /*!
  @brief   Given the index of one obstacle, reports the index of the next obstacle in the loop.
- 
+
  @param   i   The index of the query obstacle.
  @returns The index of the obstacle's whose point p0 is the same as this obstacles p1.
  */
@@ -256,7 +264,6 @@ MENGE_API bool GetObstacleP0(size_t i, float* x0, float* y0, float* z0);
  */
 MENGE_API bool GetObstacleP1(size_t i, float* x1, float* y1, float* z1);
 
-
 MENGE_API int TestNewFunction();
 
 /*!
@@ -283,7 +290,6 @@ MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y);
  @returns     True if the values were successfully set.
  */
 MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, float x, float y);
-
 }
 
 #endif  // __MENGE_C_API__
