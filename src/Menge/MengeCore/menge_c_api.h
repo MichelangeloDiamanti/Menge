@@ -275,6 +275,10 @@ MENGE_API int TestNewFunction();
  */
 MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id);
 
+/*
+*/
+MENGE_API bool IsStateGoalSelectorExternal(const char* stateName);
+
 /*!
  @brief   Reports the id of the goal the indicated agent is currently in.
 

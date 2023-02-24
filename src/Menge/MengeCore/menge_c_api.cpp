@@ -322,6 +322,28 @@ MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id) {
   return false;
 }
 
+MENGE_API bool IsStateGoalSelectorExternal(const char* stateName) {
+  assert(_simulator != nullptr);
+
+  bool res = false;
+  const auto* bfsm = _simulator->getBFSM();
+
+  Menge::BFSM::State* s = bfsm->getState(stateName);
+  if (s != 0x0) {
+    Menge::BFSM::GoalSelector* selector = s->getGoalSelector();
+
+    if (selector != 0x0) {
+      // try casting to ExternalGoalSelector. If it works, the goal selector is external
+      Menge::BFSM::ExternalGoalSelector* gs =
+          dynamic_cast<Menge::BFSM::ExternalGoalSelector*>(selector);
+
+      if (gs != 0x0) res = true;
+    }
+  }
+
+  return res;
+}
+
 MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y) {
   assert(_simulator != nullptr);
 
