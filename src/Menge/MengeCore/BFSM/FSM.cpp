@@ -133,7 +133,7 @@ void FSM::advance(Agents::BaseAgent* agent) {
   State* newNode = _currNode[ID]->testTransitions(agent);
   if (newNode) {
     if (agentChangedStateCallbackFunction != 0x0)
-      agentChangedStateCallbackFunction(agent->_id);
+      agentChangedStateCallbackFunction(agent->_id, newNode->getName().c_str());
     _currNode[ID] = newNode;
   }
 }

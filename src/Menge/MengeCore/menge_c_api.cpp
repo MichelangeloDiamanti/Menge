@@ -88,7 +88,7 @@ void SetTimeStep(float timeStep) {
 
 bool DoStep() {
   assert(_simulator != 0x0);
-  //if (gCBF != 0x0) gCBF();
+  // if (gCBF != 0x0) gCBF();
   return _simulator->step();
 }
 
@@ -348,8 +348,9 @@ MENGE_API bool SetAgentPointGoal(size_t agentId, float x, float y) {
 MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, float x, float y) {
   assert(_simulator != nullptr);
   bool res = false;
-  const auto* bfsm = _simulator->getBFSM();
+  Menge::BFSM::FSM* bfsm = _simulator->getBFSM();
   if (bfsm != nullptr) {
+    Menge::BFSM::State* state = bfsm->getState(stateName);
     Menge::BFSM::GoalSelector* selector = bfsm->getState(stateName)->getGoalSelector();
     Menge::BFSM::ExternalGoalSelector* gs =
         dynamic_cast<Menge::BFSM::ExternalGoalSelector*>(selector);
@@ -357,9 +358,9 @@ MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, 
     Menge::Agents::BaseAgent* agt = _simulator->getAgent(agentId);
 
     if (gs != 0x0 && agt != 0x0) {
-      // gs->freeGoal(agt, gs->getGoal(agt));
       res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
-      // gs->assignGoal(agt);
+      // calling the enter allows the stateselctor to assign the goal
+      state->enter(agt);
     }
   }
   return res;
