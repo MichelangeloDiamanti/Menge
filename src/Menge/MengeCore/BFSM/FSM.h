@@ -98,7 +98,7 @@ class FSMFatalException : public FSMException, public MengeFatalException {
 };
 
 /////////////////////////////////////////////////////////////////////
-typedef void (*AgentChangedStateCallback)(int agentId, const char* stateName);
+typedef void(__stdcall * AgentChangedStateCallback)(int agentId, const char* stateName);
 /*!
  @brief    Templated class for the behavior finite state machine.
  */
