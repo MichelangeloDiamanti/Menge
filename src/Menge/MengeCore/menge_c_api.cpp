@@ -67,7 +67,12 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
 void SubscribeToAgentChangedStateEvent(
     Menge::BFSM::AgentChangedStateCallback agentChangedStateCallbackFunction) {
   Menge::BFSM::FSM* bfsm = _simulator->getBFSM();
-  bfsm->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
+  //bfsm->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
+  //  iterates the nodes of the FSM
+  for (size_t i = 0; i < bfsm->getNodeCount(); i++) {
+    Menge::BFSM::State* state = bfsm->getNode(i);
+    state->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -382,7 +387,7 @@ MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, 
     if (gs != 0x0 && agt != 0x0) {
       res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
       // calling the enter allows the stateselctor to assign the goal
-      state->enter(agt);
+      //state->enter(agt);
     }
   }
   return res;

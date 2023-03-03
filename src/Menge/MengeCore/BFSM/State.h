@@ -24,6 +24,10 @@
 #ifndef __FSMNODE_H__
 #define __FSMNODE_H__
 
+#include <cassert>
+#include <set>
+#include <vector>
+
 #include "MengeCore/Agents/PrefVelocity.h"
 #include "MengeCore/BFSM/Actions/Action.h"
 #include "MengeCore/BFSM/FSMEnumeration.h"
@@ -32,10 +36,6 @@
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
 #include "MengeCore/MengeException.h"
 #include "MengeCore/Runtime/ReadersWriterLock.h"
-
-#include <cassert>
-#include <set>
-#include <vector>
 
 namespace Menge {
 
@@ -82,6 +82,10 @@ class StateFatalException : public StateException, public MengeFatalException {
   StateFatalException(const std::string& s)
       : MengeException(s), StateException(), MengeFatalException() {}
 };
+
+///////////////////////////////////////////////////////////////////
+
+typedef void(__stdcall* AgentChangedStateCallback)(int agentId, const char* stateName);
 
 ///////////////////////////////////////////////////////////////////
 
@@ -139,7 +143,7 @@ class State {
   void getPrefVelocity(Agents::BaseAgent* agent, Agents::PrefVelocity& velocity);
 
   /*!
-   @brief   Attempts to update `this` State's velocity component for the given `agent` (e.g., 
+   @brief   Attempts to update `this` State's velocity component for the given `agent` (e.g.,
             `agent` is following a moving goal).
    */
   void updateVelCompForMovingGoals(Agents::BaseAgent* agent);
@@ -285,6 +289,8 @@ class State {
    */
   const Goal* getGoal(size_t goalId) { return _goals[goalId]; }
 
+  AgentChangedStateCallback agentChangedStateCallbackFunction = 0x0;
+
  protected:
   /*!
    @brief    Test the transitions out of this state, tracking cycles.
@@ -306,14 +312,14 @@ class State {
 
   /*!
    @brief    A priority-ordered list of transitions to determine if the state changes.
-   
+
    The order of the transitions in the implicitly defines the testing priority.
    */
   std::vector<Transition*> transitions_;
 
   /*!
    @brief    A priority-ordered list of velocity modifiers to determine if the state changes.
-   
+
    The order of the modifierss in the implicitly defines the testing priority.
    */
   std::vector<VelModifier*> velModifiers_;

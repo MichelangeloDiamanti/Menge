@@ -98,7 +98,7 @@ class FSMFatalException : public FSMException, public MengeFatalException {
 };
 
 /////////////////////////////////////////////////////////////////////
-typedef void(__stdcall * AgentChangedStateCallback)(int agentId, const char* stateName);
+//typedef void(__stdcall * AgentChangedStateCallback)(int agentId, const char* stateName);
 /*!
  @brief    Templated class for the behavior finite state machine.
  */
@@ -346,7 +346,7 @@ class MENGE_API FSM {
   friend FSM* buildFSM(FSMDescrip& fsmDescrip, Agents::SimulatorInterface* sim, bool VERBOSE);
 
   //typedef void (*AgentChangedStateCallback)(int agentId);
-  AgentChangedStateCallback agentChangedStateCallbackFunction = 0x0;
+  //AgentChangedStateCallback agentChangedStateCallbackFunction = 0x0;
 
  protected:
   /*!

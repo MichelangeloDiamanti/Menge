@@ -167,6 +167,10 @@ State* State::testTransitions(Agents::BaseAgent* agent, std::set<State*>& visite
     State* next = transitions_[i]->test(agent, goal);
     if (next) {
       leave(agent);  // a transition has come back true, leaving this state
+      
+      if (agentChangedStateCallbackFunction != 0x0)
+        agentChangedStateCallbackFunction(agent->_id, next->getName().c_str());
+      
       next->enter(agent);
       State* test = next->testTransitions(agent, visited);
       if (test) {

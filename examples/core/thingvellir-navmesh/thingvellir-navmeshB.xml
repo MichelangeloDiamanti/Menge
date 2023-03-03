@@ -2,44 +2,34 @@
 
 <BFSM>
 	<GoalSet id="0">
-		<!--
-		<Goal type="point" id="0" x="-3" y="5.0"/>
-		<Goal type="point" id="1" x="3" y="5.0"/>
-		<Goal type="AABB" id="2" min_x="-0.5" max_x="0.5" min_y="4.5" max_y="5.5" />
-	    <Goal type="heatmap" id="0" capacity="2147483647" weight="1" file_name="thingv_visibility_mapping.png" scale="1" offset_x="-233" offset_y="-445"/>
-		-->
-		<Goal type="point" id="42" x="268" y="-147" capacity="100"/>
+		<Goal type="point" id="42" x="670" y="1036" capacity="100"/>
 	</GoalSet>
 
-	<GoalSet id="1">
-		<Goal type="point" id="0" x="268" y="-147" capacity="100"/>
-	</GoalSet>
-
-	<State name="Wait1" final="0">
-		<GoalSelector type="identity" />
-		<VelComponent type="zero" />
+	<State name="Goal" final="0">
+		<GoalSelector type="explicit" goal_set="0" goal="42" />
+		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
-	
-	<State name="Walk1" final="0" >
-		<!--		
-		<GoalSelector type="absolute_heatmap" goal_set="0" goal="0" file_name="thingv_visibility_mapping.png" scale="1" offset_x="233" offset_y="445" look_min="2" look_max="10"/>
-		<GoalSelector type="explicit" goal_set="0" goal="42"/>
-		-->
+
+	<State name="Visibility" final="0" >
 		<GoalSelector type="external" goal_set="0" goal="42"/>
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
 
-	<State name="Stop1" final="0">
+	<State name="Stop" final="0">
 		<GoalSelector type="identity" />
 		<VelComponent type="zero" />
 	</State>
 	
 
-	<Transition from="Wait1" to="Walk1">
-		<Condition type="timer" per_agent="1" dist="c" value="1" />
+	<Transition from="Goal" to="Visibility">
+		<Condition type="timer" per_agent="1" dist="c" value="10" />
 	</Transition>
 
-	<Transition from="Walk1" to="Stop1">
+	<Transition from="Visibility" to="Goal">
+		<Condition type="goal_reached" distance="0.25" />
+	</Transition>
+
+	<Transition from="Goal" to="Stop">
 		<Condition type="goal_reached" distance="0.25" />
 	</Transition>
 

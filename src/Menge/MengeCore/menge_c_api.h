@@ -26,7 +26,8 @@
 
 #include "MengeCore/CoreConfig.h"
 #include "MengeCore/BFSM/FSM.h"
-//#include <string>
+#include "MengeCore/BFSM/State.h"
+ //#include <string>
 #ifndef _WIN32
 #include <cstddef>
 #endif

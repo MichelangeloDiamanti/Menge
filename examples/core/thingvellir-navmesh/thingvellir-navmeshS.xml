@@ -31,7 +31,7 @@
 
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
-		<StateSelector type="const" name="Wait1" />
+		<StateSelector type="const" name="Goal" />
 		<Generator type="explicit" >
 		<!--
 			<Agent p_x="-0.55" p_y="4.0"/>
@@ -45,7 +45,7 @@
 		-->
 			<Agent p_x="69" p_y="-171" />
 
-      <Agent p_x="75" p_y="-171" />
+	        <Agent p_x="302" p_y="-146" />
 		</Generator>
 		<!-- -->
     </AgentGroup>
