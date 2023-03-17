@@ -23,11 +23,9 @@
  @file       SimXMLLoader.h
  @brief      Contains functionality for parsing simulation specifcation from an XML file.
  */
-
+#include "MengeCore/Agents/AgentGenerators/RuntimeAgentGenerator.h"
 #include "MengeCore/mengeCommon.h"
-
 #include "tinyxml/tinyxml.h"
-
 #include <string>
 
 namespace Menge {

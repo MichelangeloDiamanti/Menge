@@ -38,6 +38,10 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/Agents/SimXMLLoader.h"
 
+#include <iostream>
+#include <list>
+#include <vector>
+
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
 #include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/BaseAgent.h"
@@ -50,10 +54,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/XMLSimulatorBase.h"
 #include "MengeCore/Core.h"
 #include "MengeCore/Runtime/os.h"
-
-#include <iostream>
-#include <list>
-#include <vector>
 
 namespace Menge {
 
@@ -313,21 +313,20 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
       }
       stateSel = StateSelectorDB::getInstance(child, _sceneFldr);
       if (stateSel == 0x0) {
-        logger << Logger::ERR_MSG
-               << "Unable to instantiate the state selector specification line "
+        logger << Logger::ERR_MSG << "Unable to instantiate the state selector specification line "
                << child->Row() << ".";
         return false;
       }
     }
   }
   if (profileSel == 0x0) {
-    logger << Logger::ERR_MSG
-           << "No profile selector defined for the AgentGroup on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "No profile selector defined for the AgentGroup on line "
+           << node->Row() << ".";
     return false;
   }
   if (stateSel == 0x0) {
-    logger << Logger::ERR_MSG
-           << "No state selector defined for the AgentGroup on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "No state selector defined for the AgentGroup on line "
+           << node->Row() << ".";
     return false;
   }
 
@@ -337,22 +336,35 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
       AgentGenerator* generator = AgentGeneratorDB::getInstance(child, _sceneFldr);
 
       if (generator == 0x0) {
-        logger << Logger::ERR_MSG
-               << "Unable to instantiate agent generator specifcation on line "
+        logger << Logger::ERR_MSG << "Unable to instantiate agent generator specifcation on line "
                << child->Row() << ".";
         return false;
       }
-      // Now instantiate the agents
-      const size_t AGT_COUNT = generator->agentCount();
-      Vector2 zero;
-      for (size_t i = 0; i < AGT_COUNT; ++i) {
-        BaseAgent* agent = _sim->addAgent(zero, profileSel->getProfile());
-        generator->setAgentPosition(i, agent);
-        _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
-      }
-      _agtCount += (unsigned int)AGT_COUNT;
 
-      generator->destroy();
+      // check if the generator is a runtime generator
+      RuntimeAgentGenerator* runtimeGenerator = dynamic_cast<RuntimeAgentGenerator*>(generator);
+
+      if (runtimeGenerator) {
+        // The generator implements the RuntimeAgentGenerator interface
+        // You can now save the runtimeGenerator
+        runtimeGenerator->setAgentProfile(profileSel);
+        _sim->addRuntimeAgentGenerator(runtimeGenerator);
+      
+      } else {
+        // The generator does not implement the RuntimeAgentGenerator interface
+      
+        // Now instantiate the agents
+        const size_t AGT_COUNT = generator->agentCount();
+        Vector2 zero;
+        for (size_t i = 0; i < AGT_COUNT; ++i) {
+          BaseAgent* agent = _sim->addAgent(zero, profileSel->getProfile());
+          generator->setAgentPosition(i, agent);
+          _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
+        }
+        _agtCount += (unsigned int)AGT_COUNT;
+
+        generator->destroy();
+      }
     }
   }
 
@@ -365,8 +377,8 @@ bool SimXMLLoader::parseObstacleSet(TiXmlElement* node) {
   // pass through, try to get a generator, and then use it
   ObstacleSet* obSet = ObstacleSetDB::getInstance(node, _sceneFldr);
   if (obSet == 0x0) {
-    logger << Logger::ERR_MSG
-           << "Unable to instantiate obstacle set specifcation on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "Unable to instantiate obstacle set specifcation on line "
+           << node->Row() << ".";
     return false;
   } else {
     //_sim->setSpatialQuery( spQuery );

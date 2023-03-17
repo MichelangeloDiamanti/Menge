@@ -29,10 +29,11 @@
 #ifndef __XML_SIMULATOR_BASE__
 #define __XML_SIMULATOR_BASE__
 
+#include <vector>
+
 #include "MengeCore/Agents/SimXMLLoader.h"
 #include "MengeCore/mengeCommon.h"
-
-#include <vector>
+#include "MengeCore/Agents/AgentGenerators/RuntimeAgentGenerator.h"
 
 namespace Menge {
 
@@ -146,6 +147,15 @@ class MENGE_API XMLSimulatorBase {
    */
   virtual bool setExpParam(const std::string& paramName,
                            const std::string& value) throw(XMLParamException) = 0;
+
+  /*!
+   @brief    Add a runtime agent generator which will then be used to generate agents at runtime
+   based on a schedule
+
+   @param    gen          generator to add.
+   @returns  A pointer to the agent (if initialization was succesful) or NULL if failed.
+   */
+  virtual void addRuntimeAgentGenerator(RuntimeAgentGenerator* gen) = 0;
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by

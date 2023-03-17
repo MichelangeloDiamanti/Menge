@@ -25,14 +25,16 @@
             types of agents. It is templated on the Agent type.
  */
 
+#include <map>
+#include <vector>
+
+#include "MengeCore/Agents/AgentGenerators/RuntimeAgentGenerator.h"
 #include "MengeCore/Agents/AgentInitializer.h"
-#include "MengeCore/Agents/AgentGenerators/AgentGenerator.h"
+#include "MengeCore/Agents/ProfileSelectors/ProfileSelectorDatabase.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"
 #include "MengeCore/Runtime/Utils.h"
 #include "MengeCore/mengeCommon.h"
-
-#include <vector>
 
 #if HAVE_OPENMP || _OPENMP
 #include <omp.h>
@@ -102,14 +104,13 @@ class SimulatorBase : public SimulatorInterface {
   virtual const BaseAgent* getAgent(size_t agentNo) const { return &_agents[agentNo]; }
 
   /*!
-   @brief    Add an agent generator to the simulator.
+   @brief    Add a runtime agent generator which will then be used to generate agents at runtime
+   based on a schedule
 
-   The agent generator is responsible for generating agents during the simulation based on the
-   defined configuration.
-
-   @param    generator    The AgentGenerator to be added to the simulator.
+   @param    gen          generator to add.
+   @returns  A pointer to the agent (if initialization was succesful) or NULL if failed.
    */
-  void addAgentGenerator(AgentGenerator* generator);
+  virtual void addRuntimeAgentGenerator(RuntimeAgentGenerator* gen);
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by
@@ -160,6 +161,8 @@ class SimulatorBase : public SimulatorInterface {
                            const std::string& value) throw(XMLParamException);
 
  protected:
+  void spawnDynamicAgents();
+
   /*!
    @brief    Computes the neighbors for the given agent.
 
@@ -167,13 +170,12 @@ class SimulatorBase : public SimulatorInterface {
    */
   void computeNeighbors(Agent* agent);
 
+  std::vector<RuntimeAgentGenerator*> _runtimeAgentGenerators;
+
   /*!
    @brief    The collection of agents in the simulation
    */
   std::vector<Agent> _agents;
-
-  // Add a data member for storing agent generators
-  std::vector<AgentGenerator*> _agentGenerators;
 };
 
 ////////////////////////////////////////////////////////////////
@@ -196,16 +198,7 @@ template <class Agent>
 void SimulatorBase<Agent>::doStep() {
   assert(_spatialQuery != 0x0 && "Can't run without a spatial query instance defined");
 
-  //// Generate agents using agent generators
-  //for (AgentGenerator* generator : _agentGenerators) {
-  //  if (generator->shouldGenerate(_globalTime)) {
-  //    Vector2 pos;
-  //    AgentInitializer* agentInit;
-  //    if (generator->generateAgent(pos, agentInit)) {
-  //      addAgent(pos, agentInit);
-  //    }
-  //  }
-  //}
+  spawnDynamicAgents();
 
   _spatialQuery->updateAgents();
   int AGT_COUNT = static_cast<int>(_agents.size());
@@ -256,8 +249,25 @@ void SimulatorBase<Agent>::finalize() {
 ////////////////////////////////////////////////////////////////
 
 template <class Agent>
-void SimulatorBase<Agent>::addAgentGenerator(AgentGenerator* generator) {
-  _agentGenerators.push_back(generator);
+void SimulatorBase<Agent>::spawnDynamicAgents() {
+  for (RuntimeAgentGenerator* generator : _runtimeAgentGenerators) {
+    size_t count;
+    if (generator->shouldSpawn(_globalTime, count)) {
+      Vector2 zero;
+      for (size_t i = 0; i < count; ++i) {
+        BaseAgent* agent = addAgent(zero, generator->getAgentProfile()->getProfile());
+        generator->setAgentPosition(i, agent);
+        // getInitialState()->setAgentState(agent->_id, stateSel->getState());
+      }
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////
+
+template <class Agent>
+void addRuntimeAgentGenerator(RuntimeAgentGenerator* gen) {
+  _runtimeAgentGenerators.push_back(gen);
 }
 
 ////////////////////////////////////////////////////////////////

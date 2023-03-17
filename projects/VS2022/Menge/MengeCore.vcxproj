@@ -367,6 +367,7 @@ xcopy /y $(TargetPath) $(ExeDir)
     <ClCompile Include="$(SrcDir)\MengeCore\Agents\Events\change_state_effect.cpp" />
     <ClCompile Include="$(SrcDir)\MengeCore\Agents\Events\state_population_trigger.cpp" />
     <ClCompile Include="$(SrcDir)\MengeCore\BFSM\Goals\GoalPath.cpp" />
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\TimedAgentGenerator.cpp" />
     <ClCompile Include="GoalSelectorExternal.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -573,6 +574,8 @@ xcopy /y $(TargetPath) $(ExeDir)
     <ClInclude Include="$(SrcDir)\MengeCore\Agents\Events\change_state_effect.h" />
     <ClInclude Include="$(SrcDir)\MengeCore\Agents\Events\state_population_trigger.h" />
     <ClInclude Include="$(SrcDir)\MengeCore\BFSM\Goals\GoalPath.h" />
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\RuntimeAgentGenerator.h" />
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\TimedAgentGenerator.h" />
     <ClInclude Include="..\..\..\src\Menge\MengeCore\BFSM\GoalSelectors\GoalSelectorExternal.h" />
   </ItemGroup>
   <ItemGroup>
