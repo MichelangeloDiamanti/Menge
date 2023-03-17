@@ -2,16 +2,23 @@
 
 <BFSM>
 	<GoalSet id="0">
-		<Goal type="point" id="42" x="670" y="1036" capacity="100"/>
+		<Goal type="point" id="1" x="669" y="1038" capacity="100"/>
+		<Goal type="point" id="2" x="440" y="478" capacity="100"/>
+		<Goal type="point" id="3" x="391" y="291" capacity="100"/>
+		<Goal type="point" id="4" x="198" y="-44" capacity="100"/>
+		<Goal type="point" id="5" x="501" y="51" capacity="100"/>
+		<Goal type="point" id="6" x="99" y="-128" capacity="100"/>
+		<Goal type="point" id="7" x="37" y="-140" capacity="100"/>
+		<Goal type="point" id="8" x="108" y="-180" capacity="100"/>
 	</GoalSet>
 
 	<State name="Goal" final="0">
-		<GoalSelector type="explicit" goal_set="0" goal="42" />
+		<GoalSelector type="random" goal_set="0" per_agent="1" persistent="1" />
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
 
 	<State name="Visibility" final="0" >
-		<GoalSelector type="external" goal_set="0" goal="42"/>
+		<GoalSelector type="external" goal_set="0" goal="1"/>
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
 
