@@ -29,15 +29,19 @@
 #ifndef __XML_SIMULATOR_BASE__
 #define __XML_SIMULATOR_BASE__
 
+#include <vector>
+
 #include "MengeCore/Agents/SimXMLLoader.h"
 #include "MengeCore/mengeCommon.h"
 
-#include <vector>
 
 namespace Menge {
 
 namespace Agents {
-
+    
+// forward declaration
+class AgentGenerator;
+class PersistentAgentGeneratorWrapper;
 class Elevation;
 class SpatialQuery;
 class BaseAgent;
@@ -146,6 +150,15 @@ class MENGE_API XMLSimulatorBase {
    */
   virtual bool setExpParam(const std::string& paramName,
                            const std::string& value) throw(XMLParamException) = 0;
+
+  /**
+   * @brief Adds a mapping between a generator ID and a PersistentAgentGeneratorWrapper instance.
+   *
+   * @param generatorID The unique ID of the generator.
+   * @param wrapper The PersistentAgentGeneratorWrapper instance containing the ProfileSelector and
+   * StateSelector.
+   */
+  virtual void addGeneratorMapping(AgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) = 0;
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by

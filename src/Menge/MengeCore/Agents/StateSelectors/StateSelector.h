@@ -85,6 +85,12 @@ class MENGE_API StateSelector : public Element {
    */
   StateSelector();
 
+
+  /*!
+   @brief    Clone function
+   */
+  virtual StateSelector* clone() const = 0;
+
  protected:
   /*!
    @brief    Virtual destructor.

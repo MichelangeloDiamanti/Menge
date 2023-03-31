@@ -59,7 +59,7 @@ class SetSelector {
 
    @param index  The index of the desired data element.
    */
-  Data* getByIndex(size_t index) {
+  Data* getByIndex(size_t index) const {
     assert(index < _data.size());
     return _data[index].data;
   }

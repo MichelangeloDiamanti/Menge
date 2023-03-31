@@ -141,6 +141,8 @@ class MENGE_API FSM {
    */
   void setAgentCount(size_t count);
 
+  void updateAgentCount(size_t newCount);
+
   /*!
    @brief    Advances the FSM based on the current state for the given agent.
 
@@ -336,6 +338,12 @@ class MENGE_API FSM {
    */
   std::map<size_t, GoalSet*>& getGoalSets() { return _goalSets; }
 
+    /*!
+   @brief    Get the velocity modifiers from the FSM
+   */
+  const std::vector<VelModifier*>& getVelocityModifiers() const { return _velModifiers; }
+
+  
   /*!
    @brief    Add an velocity modifier to the FSM
 

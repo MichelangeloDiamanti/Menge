@@ -642,6 +642,9 @@
     <ClCompile Include="GoalSelectorExternal.cpp">
       <Filter>Source Files\BFSM\GoalSelectors</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\SimulatorBase.cpp">
+      <Filter>Source Files\Agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SrcDir)\mengeCore\Core.h">
@@ -1255,6 +1258,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\Menge\MengeCore\BFSM\GoalSelectors\GoalSelectorExternal.h">
       <Filter>Header Files\BFSM\GoalSelectors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\PersistentAgentGeneratorWrapper.h">
+      <Filter>Header Files\Agents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

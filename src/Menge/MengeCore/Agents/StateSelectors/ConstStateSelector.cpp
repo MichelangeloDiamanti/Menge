@@ -41,6 +41,15 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 namespace Menge {
 
 namespace Agents {
+////////////////////////////////////////////////////////////////////////////
+//      Implementation of ConstStateSelector
+////////////////////////////////////////////////////////////////////////////
+
+StateSelector* ConstStateSelector::clone() const { 
+    ConstStateSelector* newSelector = new ConstStateSelector();
+    newSelector->_stateName = _stateName;
+    return newSelector;
+}
 
 ////////////////////////////////////////////////////////////////////////////
 //      Implementation of ConstProfileSelectorFactory
@@ -65,5 +74,6 @@ bool ConstStateSelectorFactory::setFromXML(StateSelector* sel, TiXmlElement* nod
 
   return true;
 }
+
 }  // namespace Agents
 }  // namespace Menge

@@ -42,6 +42,9 @@ class MENGE_API ConstStateSelector : public StateSelector {
    */
   ConstStateSelector() : _stateName("") {}
 
+  // Inherited via StateSelector
+  virtual StateSelector* clone() const override;
+
   /*!
    @brief    Provides the name of a state.
 
@@ -63,6 +66,7 @@ class MENGE_API ConstStateSelector : public StateSelector {
    @brief    The name of the profile to use.
    */
   std::string _stateName;
+
 };
 
 //////////////////////////////////////////////////////////////////////////////

@@ -26,12 +26,14 @@
 #define __CONST_PROFILE_SELECTOR_H__
 
 #include "MengeCore/Agents/ProfileSelectors/ProfileSelector.h"
+#include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/ProfileSelectors/ProfileSelectorFactory.h"
 #include "MengeCore/mengeCommon.h"
 
 namespace Menge {
 
 namespace Agents {
+  
 /*!
  @brief   A profile selector that stores a single agent initializer and assigns this profile to all
           agents.
@@ -51,6 +53,9 @@ class MENGE_API ConstProfileSelector : public ProfileSelector {
    */
   ConstProfileSelector();
 
+  // Inherited via ProfileSelector
+  virtual ProfileSelector* clone() const override;
+  
   /*!
    @brief    Select an agent profile based on internal mechanisms.
 

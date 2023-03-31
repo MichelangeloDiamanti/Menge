@@ -39,6 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/SimXMLLoader.h"
 
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
+#include "MengeCore/Agents/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Agents/Elevations/ElevationDatabase.h"
@@ -346,13 +347,17 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
       const size_t AGT_COUNT = generator->agentCount();
       Vector2 zero;
       for (size_t i = 0; i < AGT_COUNT; ++i) {
-        BaseAgent* agent = _sim->addAgent(zero, profileSel->getProfile());
+        AgentInitializer* agtInit = profileSel->getProfile();
+        BaseAgent* agent = _sim->addAgent(zero, agtInit);
         generator->setAgentPosition(i, agent);
         _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
       }
       _agtCount += (unsigned int)AGT_COUNT;
 
-      generator->destroy();
+      //generator->destroy();
+      PersistentAgentGeneratorWrapper* wrapper =
+          new PersistentAgentGeneratorWrapper(profileSel->clone(), stateSel->clone());
+      _sim->addGeneratorMapping(generator, wrapper);
     }
   }
 

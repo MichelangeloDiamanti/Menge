@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "MengeCore/Agents/ProfileSelectors/ProfileSelector.h"
+#include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/ProfileSelectors/ProfileSelectorFactory.h"
 #include "MengeCore/data_set_selector.h"
 #include "MengeCore/mengeCommon.h"
@@ -32,6 +33,8 @@ class AgentInitializer;
 class MENGE_API ProfileSelectorRandom final : public ProfileSelector {
  public:
   ProfileSelectorRandom() = default;
+  // Inherited via ProfileSelector
+  virtual ProfileSelector* clone() const override;
   AgentInitializer* getProfile() const override;
   bool cacheProfiles(HASH_MAP<std::string, AgentInitializer*>& profiles) override;
 

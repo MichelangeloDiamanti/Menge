@@ -8,6 +8,20 @@ namespace Agents {
 //			Implementation of ProfileSelectorRandom
 ////////////////////////////////////////////////////////////////////////////
 
+ProfileSelector* ProfileSelectorRandom::clone() const {
+  ProfileSelectorRandom* newSelector = new ProfileSelectorRandom();
+  newSelector->_profile_names = _profile_names;
+
+  for (size_t i = 0; i < _profiles.size(); ++i) {
+    AgentInitializer* originalInit = _profiles.getByIndex(i);
+    AgentInitializer* copiedInit =
+        new AgentInitializer(*originalInit);  // Create a deep copy using the copy constructor
+    newSelector->_profiles.addData(copiedInit);
+  }
+
+  return newSelector;
+}
+
 AgentInitializer* ProfileSelectorRandom::getProfile() const { return _profiles.getRandom(); }
 
 ////////////////////////////////////////////////////////////////////////////

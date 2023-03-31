@@ -127,6 +127,31 @@ void FSM::setAgentCount(size_t count) {
 
 /////////////////////////////////////////////////////////////////////
 
+void FSM::updateAgentCount(size_t newCount) {
+  if (newCount <= _agtCount) {
+    // If the new count is less than or equal to the current count, do nothing
+    return;
+  }
+
+  // Allocate a new array with the updated agent count
+  State** newCurrNode = new State*[newCount];
+
+  // Copy the existing pointers from the old array to the new one
+  memcpy(newCurrNode, _currNode, _agtCount * sizeof(State*));
+
+  // Initialize the new elements to nullptr
+  memset(newCurrNode + _agtCount, 0x0, (newCount - _agtCount) * sizeof(State*));
+
+  // Deallocate the old array
+  delete[] _currNode;
+
+  // Update _currNode to point to the new array and update _agtCount
+  _currNode = newCurrNode;
+  _agtCount = newCount;
+}
+
+/////////////////////////////////////////////////////////////////////
+
 void FSM::advance(Agents::BaseAgent* agent) {
   const size_t ID = agent->_id;
   // Evaluate the current state's transitions
@@ -329,7 +354,8 @@ void FSM::moveGoals(float time_step) {
 #pragma omp parallel for
   for (int i = 0; i < agent_count; ++i) {
     Agents::BaseAgent* agent = _sim->getAgent(i);
-    _currNode[agent->_id]->updateVelCompForMovingGoals(agent);
+    State* state = _currNode[agent->_id];
+    state->updateVelCompForMovingGoals(agent);
   }
 }
 

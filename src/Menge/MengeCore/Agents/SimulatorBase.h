@@ -25,14 +25,17 @@
             types of agents. It is templated on the Agent type.
  */
 
-#include "MengeCore/Agents/AgentInitializer.h"
+#include <vector>
+
+
 #include "MengeCore/Agents/AgentGenerators/AgentGenerator.h"
+#include "MengeCore/Agents/AgentInitializer.h"
+#include "MengeCore/Agents/PersistentAgentGeneratorWrapper.h"
+#include "MengeCore/Agents/SimulatorState.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"
 #include "MengeCore/Runtime/Utils.h"
 #include "MengeCore/mengeCommon.h"
-
-#include <vector>
 
 #if HAVE_OPENMP || _OPENMP
 #include <omp.h>
@@ -101,21 +104,15 @@ class SimulatorBase : public SimulatorInterface {
    */
   virtual const BaseAgent* getAgent(size_t agentNo) const { return &_agents[agentNo]; }
 
-  /*!
-   @brief    Add an agent generator to the simulator.
+  // Inherited via SimulatorInterface
+  virtual void addGeneratorMapping(AgentGenerator* generator,
+                                   PersistentAgentGeneratorWrapper* wrapper);
 
-   The agent generator is responsible for generating agents during the simulation based on the
-   defined configuration.
-
-   @param    generator    The AgentGenerator to be added to the simulator.
-   */
-  void addAgentGenerator(AgentGenerator* generator);
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by
-            the given agent initializer.
-
-   It uses the agent initializer to define the values of the remaining agent parameters.
+            the given agent initializer. It uses the agent initializer to define the values of the
+   remaining agent parameters.
 
    @param    pos          The 2d vector representing the agent's position.
    @param    agentInit    The AgentInitializer necessary to parse AgentSet properties.
@@ -172,145 +169,11 @@ class SimulatorBase : public SimulatorInterface {
    */
   std::vector<Agent> _agents;
 
-  // Add a data member for storing agent generators
-  std::vector<AgentGenerator*> _agentGenerators;
+  std::unordered_map<AgentGenerator*, PersistentAgentGeneratorWrapper*> _generatorMap;
+
 };
 
-////////////////////////////////////////////////////////////////
-//          Implementation of SimulatorBase
-////////////////////////////////////////////////////////////////
 
-template <class Agent>
-SimulatorBase<Agent>::SimulatorBase() : SimulatorInterface(), _agents() {}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-SimulatorBase<Agent>::~SimulatorBase() {
-  _agents.clear();
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-void SimulatorBase<Agent>::doStep() {
-  assert(_spatialQuery != 0x0 && "Can't run without a spatial query instance defined");
-
-  //// Generate agents using agent generators
-  //for (AgentGenerator* generator : _agentGenerators) {
-  //  if (generator->shouldGenerate(_globalTime)) {
-  //    Vector2 pos;
-  //    AgentInitializer* agentInit;
-  //    if (generator->generateAgent(pos, agentInit)) {
-  //      addAgent(pos, agentInit);
-  //    }
-  //  }
-  //}
-
-  _spatialQuery->updateAgents();
-  int AGT_COUNT = static_cast<int>(_agents.size());
-#pragma omp parallel for
-  for (int i = 0; i < AGT_COUNT; ++i) {
-    computeNeighbors(&(_agents[i]));
-    _agents[i].computeNewVelocity();
-  }
-
-#pragma omp parallel for
-  for (int i = 0; i < AGT_COUNT; ++i) {
-    _agents[i].update(TIME_STEP);
-  }
-
-  _globalTime += TIME_STEP;
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-bool SimulatorBase<Agent>::initSpatialQuery() {
-  assert(_spatialQuery != 0x0 && "Can't run without a spatial query instance defined");
-
-  const size_t AGT_COUNT = _agents.size();
-  std::vector<BaseAgent*> agtPointers(AGT_COUNT);
-  for (size_t a = 0; a < AGT_COUNT; ++a) {
-    agtPointers[a] = &_agents[a];
-  }
-  _spatialQuery->setAgents(agtPointers);
-
-  _spatialQuery->processObstacles();
-
-  return true;
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-void SimulatorBase<Agent>::finalize() {
-  SimulatorInterface::finalize();
-
-  // initialize agents
-  for (size_t i = 0; i < _agents.size(); ++i) {
-    _agents[i].initialize();
-  }
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-void SimulatorBase<Agent>::addAgentGenerator(AgentGenerator* generator) {
-  _agentGenerators.push_back(generator);
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-BaseAgent* SimulatorBase<Agent>::addAgent(const Vector2& pos, AgentInitializer* agentInit) {
-  Agent agent;
-
-  agent._pos = pos;
-  agent._id = _agents.size();
-  if (!agentInit->setProperties(&agent)) {
-    logger << Logger::ERR_MSG << "Error initializing agent " << agent._id << "\n";
-    return 0x0;
-  }
-  _agents.push_back(agent);
-
-  return &_agents[_agents.size() - 1];
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-bool SimulatorBase<Agent>::setExpParam(const std::string& paramName,
-                                       const std::string& value) throw(XMLParamException) {
-  if (paramName == "time_step") {
-    try {
-      LOGICAL_TIME_STEP = toFloat(value);
-    } catch (UtilException) {
-      throw XMLParamException(
-          std::string("Common parameters \"time_step\" value couldn't be converted "
-                      "to a float.  Found the value: ") +
-          value);
-    }
-  } else {
-    return false;
-  }
-
-  return true;
-}
-
-////////////////////////////////////////////////////////////////
-
-template <class Agent>
-void SimulatorBase<Agent>::computeNeighbors(Agent* agent) {
-  // obstacles
-  agent->startQuery();
-  _spatialQuery->obstacleQuery(agent);
-
-  // agents
-  if (agent->_maxNeighbors > 0) {
-    _spatialQuery->agentQuery(agent);
-  }
-}
 }  // namespace Agents
 }  // namespace Menge
 #endif  // __SIMULATOR_BASE_H__

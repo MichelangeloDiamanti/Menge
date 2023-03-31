@@ -48,6 +48,13 @@ namespace Agents {
 
 ConstProfileSelector::ConstProfileSelector() : ProfileSelector(), _profileName(""), _init(0x0) {}
 
+ProfileSelector* ConstProfileSelector::clone() const { 
+  ConstProfileSelector* newSelector = new ConstProfileSelector();
+  newSelector->_profileName = _profileName;
+  newSelector->_init = new AgentInitializer(*_init);  // Assuming AgentInitializer instances can be safely shared.
+  return newSelector;
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
 bool ConstProfileSelector::cacheProfiles(HASH_MAP<std::string, AgentInitializer*>& profiles) {

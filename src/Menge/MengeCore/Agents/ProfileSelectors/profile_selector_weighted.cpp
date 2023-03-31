@@ -8,6 +8,22 @@ namespace Agents {
 //			Implementation of ProfileSelectorWeighted
 ////////////////////////////////////////////////////////////////////////////
 
+ProfileSelector* ProfileSelectorWeighted::clone() const { 
+    ProfileSelectorWeighted* newSelector = new ProfileSelectorWeighted();
+    newSelector->_profile_specs = _profile_specs;
+
+    for (size_t i = 0; i < _profiles.size(); ++i) {
+      AgentInitializer* originalInit = _profiles.getByIndex(i);
+      AgentInitializer* copiedInit =
+          new AgentInitializer(*originalInit);  // Create a deep copy using the copy constructor
+      newSelector->_profiles.addData(copiedInit);
+    }
+
+    return newSelector;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 AgentInitializer* ProfileSelectorWeighted::getProfile() const { return _profiles.getWeighted(); }
 
 ////////////////////////////////////////////////////////////////////////////
