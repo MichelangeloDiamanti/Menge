@@ -39,7 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/SimXMLLoader.h"
 
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
-#include "MengeCore/Agents/PersistentAgentGeneratorWrapper.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Agents/Elevations/ElevationDatabase.h"

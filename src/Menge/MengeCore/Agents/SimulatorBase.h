@@ -30,7 +30,7 @@
 
 #include "MengeCore/Agents/AgentGenerators/AgentGenerator.h"
 #include "MengeCore/Agents/AgentInitializer.h"
-#include "MengeCore/Agents/PersistentAgentGeneratorWrapper.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/SimulatorState.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"

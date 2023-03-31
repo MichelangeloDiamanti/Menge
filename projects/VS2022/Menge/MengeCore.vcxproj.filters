@@ -145,6 +145,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Header Files\Agents\AgentGenerators\Persistent">
+      <UniqueIdentifier>{ca93e804-d698-4849-887f-c93b5ad4150c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Agents\AgentGenerators\Persistent">
+      <UniqueIdentifier>{2d7cbbd1-4161-4412-93e9-25ac29eb6f35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SrcDir)\mengeCore\Core.cpp">
@@ -644,6 +650,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\SimulatorBase.cpp">
       <Filter>Source Files\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ConstantPersistentAgentGenerator.cpp">
+      <Filter>Source Files\Agents\AgentGenerators\Persistent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1259,8 +1268,14 @@
     <ClInclude Include="..\..\..\src\Menge\MengeCore\BFSM\GoalSelectors\GoalSelectorExternal.h">
       <Filter>Header Files\BFSM\GoalSelectors</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\PersistentAgentGeneratorWrapper.h">
-      <Filter>Header Files\Agents</Filter>
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\PersistentAgentGenerator\PersistentAgentGeneratorWrapper.h">
+      <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGenerator.h">
+      <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ConstantPersistentAgentGenerator.h">
+      <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
