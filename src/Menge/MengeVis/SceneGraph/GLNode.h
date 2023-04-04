@@ -157,6 +157,12 @@ class MENGEVIS_API GLDagNode : public GLNode {
    */
   virtual ~GLDagNode();
 
+
+  /*!
+   @brief   Clears all child nodes from this node.
+  */
+  void clearChildren();
+  
   /*!
    @brief   Adds a child node to this node.
 

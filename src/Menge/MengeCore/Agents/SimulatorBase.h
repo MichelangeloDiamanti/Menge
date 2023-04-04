@@ -28,8 +28,8 @@
 #include <vector>
 
 
-#include "MengeCore/Agents/AgentGenerators/AgentGenerator.h"
 #include "MengeCore/Agents/AgentInitializer.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGenerator.h"
 #include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/SimulatorState.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
@@ -68,6 +68,17 @@ class SimulatorBase : public SimulatorInterface {
    */
   void doStep();
 
+/*!
+  @brief Generates and initializes new agents based on the registered PersistentAgentGenerators.
+
+  This function iterates over the registered PersistentAgentGenerators in the simulator and checks
+  if it is time to generate new agents based on each generator's internal conditions. For each
+  generator that meets the generation conditions, it creates new agents using the provided agent
+  profile, sets their initial positions and states, initializes them, and registers them for all
+  velocity modifiers.
+  */
+  void GenerateAgents();
+
   /*!
    @brief    Initalize spatial query structure.
    */
@@ -105,8 +116,8 @@ class SimulatorBase : public SimulatorInterface {
   virtual const BaseAgent* getAgent(size_t agentNo) const { return &_agents[agentNo]; }
 
   // Inherited via SimulatorInterface
-  virtual void addGeneratorMapping(AgentGenerator* generator,
-                                   PersistentAgentGeneratorWrapper* wrapper);
+  virtual void addPersistentGeneratorMapping(PersistentAgentGenerator* generator,
+                                   PersistentAgentGeneratorWrapper* wrapper) override;
 
 
   /*!
@@ -169,7 +180,7 @@ class SimulatorBase : public SimulatorInterface {
    */
   std::vector<Agent> _agents;
 
-  std::unordered_map<AgentGenerator*, PersistentAgentGeneratorWrapper*> _generatorMap;
+  std::unordered_map<PersistentAgentGenerator*, PersistentAgentGeneratorWrapper*> _generatorMap;
 
 };
 

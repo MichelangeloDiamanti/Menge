@@ -36,32 +36,39 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
 
-#include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorFactory.h"
 
-#include "MengeCore/Agents/AgentGenerators/ExplicitAgentGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/HexLatticeGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/NavMeshAgentGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/RectGridGenerator.h"
+#include "MengeCore/Math/RandGenerator.h"
 
-#include "MengeCore/Agents/AgentGenerators/Persistent/ConstantPersistentAgentGenerator.h"
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#include "thirdParty/tinyxml.h"
 
 namespace Menge {
 
-// Specialization
-template <>
-std::string ElementDB<Agents::AgentGeneratorFactory, Agents::AgentGenerator>::getElementName() {
-  return "agent generator";
+namespace Agents {
+
+using Math::FloatGenerator;
+
+/////////////////////////////////////////////////////////////////////
+//          Implementation of PersistentAgentGeneratorFactory
+/////////////////////////////////////////////////////////////////////
+
+bool PersistentAgentGeneratorFactory::setFromXML(PersistentAgentGenerator* gen, TiXmlElement* node,
+                                       const std::string& behaveFldr) const {
+  if (!ElementFactory<PersistentAgentGenerator>::setFromXML(gen, node, behaveFldr)) {
+    return false;
+  }
+
+  Math::FloatGenerator* fGen = createFloatGenerator(node, 1.f, "displace_");
+  if (fGen) {
+    gen->setNoiseGenerator(fGen);
+  } else {
+    logger << Logger::WARN_MSG << "Persistent Agent generator on line " << node->Row()
+           << " has "
+              "no valid noise definition.  No noise applied.";
+  }
+
+  return true;
 }
 
-template <>
-void ElementDB<Agents::AgentGeneratorFactory, Agents::AgentGenerator>::addBuiltins() {
-  addFactory(new Agents::ExplicitGeneratorFactory());
-  addFactory(new Agents::RectGridGeneratorFactory());
-  addFactory(new Agents::HexLatticeGeneratorFactory());
-  addFactory(new Agents::NavMeshGeneratorFactory());
-}
+}  // namespace Agents
 }  // namespace Menge
-
-#endif  // DOXYGEN_SHOULD_SKIP_THIS

@@ -131,6 +131,11 @@ class MENGEVIS_API GLScene {
   bool addSystem(System* system);
 
   /*!
+   @brief   Gets the context from the scene that is used to handle UI events.
+   */
+  Context* getContext() { return _uiContext; }
+
+  /*!
    @brief   Sets the context the scene will use to handle UI events.
 
    If the scene already has a context assigned, that context will be deactivated and *deleted*.

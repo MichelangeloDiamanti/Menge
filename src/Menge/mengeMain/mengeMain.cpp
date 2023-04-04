@@ -360,14 +360,15 @@ int simMain(SimulatorDBEntry* dbEntry, const std::string& behaveFile, const std:
       visualize = false;
     } else {
       GLScene* scene = new GLScene();
-      SimSystem* system = new SimSystem(sim);
-      system->populateScene(scene);
+      SimSystem* system = new SimSystem(sim, scene);
+      system->populateScene();
       scene->addSystem(system);
       view.setScene(scene);
 
       view.setFixedStep(TIME_STEP);
       view.setBGColor(0.1f, 0.1f, 0.1f);
       MengeVis::Runtime::MengeContext* ctx = new MengeVis::Runtime::MengeContext(sim);
+      system->setMengeContext(ctx);
       scene->setContext(new EventInjectionContext(ctx));
       view.newGLContext();
       logger.line();

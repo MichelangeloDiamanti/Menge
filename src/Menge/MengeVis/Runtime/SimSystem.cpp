@@ -35,20 +35,21 @@ TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
-
+#define NOMINMAX  // prevent windows.h from stomping on "min"
 #include "MengeVis/Runtime/SimSystem.h"
+
+#include <set>
 
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Agents/Obstacle.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
 #include "MengeCore/Agents/SpatialQueries/SpatialQuery.h"
 #include "MengeCore/Runtime/Logger.h"
+#include "MengeVis/Runtime/AgentContext/BaseAgentContext.h"
 #include "MengeVis/Runtime/VisAgent/VisAgent.h"
 #include "MengeVis/Runtime/VisAgent/VisAgentDatabase.h"
 #include "MengeVis/Runtime/VisObstacle.h"
 #include "MengeVis/SceneGraph/GLScene.h"
-
-#include <set>
 
 namespace MengeVis {
 namespace Runtime {
@@ -68,19 +69,45 @@ using SceneGraph::SystemStopException;
 //      Implementation of SimSystem
 ////////////////////////////////////////////////////////////////////////////
 
-SimSystem::SimSystem(SimulatorInterface* sim)
-    : SceneGraph::System(), _sim(sim), _lastUpdate(0.f), _isRunning(true) {}
+SimSystem::SimSystem(SimulatorInterface* sim, GLScene* scene)
+    : SceneGraph::System(), _sim(sim), _lastUpdate(0.f), _isRunning(true), _scene(scene) {}
 
 ////////////////////////////////////////////////////////////////////////////
 
 SimSystem::~SimSystem() {
+  // Clean up the VisAgent objects
+  for (VisAgent* visAgent : _visAgents) {
+    delete visAgent;
+  }
+  _visAgents.clear();
+
   if (_sim) delete _sim;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
+void SimSystem::setScene(SceneGraph::GLScene* scene) { _scene = scene; }
+
+////////////////////////////////////////////////////////////////////////////
+
+void SimSystem::setMengeContext(MengeVis::Runtime::MengeContext* ctx) { _mengeContext = ctx; }
+
+////////////////////////////////////////////////////////////////////////////
+
 bool SimSystem::updateScene(float time) {
+  // TODO: I tried to do this in the updateSceneAgentCollection() function so it would be self
+  // contained and not use member variables, but for some reason it doesnt work and the selected
+  // agent is null
+  VisAgent* selectedAgent = dynamic_cast<VisAgent*>(SceneGraph::Selectable::getSelectedObject());
+  if (selectedAgent != 0x0) {
+    _isAgentSelected = true;
+    _selectedAgentId = selectedAgent->getAgent()->_id;
+  } else {
+    _isAgentSelected = false;
+  }
+
   if (_sim->step()) {
+    updateSceneAgentCollection();
     updateAgentPosition(static_cast<int>(_sim->getNumAgents()));
     return true;
   }
@@ -89,7 +116,40 @@ bool SimSystem::updateScene(float time) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void SimSystem::addObstacleToScene(GLScene* scene) {
+bool SimSystem::updateSceneAgentCollection() {
+  size_t simAgentsCount = _sim->getNumAgents();
+
+  if (simAgentsCount > _visAgents.size()) {
+    // Clear the existing visAgents vector
+    _visAgents.clear();
+
+    _agentRoot->clearChildren();
+    // Reserve memory for agents
+    _visAgents.reserve(simAgentsCount);
+
+    // Add all agents from the simulator
+    for (size_t a = 0; a < simAgentsCount; ++a) {
+      BaseAgent* agt = _sim->getAgent(a);
+      VisAgent* baseNode = VisAgentDB::getInstance(agt);
+      VisAgent* agtNode = baseNode->moveToClone();
+      float h = _sim->getElevation(agt);
+      agtNode->setPosition(agt->_pos.x(), agt->_pos.y(), h);
+      _agentRoot->addChild(agtNode);
+      _visAgents.push_back(agtNode);
+
+      // update the selected agent with the updated reference to the right VisAgent
+      if (_isAgentSelected && agt->_id == _selectedAgentId) {
+        SceneGraph::Selectable::setSelectedObject(agtNode);
+        _mengeContext->updateSelected();
+      }
+    }
+  }
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+void SimSystem::addObstacleToScene() {
   // TODO: If the bsptree (ObstacleKDTree.h) chops up the obstacles, this isn't doing the
   //    right thing.  Currently, the bsptree chops them
   //  THIS IS A HACK to address the issues of the ObstacleKDTree
@@ -111,7 +171,7 @@ void SimSystem::addObstacleToScene(GLScene* scene) {
       Vector3 p1(p1a.x(), p1a.y(), _sim->getElevation(p1a));
       VisObstacle* vo = new VisObstacle(p0, p1);
 
-      scene->addNode(vo);
+      _obstacleRoot->addChild(vo);
       handled.insert(obst);
     }
   }
@@ -119,26 +179,34 @@ void SimSystem::addObstacleToScene(GLScene* scene) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void SimSystem::addAgentsToScene(GLScene* scene) {
-  _visAgents = new VisAgent*[_sim->getNumAgents()];
-  for (size_t a = 0; a < _sim->getNumAgents(); ++a) {
+void SimSystem::addAgentsToScene() {
+  size_t numAgents = _sim->getNumAgents();
+  _visAgents.resize(numAgents);
+  for (size_t a = 0; a < numAgents; ++a) {
     BaseAgent* agt = _sim->getAgent(a);
     VisAgent* baseNode = VisAgentDB::getInstance(agt);
     VisAgent* agtNode = baseNode->moveToClone();
     float h = _sim->getElevation(agt);
     agtNode->setPosition(agt->_pos.x(), agt->_pos.y(), h);
-    scene->addNode(agtNode);
+    _agentRoot->addChild(agtNode);
     _visAgents[a] = agtNode;
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-void SimSystem::populateScene(GLScene* scene) {
+void SimSystem::populateScene() {
   assert(_sim != 0x0 && "Can't add SimSystem to scene when no simulator is connected");
 
-  addAgentsToScene(scene);
-  addObstacleToScene(scene);
+  _agentRoot = new MengeVis::SceneGraph::GLDagNode();
+  _scene->addNode(_agentRoot);
+
+  addAgentsToScene();
+
+  _obstacleRoot = new MengeVis::SceneGraph::GLDagNode();
+  _scene->addNode(_obstacleRoot);
+
+  addObstacleToScene();
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -1,9 +1,10 @@
 #include "MengeCore/Agents/SimulatorBase.h"
+
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/BFSM/State.h"
 #include "MengeCore/BFSM/VelocityModifiers/VelModifier.h"
-#include "MengeCore/PedVO/PedVOAgent.h"
 #include "MengeCore/Orca/ORCAAgent.h"
+#include "MengeCore/PedVO/PedVOAgent.h"
 
 namespace Menge {
 namespace Agents {
@@ -32,46 +33,7 @@ template <class Agent>
 void SimulatorBase<Agent>::doStep() {
   assert(_spatialQuery != 0x0 && "Can't run without a spatial query instance defined");
 
-  // Iterate over the generator map and spawn agents
-  for (auto& entry : _generatorMap) {
-    AgentGenerator* generator = entry.first;
-    PersistentAgentGeneratorWrapper* wrapper = entry.second;
-
-    //// Check if it's time to spawn an agent based on your conditions, e.g., elapsed time, agent
-    //// count, etc.
-    // if (shouldSpawnAgent(generator)) {
-    //  Retrieve the profile selector and state selector from the wrapper
-    ProfileSelector* profileSel = wrapper->getProfileSelector();
-    StateSelector* stateSel = wrapper->getStateSelector();
-
-    // Now instantiate the agents
-    const size_t AGT_COUNT = generator->agentCount();
-    Vector2 zero;
-    for (size_t i = 0; i < AGT_COUNT; ++i) {
-      AgentInitializer* agentProfile = profileSel->getProfile();
-      BaseAgent* agent = addAgent(zero, agentProfile);
-      generator->setAgentPosition(i, agent);
-      this->getInitialState()->setAgentState(agent->_id, stateSel->getState());
-      
-      this->getBFSM()->updateAgentCount(getNumAgents());
-      _agents[agent->_id].initialize();
-
-      BFSM::State* initialState = this->getBFSM()->getState(stateSel->getState().c_str());
-      this->getBFSM()->setCurrentState(agent, initialState->getID());
-      initialState->enter(agent);
-      agent->_vel.set(Vector2(0.f, 0.f));
-      
-      // register the agent for all vel modifiers
-      const std::vector<BFSM::VelModifier*>& velModifiers = this->getBFSM()->getVelocityModifiers();
-      for (auto vItr = velModifiers.cbegin(); vItr != velModifiers.cend(); ++vItr) {
-        (*vItr)->registerAgent(agent);
-      }
-
-    }
-
-    // Perform any other required actions for the newly spawned agent
-    //}
-  }
+  GenerateAgents();
 
   _spatialQuery->updateAgents();
   int AGT_COUNT = static_cast<int>(_agents.size());
@@ -87,6 +49,52 @@ void SimulatorBase<Agent>::doStep() {
   }
 
   _globalTime += TIME_STEP;
+}
+
+////////////////////////////////////////////////////////////////
+
+template <class Agent>
+void SimulatorBase<Agent>::GenerateAgents() {
+  // Iterate over the generator map and spawn agents
+  for (auto& entry : _generatorMap) {
+    PersistentAgentGenerator* generator = entry.first;
+    PersistentAgentGeneratorWrapper* wrapper = entry.second;
+
+    //// Check if it's time to spawn an agent based on your conditions, e.g., elapsed time, agent
+    //// count, etc.
+    if (generator->shouldGenerate(TIME_STEP)) {
+      //  Retrieve the profile selector and state selector from the wrapper
+      ProfileSelector* profileSel = wrapper->getProfileSelector();
+      StateSelector* stateSel = wrapper->getStateSelector();
+
+      // Now instantiate the agents
+      const size_t AGT_COUNT = generator->getSpawnRate();
+      Vector2 zero;
+      for (size_t i = 0; i < AGT_COUNT; ++i) {
+        AgentInitializer* agentProfile = profileSel->getProfile();
+        BaseAgent* agent = addAgent(zero, agentProfile);
+        generator->setAgentPosition(i, agent);
+        this->getInitialState()->setAgentState(agent->_id, stateSel->getState());
+
+        this->getBFSM()->updateAgentCount(getNumAgents());
+        _agents[agent->_id].initialize();
+
+        BFSM::State* initialState = this->getBFSM()->getState(stateSel->getState().c_str());
+        this->getBFSM()->setCurrentState(agent, initialState->getID());
+        initialState->enter(agent);
+        agent->_vel.set(Vector2(0.f, 0.f));
+
+        // register the agent for all vel modifiers
+        const std::vector<BFSM::VelModifier*>& velModifiers =
+            this->getBFSM()->getVelocityModifiers();
+        for (auto vItr = velModifiers.cbegin(); vItr != velModifiers.cend(); ++vItr) {
+          (*vItr)->registerAgent(agent);
+        }
+      }
+
+      // Perform any other required actions for the newly spawned agent
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////
@@ -122,8 +130,8 @@ void SimulatorBase<Agent>::finalize() {
 ////////////////////////////////////////////////////////////////
 
 template <class Agent>
-inline void SimulatorBase<Agent>::addGeneratorMapping(AgentGenerator* generator,
-                                                      PersistentAgentGeneratorWrapper* wrapper) {
+inline void SimulatorBase<Agent>::addPersistentGeneratorMapping(
+    PersistentAgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) {
   _generatorMap[generator] = wrapper;
 }
 

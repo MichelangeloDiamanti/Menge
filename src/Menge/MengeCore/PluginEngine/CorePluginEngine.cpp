@@ -1,6 +1,7 @@
 #include "MengeCore/PluginEngine/CorePluginEngine.h"
 
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorDatabase.h"
 #include "MengeCore/Agents/Elevations/ElevationDatabase.h"
 #include "MengeCore/Agents/Events/EventEffectDB.h"
 #include "MengeCore/Agents/Events/EventTargetDB.h"
@@ -43,6 +44,7 @@ CorePluginEngine::CorePluginEngine(SimulatorDB* simDB)
   Agents::ElevationDB::initialize();
   Agents::SpatialQueryDB::initialize();
   Agents::AgentGeneratorDB::initialize();
+  Agents::PersistentAgentGeneratorDB::initialize();
   Agents::ObstacleSetDB::initialize();
   Agents::ProfileSelectorDB::initialize();
   Agents::StateSelectorDB::initialize();
@@ -125,6 +127,12 @@ void CorePluginEngine::registerSpatialQueryFactory(Agents::SpatialQueryFactory* 
 
 void CorePluginEngine::registerAgentGeneratorFactory(Agents::AgentGeneratorFactory* factory) {
   Agents::AgentGeneratorDB::addFactory(factory);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+void CorePluginEngine::registerPersistentAgentGeneratorFactory(Agents::PersistentAgentGeneratorFactory* factory) {
+  Agents::PersistentAgentGeneratorDB::addFactory(factory);
 }
 
 /////////////////////////////////////////////////////////////////////

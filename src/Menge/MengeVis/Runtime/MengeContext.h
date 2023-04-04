@@ -62,6 +62,11 @@ class MENGEVIS_API MengeContext : public SceneGraph::SelectContext {
    */
   virtual ~MengeContext();
 
+  virtual VisAgent* getSelected() { return _selected; }
+  virtual void setSelected(VisAgent* selected) { _selected = selected; }
+
+  virtual BaseAgentContext* getAgentContext() { return _agentContext; }
+  
   /*!
    @brief   Give the context the opportunity to respond to a keyboard event.
 
@@ -99,6 +104,13 @@ class MENGEVIS_API MengeContext : public SceneGraph::SelectContext {
    */
   virtual void activate();
 
+  /*!
+   @brief   Causes the context to update its state based on the currentselected state.
+
+   @returns True if the update caused the context to change what it operates on.
+   */
+  bool updateSelected();
+
  protected:
   /*!
    @brief   Draw UI elements into the context.
@@ -109,13 +121,6 @@ class MENGEVIS_API MengeContext : public SceneGraph::SelectContext {
                       visualization (false).
    */
   virtual void drawUIGL(int vWidth, int vHeight, bool select = false);
-
-  /*!
-   @brief   Causes the context to update its state based on the currentselected state.
-
-   @returns True if the update caused the context to change what it operates on.
-   */
-  bool updateSelected();
 
  private:
   /*! @brief  The simulator interface the context works on. */

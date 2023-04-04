@@ -52,18 +52,22 @@
 					displace_dist="u" displace_min="0.0" displace_max="0.25"
 					/>
     </AgentGroup>
+    -->
 
-		-->
+		
 
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="Goal" />
 		<Generator type="explicit" >
 			<Agent p_x="69" p_y="-171" />
-			<Agent p_x="69" p_y="-171" />
-			<Agent p_x="69" p_y="-171" />
-			<Agent p_x="69" p_y="-171" />
 		</Generator>
+    </AgentGroup>
+
+	<AgentGroup>
+        <ProfileSelector type="const" name="group1" />
+		<StateSelector type="const" name="Goal" />
+		<Generator type="persistent_constant" x_pos="69" y_pos="-171" spawn_interval="10" spawn_rate="1" />
     </AgentGroup>
 		
 		<!-- -->

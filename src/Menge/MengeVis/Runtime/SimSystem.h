@@ -24,8 +24,14 @@
 #ifndef __SIM_SYSTEM_H__
 #define __SIM_SYSTEM_H__
 
+#include <unordered_map>
+#include <vector>
+
 #include "MengeCore/MengeException.h"
+#include "MengeVis/SceneGraph/GLNode.h"
 #include "MengeVis/SceneGraph/System.h"
+#include "MengeVis/Runtime/MengeContext.h"
+
 
 // forward declaration
 namespace Menge {
@@ -95,12 +101,16 @@ class MENGEVIS_API SimSystem : public SceneGraph::System {
 
    @param   sim   A pointer to the simulator.
    */
-  SimSystem(Menge::Agents::SimulatorInterface* sim);
+  SimSystem(Menge::Agents::SimulatorInterface* sim, SceneGraph::GLScene* scene);
 
   /*!
    @brief    Destructor.
    */
   ~SimSystem();
+
+  virtual void setScene(SceneGraph::GLScene* scene);
+
+  virtual void setMengeContext(MengeVis::Runtime::MengeContext* ctx);
 
   /*!
    @brief   Update the simulation (and possibly visual elements) to the given global time.
@@ -111,25 +121,42 @@ class MENGEVIS_API SimSystem : public SceneGraph::System {
   virtual bool updateScene(float time);
 
   /*!
+   @brief   Updates the scene agent collection by synchronizing the _visAgents vector with the
+            simulator's agent list.
+
+   This function is called to ensure that the _visAgents vector accurately represents the current
+   list of agents in the simulator. As the simulator adds agents, it might recreate its internal
+   agent list to accommodate more agents, causing the memory addresses (pointers) of the agents to
+   change. Consequently, it is necessary to clear the _agentRoot and _visAgents each time this
+   function is called, to make sure they remain synchronized with the simulator's agent list.
+
+   Instead of updating the existing nodes one by one to match the simulator's new agent list, it is
+   more convenient to delete the previous nodes and create a new list of nodes that directly
+   corresponds to the updated list of agents in the simulator. This approach simplifies the
+   synchronization process and helps avoid potential issues with outdated or invalid pointers.
+   */
+  virtual bool updateSceneAgentCollection();
+
+  /*!
    @brief   Add visual representations of the simulation obstcles to the GLScene.
 
    @param   scene   The scene which receives nodes for drawing obstacles.
    */
-  void addObstacleToScene(SceneGraph::GLScene* scene);
+  void addObstacleToScene();
 
   /*!
    @brief   Add visual representations of the simulation agents to the GLScene.
 
    @param   scene   The scene which receives nodes for drawing agents.
    */
-  virtual void addAgentsToScene(SceneGraph::GLScene* scene);
+  virtual void addAgentsToScene();
 
   /*!
    @brief   Add visual representations of obstacles and agents to the GLScene.
 
    @param   scene   The scene which receives nodes for drawing agents.
    */
-  void populateScene(SceneGraph::GLScene* scene);
+  void populateScene();
 
   /*!
    @brief   Update the position of the *visual* agents from the simulation data.
@@ -143,7 +170,7 @@ class MENGEVIS_API SimSystem : public SceneGraph::System {
 
    @returns Returns the pointer to the pointers.
    */
-  inline VisAgent** getVisAgents() { return _visAgents; }
+  // inline VisAgent** getVisAgents() { return _visAgents; }
 
   /*!
    @brief   Reports the number of agents.
@@ -161,7 +188,10 @@ class MENGEVIS_API SimSystem : public SceneGraph::System {
   /*!
    @brief   The visualization agents the system is responsible for updating.
    */
-  VisAgent** _visAgents;
+  // VisAgent** _visAgents;
+  std::vector<VisAgent*> _visAgents;
+
+  // size_t _visAgentCount;
 
   /*!
    @brief   The global time of last system update.
@@ -172,6 +202,15 @@ class MENGEVIS_API SimSystem : public SceneGraph::System {
    @brief   Indicates if the simulation is running.
    */
   bool _isRunning;
+
+  SceneGraph::GLScene* _scene;
+  
+  MengeVis::Runtime::MengeContext* _mengeContext;
+
+  SceneGraph::GLDagNode* _agentRoot;
+  bool _isAgentSelected = false;
+  size_t _selectedAgentId;
+  SceneGraph::GLDagNode* _obstacleRoot;
 };
 }  // namespace Runtime
 }  // namespace MengeVis

@@ -41,6 +41,7 @@ namespace Agents {
     
 // forward declaration
 class AgentGenerator;
+class PersistentAgentGenerator;
 class PersistentAgentGeneratorWrapper;
 class Elevation;
 class SpatialQuery;
@@ -158,7 +159,7 @@ class MENGE_API XMLSimulatorBase {
    * @param wrapper The PersistentAgentGeneratorWrapper instance containing the ProfileSelector and
    * StateSelector.
    */
-  virtual void addGeneratorMapping(AgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) = 0;
+  virtual void addPersistentGeneratorMapping(PersistentAgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) = 0;
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by

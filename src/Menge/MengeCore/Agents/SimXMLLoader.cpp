@@ -38,7 +38,13 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/Agents/SimXMLLoader.h"
 
+#include <iostream>
+#include <list>
+#include <vector>
+
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGenerator.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorDatabase.h"
 #include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/AgentInitializer.h"
 #include "MengeCore/Agents/BaseAgent.h"
@@ -51,10 +57,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/XMLSimulatorBase.h"
 #include "MengeCore/Core.h"
 #include "MengeCore/Runtime/os.h"
-
-#include <iostream>
-#include <list>
-#include <vector>
 
 namespace Menge {
 
@@ -247,13 +249,13 @@ bool SimXMLLoader::loadFromXML(const std::string& filename, AgentInitializer* ag
     }
   }
 
-  if (_agtCount == 0) {
-    // TODO: Change this test when agent sources are introduced
-    //  in this case, it is possible to start with no agents and then add them
-    //  w.r.t. time.
-    logger << Logger::ERR_MSG << "No agents defined in simulation.";
-    return false;
-  }
+  //if (_agtCount == 0) {
+  //  // TODO: Change this test when agent sources are introduced
+  //  //  in this case, it is possible to start with no agents and then add them
+  //  //  w.r.t. time.
+  //  logger << Logger::ERR_MSG << "No agents defined in simulation.";
+  //  return false;
+  //}
 
   // free up the profiles
   //  TODO: I'll need to save these when I have AgentSources.
@@ -314,50 +316,59 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
       }
       stateSel = StateSelectorDB::getInstance(child, _sceneFldr);
       if (stateSel == 0x0) {
-        logger << Logger::ERR_MSG
-               << "Unable to instantiate the state selector specification line "
+        logger << Logger::ERR_MSG << "Unable to instantiate the state selector specification line "
                << child->Row() << ".";
         return false;
       }
     }
   }
   if (profileSel == 0x0) {
-    logger << Logger::ERR_MSG
-           << "No profile selector defined for the AgentGroup on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "No profile selector defined for the AgentGroup on line "
+           << node->Row() << ".";
     return false;
   }
   if (stateSel == 0x0) {
-    logger << Logger::ERR_MSG
-           << "No state selector defined for the AgentGroup on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "No state selector defined for the AgentGroup on line "
+           << node->Row() << ".";
     return false;
   }
 
   // Second pass, parse Generators
   for (child = node->FirstChildElement(); child; child = child->NextSiblingElement()) {
     if (child->ValueStr() == "Generator") {
+      // the generator could either be persistent or not. If it is persistent it means that it
+      // spawns agents on demand during the course of the simulation based on an internal mechanism.
+      // Otherwise it just spawns a fixed number of agents at the beginning of the simulation.
       AgentGenerator* generator = AgentGeneratorDB::getInstance(child, _sceneFldr);
+      PersistentAgentGenerator* persistentgen =
+          PersistentAgentGeneratorDB::getInstance(child, _sceneFldr);
 
-      if (generator == 0x0) {
-        logger << Logger::ERR_MSG
-               << "Unable to instantiate agent generator specifcation on line "
+      if (generator == 0x0 && persistentgen == 0x0) {
+        logger << Logger::ERR_MSG << "Unable to instantiate agent generator specifcation on line "
                << child->Row() << ".";
         return false;
       }
-      // Now instantiate the agents
-      const size_t AGT_COUNT = generator->agentCount();
-      Vector2 zero;
-      for (size_t i = 0; i < AGT_COUNT; ++i) {
-        AgentInitializer* agtInit = profileSel->getProfile();
-        BaseAgent* agent = _sim->addAgent(zero, agtInit);
-        generator->setAgentPosition(i, agent);
-        _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
-      }
-      _agtCount += (unsigned int)AGT_COUNT;
 
-      //generator->destroy();
-      PersistentAgentGeneratorWrapper* wrapper =
-          new PersistentAgentGeneratorWrapper(profileSel->clone(), stateSel->clone());
-      _sim->addGeneratorMapping(generator, wrapper);
+      // here I want to check if the agent generator is persistent, if so, I want to add it to the
+      // mapping and not spawn the agents if it's not, just use it and discard it.
+      if (generator != 0x0) {
+        // Now instantiate the agents
+        const size_t AGT_COUNT = generator->agentCount();
+        Vector2 zero;
+        for (size_t i = 0; i < AGT_COUNT; ++i) {
+          AgentInitializer* agtInit = profileSel->getProfile();
+          BaseAgent* agent = _sim->addAgent(zero, agtInit);
+          generator->setAgentPosition(i, agent);
+          _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
+        }
+        _agtCount += (unsigned int)AGT_COUNT;
+        generator->destroy();
+      } else if (persistentgen) {
+        // if it's persistent, add it to the mapping
+        PersistentAgentGeneratorWrapper* wrapper =
+            new PersistentAgentGeneratorWrapper(profileSel->clone(), stateSel->clone());
+        _sim->addPersistentGeneratorMapping(persistentgen, wrapper);
+      }
     }
   }
 
@@ -370,8 +381,8 @@ bool SimXMLLoader::parseObstacleSet(TiXmlElement* node) {
   // pass through, try to get a generator, and then use it
   ObstacleSet* obSet = ObstacleSetDB::getInstance(node, _sceneFldr);
   if (obSet == 0x0) {
-    logger << Logger::ERR_MSG
-           << "Unable to instantiate obstacle set specifcation on line " << node->Row() << ".";
+    logger << Logger::ERR_MSG << "Unable to instantiate obstacle set specifcation on line "
+           << node->Row() << ".";
     return false;
   } else {
     //_sim->setSpatialQuery( spQuery );

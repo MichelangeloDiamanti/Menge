@@ -77,6 +77,22 @@ GLDagNode::~GLDagNode() {
 
 ///////////////////////////////////////////////////////////////////////////
 
+void GLDagNode::clearChildren() {
+  // Delete each child node
+  for (size_t i = 0; i < _childCount; ++i) {
+    delete _children[i];
+  }
+
+  // Reset the child count
+  _childCount = 0;
+
+  // Deallocate the memory used by the _children array
+  delete[] _children;
+  _children = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////
+
 // This isn't the most efficient memory management, time-wise, but if you assume
 //  that the construction of the graph is pre-processing then it optimizes evaluation over
 //  construction.

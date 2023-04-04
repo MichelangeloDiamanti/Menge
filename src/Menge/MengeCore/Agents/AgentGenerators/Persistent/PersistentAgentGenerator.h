@@ -32,9 +32,9 @@ namespace Agents {
 
 class MENGE_API PersistentAgentGenerator : public AgentGenerator {
  public:
+  virtual bool shouldGenerate(float time_step) = 0;
 
-  virtual bool shouldGenerate() const = 0;
-  
+  virtual size_t getSpawnRate() const = 0;
 };
 
 }  // namespace Agents

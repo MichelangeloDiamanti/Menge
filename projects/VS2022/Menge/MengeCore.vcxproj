@@ -368,6 +368,8 @@ xcopy /y $(TargetPath) $(ExeDir)
     <ClCompile Include="$(SrcDir)\MengeCore\Agents\Events\state_population_trigger.cpp" />
     <ClCompile Include="$(SrcDir)\MengeCore\BFSM\Goals\GoalPath.cpp" />
     <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ConstantPersistentAgentGenerator.cpp" />
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorDatabase.cpp" />
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorFactory.cpp" />
     <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\SimulatorBase.cpp" />
     <ClCompile Include="GoalSelectorExternal.cpp" />
   </ItemGroup>
@@ -578,6 +580,8 @@ xcopy /y $(TargetPath) $(ExeDir)
     <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\PersistentAgentGenerator\PersistentAgentGeneratorWrapper.h" />
     <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ConstantPersistentAgentGenerator.h" />
     <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGenerator.h" />
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorDatabase.h" />
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorFactory.h" />
     <ClInclude Include="..\..\..\src\Menge\MengeCore\BFSM\GoalSelectors\GoalSelectorExternal.h" />
   </ItemGroup>
   <ItemGroup>

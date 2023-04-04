@@ -36,12 +36,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 */
 
-#include "MengeCore/Agents/AgentGenerators/AgentGeneratorDatabase.h"
-
-#include "MengeCore/Agents/AgentGenerators/ExplicitAgentGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/HexLatticeGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/NavMeshAgentGenerator.h"
-#include "MengeCore/Agents/AgentGenerators/RectGridGenerator.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorDatabase.h"
 
 #include "MengeCore/Agents/AgentGenerators/Persistent/ConstantPersistentAgentGenerator.h"
 
@@ -51,16 +46,15 @@ namespace Menge {
 
 // Specialization
 template <>
-std::string ElementDB<Agents::AgentGeneratorFactory, Agents::AgentGenerator>::getElementName() {
-  return "agent generator";
+std::string ElementDB<Agents::PersistentAgentGeneratorFactory,
+                      Agents::PersistentAgentGenerator>::getElementName() {
+  return "persistent agent generator";
 }
 
 template <>
-void ElementDB<Agents::AgentGeneratorFactory, Agents::AgentGenerator>::addBuiltins() {
-  addFactory(new Agents::ExplicitGeneratorFactory());
-  addFactory(new Agents::RectGridGeneratorFactory());
-  addFactory(new Agents::HexLatticeGeneratorFactory());
-  addFactory(new Agents::NavMeshGeneratorFactory());
+void ElementDB<Agents::PersistentAgentGeneratorFactory,
+               Agents::PersistentAgentGenerator>::addBuiltins() {
+  addFactory(new Agents::ConstantPersistentAgentGeneratorFactory());
 }
 }  // namespace Menge
 

@@ -44,6 +44,7 @@ namespace Agents {
 class ElevationFactory;
 class SpatialQueryFactory;
 class AgentGeneratorFactory;
+class PersistentAgentGeneratorFactory;
 class ProfileSelectorFactory;
 class StateSelectorFactory;
 class ObstacleSetFactory;
@@ -156,6 +157,13 @@ class MENGE_API CorePluginEngine
    @param    factory    An instance of the AgentGeneratorFactory to register
    */
   void registerAgentGeneratorFactory(Agents::AgentGeneratorFactory* factory);
+
+  /*!
+   @brief    Register a PersistentAgentGeneratorFactory.
+
+   @param    factory    An instance of the PersistentAgentGeneratorFactory to register
+   */
+  void registerPersistentAgentGeneratorFactory(Agents::PersistentAgentGeneratorFactory* factory);
 
   /*!
    @brief    Register an ObstacleSetFactory.
