@@ -48,6 +48,8 @@ void Menge::Agents::ConstantPersistentAgentGenerator::setSpawnInterval(float int
   _spawnInterval = interval;
 }
 
+void Menge::Agents::ConstantPersistentAgentGenerator::spawn() {}
+
 //////////////////////////////////////////////////////////////////////////////
 // 		Implementation of ConstantPersistentAgentGeneratorFactory
 //////////////////////////////////////////////////////////////////////////////

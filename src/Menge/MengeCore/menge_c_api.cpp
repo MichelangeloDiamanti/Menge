@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "MengeCore/Agents/AgentGenerators/Persistent/ExternalPersistentAgentGenerator.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorWrapper.h"
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Agents/Events/EventSystem.h"
 #include "MengeCore/Agents/SimulatorInterface.h"
@@ -67,12 +69,65 @@ bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* mo
 void SubscribeToAgentChangedStateEvent(
     Menge::BFSM::AgentChangedStateCallback agentChangedStateCallbackFunction) {
   Menge::BFSM::FSM* bfsm = _simulator->getBFSM();
-  //bfsm->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
-  //  iterates the nodes of the FSM
+  // bfsm->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
+  //   iterates the nodes of the FSM
   for (size_t i = 0; i < bfsm->getNodeCount(); i++) {
     Menge::BFSM::State* state = bfsm->getNode(i);
     state->agentChangedStateCallbackFunction = agentChangedStateCallbackFunction;
   }
+}
+
+/////////////////////////////////////////////////////////////////////
+
+MENGE_API bool AddPositionToExternalAgentGenerator(const char* generatorName, float x, float y) {
+  assert(_simulator != nullptr);
+
+  Menge::Agents::PersistentAgentGeneratorWrapper* wrapper =
+      _simulator->getPersistentGeneratorWrapper(generatorName);
+  if (wrapper == 0x0) return false;
+
+  Menge::Agents::ExternalPersistentAgentGenerator* extGenerator =
+      dynamic_cast<Menge::Agents::ExternalPersistentAgentGenerator*>(wrapper->getGenerator());
+  if (extGenerator == 0x0) return false;
+
+  Menge::Math::Vector2 position = Menge::Math::Vector2(x, y);
+
+  extGenerator->addPosition(position);
+  return true;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+MENGE_API bool ClearExternalAgentGeneratorPositions(const char* generatorName) {
+  assert(_simulator != nullptr);
+
+  Menge::Agents::PersistentAgentGeneratorWrapper* wrapper =
+      _simulator->getPersistentGeneratorWrapper(generatorName);
+  if (wrapper == 0x0) return false;
+
+  Menge::Agents::ExternalPersistentAgentGenerator* extGenerator =
+      dynamic_cast<Menge::Agents::ExternalPersistentAgentGenerator*>(wrapper->getGenerator());
+  if (extGenerator == 0x0) return false;
+
+  extGenerator->clearPositions();
+  return true;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+MENGE_API bool TriggerExternalAgentGeneratorSpawn(const char* generatorName) {
+  assert(_simulator != nullptr);
+
+  Menge::Agents::PersistentAgentGeneratorWrapper* wrapper =
+      _simulator->getPersistentGeneratorWrapper(generatorName);
+  if (wrapper == 0x0) return false;
+
+  Menge::Agents::ExternalPersistentAgentGenerator* extGenerator =
+      dynamic_cast<Menge::Agents::ExternalPersistentAgentGenerator*>(wrapper->getGenerator());
+  if (extGenerator == 0x0) return false;
+
+  extGenerator->spawn();
+  return true;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -387,7 +442,7 @@ MENGE_API bool SetStatePointGoalForAgent(const char* stateName, size_t agentId, 
     if (gs != 0x0 && agt != 0x0) {
       res = gs->setGoal(agentId, new Menge::BFSM::PointGoal(x, y));
       // calling the enter allows the stateselctor to assign the goal
-      //state->enter(agt);
+      // state->enter(agt);
     }
   }
   return res;

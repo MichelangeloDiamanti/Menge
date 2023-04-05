@@ -64,12 +64,20 @@
 		</Generator>
     </AgentGroup>
 
+<!--
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="Goal" />
-		<Generator type="persistent_constant" x_pos="69" y_pos="-171" spawn_interval="10" spawn_rate="1" />
+		<Generator type="persistent_constant" name="firstGen" x_pos="69" y_pos="-171" spawn_interval="10" spawn_rate="1" />
     </AgentGroup>
+-->
 		
+	<AgentGroup>
+        <ProfileSelector type="const" name="group1" />
+		<StateSelector type="const" name="Goal" />
+		<Generator type="persistent_external" name="secondGen" />
+    </AgentGroup>
+
 		<!-- -->
 <!-- 
     <ObstacleSet type="nav_mesh" file_name="simple.nav" class="1" />    

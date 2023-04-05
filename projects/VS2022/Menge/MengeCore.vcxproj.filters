@@ -660,6 +660,12 @@
     <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorDatabase.cpp">
       <Filter>Source Files\Agents\AgentGenerators\Persistent</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ExternalPersistentAgentGenerator.cpp">
+      <Filter>Source Files\Agents\AgentGenerators\Persistent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGenerator.cpp">
+      <Filter>Source Files\Agents\AgentGenerators\Persistent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SrcDir)\mengeCore\Core.h">
@@ -1287,6 +1293,9 @@
       <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\PersistentAgentGeneratorDatabase.h">
+      <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Menge\MengeCore\Agents\AgentGenerators\Persistent\ExternalPersistentAgentGenerator.h">
       <Filter>Header Files\Agents\AgentGenerators\Persistent</Filter>
     </ClInclude>
   </ItemGroup>

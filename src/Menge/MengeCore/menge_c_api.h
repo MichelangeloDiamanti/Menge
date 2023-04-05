@@ -24,10 +24,10 @@
 #ifndef __MENGE_C_API__
 #define __MENGE_C_API__
 
-#include "MengeCore/CoreConfig.h"
 #include "MengeCore/BFSM/FSM.h"
 #include "MengeCore/BFSM/State.h"
- //#include <string>
+#include "MengeCore/CoreConfig.h"
+// #include <string>
 #ifndef _WIN32
 #include <cstddef>
 #endif
@@ -52,11 +52,17 @@ extern "C" {
 MENGE_API bool InitSimulator(const char* behaveFile, const char* sceneFile, const char* model,
                              const char* pluginPath = 0x0);
 
-//typedef void (*AgentChangedStateCallback)(int agentId);
-// callback_function gCBF = 0x0;
+// typedef void (*AgentChangedStateCallback)(int agentId);
+//  callback_function gCBF = 0x0;
 
 MENGE_API void SubscribeToAgentChangedStateEvent(
     Menge::BFSM::AgentChangedStateCallback agentChangedStateCallbackFunction);
+
+MENGE_API bool AddPositionToExternalAgentGenerator(const char* generatorName, float x, float y);
+
+MENGE_API bool ClearExternalAgentGeneratorPositions(const char* generatorName);
+
+MENGE_API bool TriggerExternalAgentGeneratorSpawn(const char* generatorName);
 
 /*!
  @brief    Unloads the plugins from the simulator.
@@ -277,7 +283,7 @@ MENGE_API int TestNewFunction();
 MENGE_API bool GetAgentGoal(size_t i, size_t* goal_id);
 
 /*
-*/
+ */
 MENGE_API bool IsStateGoalSelectorExternal(const char* stateName);
 
 /*!

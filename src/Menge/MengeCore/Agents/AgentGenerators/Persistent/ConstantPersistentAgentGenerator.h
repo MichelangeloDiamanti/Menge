@@ -15,6 +15,8 @@ class MENGE_API ConstantPersistentAgentGenerator : public PersistentAgentGenerat
   virtual size_t agentCount() override;
   virtual bool shouldGenerate(float time_step) override;
   virtual size_t getSpawnRate() const override;
+  virtual void spawn()
+      override;  // this doesn't do anything in this case since this is not controlled externally
   virtual void setAgentPosition(size_t i, BaseAgent* agt) override;
 
   void setGeneratorPosition(float x, float y);

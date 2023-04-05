@@ -39,7 +39,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorFactory.h"
 
 #include "MengeCore/Math/RandGenerator.h"
-
 #include "thirdParty/tinyxml.h"
 
 namespace Menge {
@@ -52,19 +51,27 @@ using Math::FloatGenerator;
 //          Implementation of PersistentAgentGeneratorFactory
 /////////////////////////////////////////////////////////////////////
 
+PersistentAgentGeneratorFactory::PersistentAgentGeneratorFactory() {
+  _nameID = _attrSet.addStringAttribute("name", true /*required*/);
+}
+
+/////////////////////////////////////////////////////////////////////
+
 bool PersistentAgentGeneratorFactory::setFromXML(PersistentAgentGenerator* gen, TiXmlElement* node,
-                                       const std::string& behaveFldr) const {
+                                                 const std::string& behaveFldr) const {
   if (!ElementFactory<PersistentAgentGenerator>::setFromXML(gen, node, behaveFldr)) {
     return false;
   }
+
+
+  gen->setName(_attrSet.getString(_nameID).c_str());
 
   Math::FloatGenerator* fGen = createFloatGenerator(node, 1.f, "displace_");
   if (fGen) {
     gen->setNoiseGenerator(fGen);
   } else {
     logger << Logger::WARN_MSG << "Persistent Agent generator on line " << node->Row()
-           << " has "
-              "no valid noise definition.  No noise applied.";
+           << " has no valid noise definition.  No noise applied.";
   }
 
   return true;

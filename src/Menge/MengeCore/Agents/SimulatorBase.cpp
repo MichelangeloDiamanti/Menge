@@ -57,8 +57,8 @@ template <class Agent>
 void SimulatorBase<Agent>::GenerateAgents() {
   // Iterate over the generator map and spawn agents
   for (auto& entry : _generatorMap) {
-    PersistentAgentGenerator* generator = entry.first;
     PersistentAgentGeneratorWrapper* wrapper = entry.second;
+    PersistentAgentGenerator* generator = wrapper->getGenerator();
 
     //// Check if it's time to spawn an agent based on your conditions, e.g., elapsed time, agent
     //// count, etc.
@@ -130,9 +130,26 @@ void SimulatorBase<Agent>::finalize() {
 ////////////////////////////////////////////////////////////////
 
 template <class Agent>
+PersistentAgentGeneratorWrapper* SimulatorBase<Agent>::getPersistentGeneratorWrapper(
+    std::string name) {
+  if (_generatorMap.find(name) == _generatorMap.end()) {
+    logger << Logger::WARN_MSG << "No persistent generator with the name " << name << " found";
+    return nullptr;
+  }
+  return _generatorMap[name];
+}
+
+////////////////////////////////////////////////////////////////
+
+template <class Agent>
 inline void SimulatorBase<Agent>::addPersistentGeneratorMapping(
-    PersistentAgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) {
-  _generatorMap[generator] = wrapper;
+    std::string name, PersistentAgentGeneratorWrapper* wrapper) {
+  if (_generatorMap.find(name) != _generatorMap.end()) {
+    logger << Logger::WARN_MSG << "A persistent generator with the name " << name
+           << " already exists. Ignoring this generator.";
+    return;
+  }
+  _generatorMap[name] = wrapper;
 }
 
 template <class Agent>

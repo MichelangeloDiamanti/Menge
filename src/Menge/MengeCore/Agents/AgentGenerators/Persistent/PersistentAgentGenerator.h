@@ -32,9 +32,35 @@ namespace Agents {
 
 class MENGE_API PersistentAgentGenerator : public AgentGenerator {
  public:
+  /*!
+    @brief    This determines whether the generator should spawn agents. 
+              based on an internal mechanism
+  */
   virtual bool shouldGenerate(float time_step) = 0;
 
+  /*!
+    @brief  returns the number of agents that should be added to the simulator
+  */
   virtual size_t getSpawnRate() const = 0;
+
+  /*!
+  * @brief this is for onDemand spawning. Informs the generator that it should spawn
+  *        new agents. 
+  * TODO:  I'm doing this here for controlling the spawning from Unity, but maybe this should
+  *        be done in another class which derives from AgentGenerator.
+  */
+  virtual void spawn() = 0;
+  
+  /*!
+  * @brief  returns the identifier for the agentGenerator, which should be a string that 
+  * univocally identifies this agent generator.
+  */
+  virtual std::string getName() const;
+
+  virtual void setName(std::string name);
+
+protected:
+  std::string _name;
 };
 
 }  // namespace Agents

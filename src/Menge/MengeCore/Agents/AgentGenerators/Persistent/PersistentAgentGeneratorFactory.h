@@ -36,6 +36,9 @@ namespace Agents {
  particular instances.
  */
 class MENGE_API PersistentAgentGeneratorFactory : public ElementFactory<PersistentAgentGenerator> {
+ public:
+  PersistentAgentGeneratorFactory();
+     
  protected:
   /*!
    @brief    Given a pointer to a Goal Selector instance, sets the appropriate fields from the
@@ -55,6 +58,8 @@ class MENGE_API PersistentAgentGeneratorFactory : public ElementFactory<Persiste
    */
   virtual bool setFromXML(PersistentAgentGenerator* gen, TiXmlElement* node,
                           const std::string& behaveFldr) const;
+  
+  size_t _nameID;  // The id of the "name" attribute
 };
 
 }  // namespace Agents

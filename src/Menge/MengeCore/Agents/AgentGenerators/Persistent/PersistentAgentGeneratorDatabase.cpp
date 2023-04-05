@@ -39,6 +39,7 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/AgentGenerators/Persistent/PersistentAgentGeneratorDatabase.h"
 
 #include "MengeCore/Agents/AgentGenerators/Persistent/ConstantPersistentAgentGenerator.h"
+#include "MengeCore/Agents/AgentGenerators/Persistent/ExternalPersistentAgentGenerator.h"
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
@@ -55,6 +56,7 @@ template <>
 void ElementDB<Agents::PersistentAgentGeneratorFactory,
                Agents::PersistentAgentGenerator>::addBuiltins() {
   addFactory(new Agents::ConstantPersistentAgentGeneratorFactory());
+  addFactory(new Agents::ExternalPersistentAgentGeneratorFactory());
 }
 }  // namespace Menge
 

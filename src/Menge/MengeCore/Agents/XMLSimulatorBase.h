@@ -34,11 +34,10 @@
 #include "MengeCore/Agents/SimXMLLoader.h"
 #include "MengeCore/mengeCommon.h"
 
-
 namespace Menge {
 
 namespace Agents {
-    
+
 // forward declaration
 class AgentGenerator;
 class PersistentAgentGenerator;
@@ -159,7 +158,10 @@ class MENGE_API XMLSimulatorBase {
    * @param wrapper The PersistentAgentGeneratorWrapper instance containing the ProfileSelector and
    * StateSelector.
    */
-  virtual void addPersistentGeneratorMapping(PersistentAgentGenerator* generator, PersistentAgentGeneratorWrapper* wrapper) = 0;
+  virtual void addPersistentGeneratorMapping(std::string name,
+                                             PersistentAgentGeneratorWrapper* wrapper) = 0;
+
+  virtual PersistentAgentGeneratorWrapper* getPersistentGeneratorWrapper(std::string name) = 0;
 
   /*!
    @brief    Add an agent with specified position to the simulator whose properties are defined by

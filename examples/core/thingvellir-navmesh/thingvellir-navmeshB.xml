@@ -21,12 +21,13 @@
 		<GoalSelector type="external" goal_set="0" goal="1"/>
 		<VelComponent type="nav_mesh" heading_threshold="0.3" file_name="simple.nav" />
 	</State>
-
+	
+	<!--
 	<State name="Stop" final="0">
 		<GoalSelector type="identity" />
 		<VelComponent type="zero" />
 	</State>
-	
+	-->
 
 	<Transition from="Goal" to="Visibility">
 		<Condition type="timer" per_agent="1" dist="c" value="10" />
@@ -35,10 +36,10 @@
 	<Transition from="Visibility" to="Goal">
 		<Condition type="goal_reached" distance="0.25" />
 	</Transition>
-
+	
+	<!--
 	<Transition from="Goal" to="Stop">
 		<Condition type="goal_reached" distance="0.25" />
 	</Transition>
-
-	<!-- -->
+	 -->
 </BFSM>

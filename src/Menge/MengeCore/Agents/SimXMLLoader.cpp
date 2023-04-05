@@ -365,9 +365,9 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
         generator->destroy();
       } else if (persistentgen) {
         // if it's persistent, add it to the mapping
-        PersistentAgentGeneratorWrapper* wrapper =
-            new PersistentAgentGeneratorWrapper(profileSel->clone(), stateSel->clone());
-        _sim->addPersistentGeneratorMapping(persistentgen, wrapper);
+        PersistentAgentGeneratorWrapper* wrapper = new PersistentAgentGeneratorWrapper(
+            persistentgen, profileSel->clone(), stateSel->clone());
+        _sim->addPersistentGeneratorMapping(persistentgen->getName(), wrapper);
       }
     }
   }

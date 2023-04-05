@@ -10,13 +10,16 @@ namespace Agents {
 
 class PersistentAgentGeneratorWrapper {
  public:
-  PersistentAgentGeneratorWrapper(ProfileSelector* profileSel, StateSelector* stateSel)
-      : _profileSelector(profileSel), _stateSelector(stateSel) {}
+  PersistentAgentGeneratorWrapper(PersistentAgentGenerator* generator, ProfileSelector* profileSel,
+                                  StateSelector* stateSel)
+      : _generator(generator), _profileSelector(profileSel), _stateSelector(stateSel) {}
 
+  PersistentAgentGenerator* getGenerator() const { return _generator; }
   ProfileSelector* getProfileSelector() const { return _profileSelector; }
   StateSelector* getStateSelector() const { return _stateSelector; }
 
  private:
+  PersistentAgentGenerator* _generator;
   ProfileSelector* _profileSelector;
   StateSelector* _stateSelector;
 };
