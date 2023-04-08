@@ -38,12 +38,12 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/resources/NavMeshLocalizer.h"
 
+#include <limits>
+
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/resources/NavMeshNode.h"
 #include "MengeCore/resources/PathPlanner.h"
 #include "MengeCore/resources/PortalPath.h"
-
-#include <limits>
 
 namespace Menge {
 
@@ -139,7 +139,7 @@ PortalPath* NavMeshLocalizer::updatePathForGoal(const Agents::BaseAgent* agent, 
   assert(path->getGoal()->moves() &&
          "NavMeshLocalizer::updatePathForGoal() should only be called on mobile goals");
   const BFSM::Goal& goal = *path->getGoal();
-  
+
   unsigned int goal_node = path->getEndNode();
   const NavMeshNode& node = _navMesh->getNode(goal_node);
 
@@ -186,6 +186,12 @@ unsigned int NavMeshLocalizer::getNode(const Agents::BaseAgent* agent, const std
 /////////////////////////////////////////////////////////////////////
 
 unsigned int NavMeshLocalizer::getNode(const Vector2& p) const { return findNodeBlind(p); }
+
+/////////////////////////////////////////////////////////////////////
+
+unsigned int NavMeshLocalizer::getClosestNode(const Vector2& p) const {
+  return findClosestNodeBlind(p);
+}
 
 /////////////////////////////////////////////////////////////////////
 
@@ -300,6 +306,30 @@ unsigned int NavMeshLocalizer::findNodeBlind(const Vector2& p, float tgtElev) co
         maxNode = n;
         elevDiff = hDiff;
       }
+    }
+  }
+  return maxNode;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+unsigned int NavMeshLocalizer::findClosestNodeBlind(const Math::Vector2& p, float tgtElev) const {
+  // TODO(curds01) 10/1/2016 - This cast is bad because I can lose precision
+  //  (after I get 4 billion nodes...)
+  const unsigned int nCount = static_cast<unsigned int>(_navMesh->getNodeCount());
+  float elevDiff = 1e6f;
+  float minDistance = std::numeric_limits<float>::max();
+  unsigned int maxNode = NavMeshLocation::NO_NODE;
+  for (unsigned int n = 0; n < nCount; ++n) {
+    const NavMeshNode& node = _navMesh->getNode(n);
+    float distToNodeCenter = node.getCenter().distanceSq(p);
+    if (distToNodeCenter < minDistance) {
+      //float hDiff = fabs(node.getElevation(p) - tgtElev);
+      //if (hDiff < elevDiff) {
+        maxNode = n;
+        //elevDiff = hDiff;
+        minDistance = distToNodeCenter;
+      //}
     }
   }
   return maxNode;

@@ -75,7 +75,13 @@
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="Goal" />
-		<Generator type="persistent_external" name="secondGen" />
+		<Generator type="persistent_external" name="carTourists" />
+    </AgentGroup>
+
+	<AgentGroup>
+        <ProfileSelector type="const" name="group1" />
+		<StateSelector type="const" name="Goal" />
+		<Generator type="persistent_external" name="busTourists" />
     </AgentGroup>
 
 		<!-- -->

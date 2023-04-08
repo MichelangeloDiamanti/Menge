@@ -25,14 +25,14 @@
 #ifndef __NAV_MESH_LOCALIZER_H__
 #define __NAV_MESH_LOCALIZER_H__
 
+#include <map>
+#include <set>
+
 #include "MengeCore/Runtime/ReadersWriterLock.h"
 #include "MengeCore/mengeCommon.h"
 #include "MengeCore/resources/NavMesh.h"
 #include "MengeCore/resources/NavMeshNode.h"
 #include "MengeCore/resources/Resource.h"
-
-#include <map>
-#include <set>
 
 namespace Menge {
 
@@ -96,8 +96,8 @@ class MENGE_API NavMeshLocation {
   /*!
    @brief    Sets the current position to being the given path.
 
-   @param    path    The path for defining the current location. The locator takes responsibility for
-                    deleting the path.
+   @param    path    The path for defining the current location. The locator takes responsibility
+   for deleting the path.
    */
   void setPath(PortalPath* path);
 
@@ -212,6 +212,16 @@ class MENGE_API NavMeshLocalizer : public Resource {
   unsigned int getNode(const Math::Vector2& p) const;
 
   /*!
+   @brief    Reports the closest node (based on centroid distanceSq) with the highest elevation for
+   the given point.
+
+   @param    p    The point to test against the mesh.
+   @returns  The index of the node associated with this location. If the location is not on a node,
+            NavMeshLocation::NO_NODE is returned.
+   */
+  unsigned int getClosestNode(const Math::Vector2& p) const;
+
+  /*!
    @brief    Returns the NavMeshNode of the given id.
 
    @param    i      The index of the desired mesh node.
@@ -275,8 +285,8 @@ class MENGE_API NavMeshLocalizer : public Resource {
    @brief    Updates the location of the agent relative to the nav mesh.
 
    @param    agent    The agent whose location is updated.
-   @param    force    Force causes the update regardless of whether the localizer is set to track all
-                    or not.
+   @param    force    Force causes the update regardless of whether the localizer is set to track
+   all or not.
    @returns  The index of the node in which the agent is found. If it is not on the navigation mesh,
             NavMeshLocation::NO_NODE is returned.
    */
@@ -389,6 +399,8 @@ class MENGE_API NavMeshLocalizer : public Resource {
    */
   unsigned int findNodeBlind(const Math::Vector2& p, float tgtElev = 1e5f) const;
 
+  unsigned int findClosestNodeBlind(const Math::Vector2& p, float tgtElev = 1e5f) const;
+
   /*!
    @brief    Finds the node a point lies in within a particular polygon group.
 
@@ -410,8 +422,8 @@ class MENGE_API NavMeshLocalizer : public Resource {
    @param    p        The point to test.
    @param    start    The identifier of the first node to search for.
    @param    stop    The identifier of the last (inclusive)
-   @returns  The identifier of the node that contains the query point, or NavMeshLocation::NO_NODE if
-            no polygon found in the range.
+   @returns  The identifier of the node that contains the query point, or NavMeshLocation::NO_NODE
+   if no polygon found in the range.
    */
   unsigned int findNodeInRange(const Math::Vector2& p, unsigned int start, unsigned int stop) const;
 
@@ -420,8 +432,8 @@ class MENGE_API NavMeshLocalizer : public Resource {
 
    @param    node      The navigation mesh node whose neighbors need to be tested.
    @param    p          The point to test against the neighboring nodes.
-   @returns  The index of the neighboring node which contains p. If p does not lie on any neighboring
-            mesh node, NavMeshLocation::NO_NODE is returned.
+   @returns  The index of the neighboring node which contains p. If p does not lie on any
+   neighboring mesh node, NavMeshLocation::NO_NODE is returned.
    */
   unsigned int testNeighbors(const NavMeshNode& node, const Math::Vector2& p) const;
 };

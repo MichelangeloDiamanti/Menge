@@ -38,6 +38,9 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 
 #include "MengeCore/BFSM/VelocityComponents/VelCompNavMesh.h"
 
+#include <iomanip>
+#include <sstream>
+
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/BFSM/Goals/Goal.h"
 #include "MengeCore/BFSM/Tasks/NavMeshLocalizerTask.h"
@@ -46,9 +49,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/resources/PathPlanner.h"
 #include "MengeCore/resources/PortalPath.h"
 #include "MengeCore/resources/Route.h"
-
-#include <iomanip>
-#include <sstream>
 
 namespace Menge {
 
@@ -82,15 +82,42 @@ void NavMeshVelComponent::setPrefVelocity(const Agents::BaseAgent* agent, const 
   if (path == 0x0) {
     // Get the route
     Vector2 goalPoint = goal->getCentroid();
-    unsigned int goalNode = _localizer->getNode(goalPoint);
-    if (goalNode == NavMeshLocation::NO_NODE) {
-      throw VelCompFatalException(
-          "Can't compute a path to a goal outside of the "
-          "navigation mesh.  Bad NavMeshVelComponent!");
-      //pVel.setSpeed(0.f);
-      //return;
-    }
     unsigned int agtNode = _localizer->getNode(agent);
+    unsigned int goalNode = _localizer->getNode(goalPoint);
+    //TODO: I disabled the exception for when the goal is not reachable in the navmesh
+    // because if I select a goal outside the navmesh then it crashes, and sometimes that can
+    // happen in the heatmap case, if the map doesn't perfectly line up with the navmesh
+    // so, for now it will just set a zero velocity instead of throwing an exception
+    if (agtNode == NavMeshLocation::NO_NODE || goalNode == NavMeshLocation::NO_NODE) {
+      pVel.setSpeed(0.f);
+      return;
+    }
+
+    //TODO: if there's no node that exactly contains the goal, but we still want to check
+    // whether there is one "close enough". This is commented out because I would need to
+    // adapt the goal to the center of the closest polygon: the PortalPath is the actual thing that
+    // computes the path and accounts for the goal (so it still needs one inside the navmesh).
+    // But the goal is constant and can't be modified here. I could clone it and send the copy to the 
+    // PortalPath, but that would require to implement the clone for each class that derives from Goal.
+    // So, for now this is not worth it and I'll just return the zero velocity
+    //bool lookingForClosestPoint = false;
+    //if (goalNode == NavMeshLocation::NO_NODE && _admissibleDistSq > 0.f) {
+    //  goalNode = _localizer->getClosestNode(goalPoint);
+    //  Vector2 goalNodePoint = _localizer->getNode(goalNode).getCenter();
+    //  float distanceToGoalNode = goalNodePoint.distanceSq(goalPoint);
+    //  if (distanceToGoalNode > _admissibleDistSq) {
+    //    throw VelCompFatalException(
+    //        "Can't compute a path to a goal outside of the "
+    //        "navigation mesh.  Bad NavMeshVelComponent!");
+    //  }
+    //  //lookingForClosestPoint = true;
+    //  }
+    //Goal* adaptedGoal;
+    //if (lookingForClosestPoint) {
+    //  adaptedGoal = new Goal(goal);
+    //}
+
+
     PortalRoute* route =
         _localizer->getPlanner()->getRoute(agtNode, goalNode, agent->_radius * 2.f);
     // compute the path
@@ -113,8 +140,7 @@ BFSM::Task* NavMeshVelComponent::getTask() {
 void NavMeshVelComponent::doUpdateGoal(const Agents::BaseAgent* agent, const Goal* goal) {
   assert(goal->moves() && "NavMeshVelComponent::doUpdateGoal called for unmoving goal");
   PortalPath* path = _localizer->getPath(agent->_id);
-  assert(path != nullptr &&
-         "Somehow updating a moving goal for an agent that doesn't have a path");
+  assert(path != nullptr && "Somehow updating a moving goal for an agent that doesn't have a path");
   assert(path->getGoal() == goal &&
          "Trying to update an (agent, goal) pair for which I have a conflicting goal");
   PortalPath* update_path = _localizer->updatePathForGoal(agent, path);

@@ -43,8 +43,8 @@ namespace BFSM {
 class NavMeshVCContext;
 
 /*!
- @brief    A velocity component that returns a preferred velocity whose direction and preferred speed
-          are computed from a navigation mesh.
+ @brief    A velocity component that returns a preferred velocity whose direction and preferred
+ speed are computed from a navigation mesh.
 
  A navigation mesh is a representation of the traversalbe space. The traversable space is
  represented as a polygonal mesh.  Graph searches through the mesh are performed to find paths
@@ -117,7 +117,7 @@ class MENGE_API NavMeshVelComponent : public VelComponent {
 
   /*!
    @brief    Used by the plugin system to know what artifacts to associate with agents of this type.
-   
+
    Every sub-class of must return a globally unique value if it should be associated with unique
    artifacts.
    */
@@ -139,7 +139,7 @@ class MENGE_API NavMeshVelComponent : public VelComponent {
 
   /*!
    @brief    The cosine of the heading deviation angular threshold.
-   
+
    This detects when the angle of approach deviates beyond a threshold and the agent needs to
    replan.
    */
@@ -154,6 +154,12 @@ class MENGE_API NavMeshVelComponent : public VelComponent {
    @brief    The localizer for the navigation mesh.
    */
   NavMeshLocalizerPtr _localizer;
+
+  /*!
+   @brief    If the goal is not contained inside any polygon in the navigation mesh, check which one
+   is the closest. If the closest has a distance lower than this value, still return a navmesh hit
+   */
+  float _admissibleDistSq = 10.f;
 };
 
 //////////////////////////////////////////////////////////////////////////////
