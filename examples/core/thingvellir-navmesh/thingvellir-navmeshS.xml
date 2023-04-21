@@ -81,7 +81,7 @@
 	<AgentGroup>
         <ProfileSelector type="const" name="group1" />
 		<StateSelector type="const" name="Goal" />
-		<Generator type="persistent_external" name="busTourists" />
+		<Generator type="persistent_external" name="busTourist" />
     </AgentGroup>
 
 		<!-- -->
