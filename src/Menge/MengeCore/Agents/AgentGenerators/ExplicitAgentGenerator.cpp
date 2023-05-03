@@ -66,7 +66,21 @@ void ExplicitGenerator::setAgentPosition(size_t i, BaseAgent* agt) {
 
 ////////////////////////////////////////////////////////////////////////////
 
-void ExplicitGenerator::addPosition(const Vector2& p) { _positions.push_back(p); }
+void ExplicitGenerator::setAgentOrientation(size_t i, BaseAgent* agt) {
+  if (i >= _orientations.size()) {
+    throw AgentGeneratorFatalException(
+        "ExplicitGenerator trying to access an agent "
+        "outside of the specified population");
+  }
+  agt->_orient = _orientations[i];
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+void ExplicitGenerator::addPositionOrientation(const Vector2& p, const Vector2& o = Vector2(0, 1)) {
+  _positions.push_back(p);
+  _orientations.push_back(o);
+}
 
 ////////////////////////////////////////////////////////////////////////////
 //      Implementation of ExplicitGeneratorFactory
@@ -85,8 +99,8 @@ bool ExplicitGeneratorFactory::setFromXML(AgentGenerator* gen, TiXmlElement* nod
        child = child->NextSiblingElement()) {
     if (child->ValueStr() == "Agent") {
       try {
-        Vector2 p = parseAgent(child);
-        eGen->addPosition(p);
+        std::pair<Vector2, Vector2> pos_orient = parseAgent(child);
+        eGen->addPositionOrientation(pos_orient.first, pos_orient.second);
       } catch (AgentGeneratorException) {
         return false;
       }
@@ -102,7 +116,7 @@ bool ExplicitGeneratorFactory::setFromXML(AgentGenerator* gen, TiXmlElement* nod
 
 ////////////////////////////////////////////////////////////////////////////
 
-Vector2 ExplicitGeneratorFactory::parseAgent(TiXmlElement* node) const {
+std::pair<Vector2, Vector2> ExplicitGeneratorFactory::parseAgent(TiXmlElement* node) const {
   float x, y;
   double dVal;
   bool valid = true;
@@ -123,7 +137,15 @@ Vector2 ExplicitGeneratorFactory::parseAgent(TiXmlElement* node) const {
         "Agent in explicit generator didn't "
         "define a position");
   }
-  return Vector2(x, y);
+  
+  Vector2 orientation(0, 1);
+  if (node->Attribute("o_x", &dVal)) {
+    orientation._x = (float)dVal;
+  }
+  if (node->Attribute("o_y", &dVal)) {
+    orientation._y = (float)dVal;
+  }
+  return std::make_pair(Vector2(x, y), orientation);
 }
 
 }  // namespace Agents

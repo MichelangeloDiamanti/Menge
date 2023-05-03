@@ -15,6 +15,12 @@ size_t Menge::Agents::ConstantPersistentAgentGenerator::agentCount() { return _c
 void Menge::Agents::ConstantPersistentAgentGenerator::setAgentPosition(size_t i, BaseAgent* agt) {
   agt->_pos = addNoise(Menge::Vector2(_posX, _posY));
 }
+//////////////////////////////////////////////////////////////////////////////
+
+void Menge::Agents::ConstantPersistentAgentGenerator::setAgentOrientation(size_t i,
+                                                                          BaseAgent* agt) {
+  agt->_orient = addNoise(Menge::Vector2(_orientX, _orientY));
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +42,12 @@ size_t Menge::Agents::ConstantPersistentAgentGenerator::getSpawnRate() const { r
 void Menge::Agents::ConstantPersistentAgentGenerator::setGeneratorPosition(float x, float y) {
   _posX = x;
   _posY = y;
+}
+//////////////////////////////////////////////////////////////////////////////
+
+void Menge::Agents::ConstantPersistentAgentGenerator::setGeneratorOrientation(float x, float y) {
+  _orientX = x;
+  _orientY = y;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -63,7 +75,7 @@ bool Menge::Agents::ConstantPersistentAgentGeneratorFactory::setFromXML(
 
   if (!PersistentAgentGeneratorFactory::setFromXML(cpGen, node, behaveFldr)) return false;
 
-  double x_pos, y_pos, spawn_interval;
+  double x_pos, y_pos, x_orient, y_orient, spawn_interval;
   int spawn_rate;
 
   if (node->Attribute("x_pos") && node->Attribute("y_pos") && node->Attribute("spawn_interval") &&
@@ -80,8 +92,16 @@ bool Menge::Agents::ConstantPersistentAgentGeneratorFactory::setFromXML(
            << node->Row() << ".";
     return false;
   }
+  if (node->Attribute("x_orient") && node->Attribute("y_orient")) {
+    node->Attribute("x_orient", &x_orient);
+    node->Attribute("y_orient", &y_orient);
+  } else {
+    x_orient = 0.0f;
+    y_orient = 1.0f;
+  }
 
   cpGen->setGeneratorPosition(x_pos, y_pos);
+  cpGen->setGeneratorOrientation(x_orient, y_orient);
   cpGen->setSpawnInterval(spawn_interval);
   cpGen->setSpawnRate(spawn_rate);
 

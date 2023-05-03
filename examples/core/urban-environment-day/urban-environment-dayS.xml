@@ -43,19 +43,19 @@
 
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="walk1" />
+    <StateSelector type="const" name="stop" />
     <Generator type="persistent_external" name="Generator1" />
   </AgentGroup>
 
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="walk1" />
+    <StateSelector type="const" name="stop" />
     <Generator type="persistent_external" name="Generator2" />
   </AgentGroup>
 
   <AgentGroup>
     <ProfileSelector type="const" name="group1" />
-    <StateSelector type="const" name="walk1" />
+    <StateSelector type="const" name="stop" />
     <Generator type="persistent_external" name="Generator3" />
   </AgentGroup>
 

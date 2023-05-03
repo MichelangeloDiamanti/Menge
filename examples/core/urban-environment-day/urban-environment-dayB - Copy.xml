@@ -58,61 +58,14 @@
     <Goal type="point" id="55" x="56" y="256" capacity="1000"/>
   </GoalSet>
 
-  <State name="stop" final="0">
-    <GoalSelector type="identity" />
-    <VelComponent type="zero" />
-  </State>
-
-
-  <State name="PerceiveComfort" final="0" >
-    <GoalSelector type="external" goal_set="0" goal="1"/>
-    <VelComponent type="nav_mesh" file_name="urban-environment-day-navmesh.nav" heading_threshold="0.3" />
-  </State>
-  
-
   <State name="walk1" final="0">
     <GoalSelector type="random" goal_set="0" per_agent="1" persistent="0" />
     <VelComponent type="nav_mesh" file_name="urban-environment-day-navmesh.nav" heading_threshold="0.3" />
   </State>
-
-
-
-  <Transition from="stop" to="PerceiveComfort">
-    <Condition type="timer" per_agent="1" dist="c" value="30" />
-  </Transition>
-
-
-  <Transition from="PerceiveComfort" to="stop">
-    <Condition type="goal_reached" distance="0.2" />
-  </Transition>
+  
+  <State name="stop" final="0" />
 
   <!--
-  <State name="PerceiveComfort" final="0" >
-    <GoalSelector type="external" goal_set="0" goal="1"/>
-    <VelComponent type="nav_mesh" file_name="urban-environment-day-navmesh.nav" heading_threshold="0.3" />
-  </State>
-  
-  <State name="walk1" final="0">
-    <GoalSelector type="random" goal_set="0" per_agent="1" persistent="0" />
-    <VelComponent type="nav_mesh" file_name="urban-environment-day-navmesh.nav" heading_threshold="0.3" />
-  </State>
-
-  <Transition from="walk1" to="PerceiveComfort">
-    <Condition type="or">
-      <Condition type="goal_reached" distance="0.2" />
-      <Condition type="timer" per_agent="1" dist="c" value="10" />
-    </Condition>
-  </Transition>
-
-  <Transition from="PerceiveComfort" to="walk1">
-    <Condition type="or">
-      <Condition type="goal_reached" distance="0.2" />
-      <Condition type="timer" per_agent="1" dist="c" value="10" />
-    </Condition>
-  </Transition>
-
-
-    
   <Transition from="walk1" to="stop">
     <Condition type="or">
       <Condition type="goal_reached" distance="0.2" />
@@ -125,17 +78,14 @@
   </Transition>
   !-->
 
-  <!--
-  <Transition from="walk1" to="PerceiveComfort">
-    <Condition type="or">
+  <Transition from="walk1" to="stop">
       <Condition type="goal_reached" distance="0.2" />
-      <Condition type="timer" per_agent="1" dist="c" value="10" />
-    </Condition>
   </Transition>
 
-  <Transition from="PerceiveComfort" to="walk1">
+  <Transition from="stop" to="walk1">
     <Condition type="timer" per_agent="1" dist="c" value="10" />
   </Transition>
+  <!--
   !-->
 
 

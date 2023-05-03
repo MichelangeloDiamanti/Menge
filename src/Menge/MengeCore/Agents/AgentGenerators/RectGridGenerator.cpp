@@ -41,7 +41,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Math/consts.h"
 #include "MengeCore/Runtime/Logger.h"
-
 #include "thirdParty/tinyxml.h"
 
 namespace Menge {
@@ -81,11 +80,19 @@ void RectGridGenerator::setAgentPosition(size_t i, BaseAgent* agt) {
 
 ////////////////////////////////////////////////////////////////////////////
 
+void RectGridGenerator::setAgentOrientation(size_t i, BaseAgent* agt) { agt->_orient = _agtOrient; }
+
+////////////////////////////////////////////////////////////////////////////
+
 void RectGridGenerator::setRotationDeg(float angle) {
   float rad = angle * DEG_TO_RAD;
   _cosRot = cos(rad);
   _sinRot = sin(rad);
 }
+
+////////////////////////////////////////////////////////////////////////////
+
+void RectGridGenerator::setGeneratorOrientation(Vector2 orient) { _agtOrient = orient; }
 
 ////////////////////////////////////////////////////////////////////////////
 //      Implementation of RectGridGeneratorFactory
@@ -100,6 +107,9 @@ RectGridGeneratorFactory::RectGridGeneratorFactory() : AgentGeneratorFactory() {
   _xCountID = _attrSet.addSizeTAttribute("count_x", true, 0);
   _yCountID = _attrSet.addSizeTAttribute("count_y", true, 0);
   _rotID = _attrSet.addFloatAttribute("rotation", false, 0.f);
+
+  _agtOrientXID = _attrSet.addFloatAttribute("agt_orient_x", false, 0.f);  // add this line
+  _agtOrientYID = _attrSet.addFloatAttribute("agt_orient_y", false, 1.f);  // add this line
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -117,6 +127,9 @@ bool RectGridGeneratorFactory::setFromXML(AgentGenerator* gen, TiXmlElement* nod
   lGen->setOffset(Vector2(_attrSet.getFloat(_offsetXID), _attrSet.getFloat(_offsetYID)));
   lGen->setAgentCounts(_attrSet.getSizeT(_xCountID), _attrSet.getSizeT(_yCountID));
   lGen->setRotationDeg(_attrSet.getFloat(_rotID));
+
+  lGen->setGeneratorOrientation(
+      Vector2(_attrSet.getFloat(_agtOrientXID), _attrSet.getFloat(_agtOrientYID)));
 
   return true;
 }

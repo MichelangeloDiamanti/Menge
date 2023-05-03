@@ -25,11 +25,11 @@
 #ifndef __EXPLICIT_AGENT_GENERATOR_H__
 #define __EXPLICIT_AGENT_GENERATOR_H__
 
+#include <vector>
+
 #include "MengeCore/Agents/AgentGenerators/AgentGenerator.h"
 #include "MengeCore/Agents/AgentGenerators/AgentGeneratorFactory.h"
 #include "MengeCore/mengeCommon.h"
-
-#include <vector>
 
 namespace Menge {
 
@@ -75,17 +75,31 @@ class MENGE_API ExplicitGenerator : public AgentGenerator {
   virtual void setAgentPosition(size_t i, BaseAgent* agt);
 
   /*!
+   @brief    Sets the ith orientation to the given agent.
+
+   @param    i      The index of the requested position in the sequence.
+   @param    agt    A pointer to the agent whose position is to be set.
+   @throws    AgentGeneratorException if the index, i, is invalid.
+   */
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
+
+  /*!
    @brief    Adds a position to the generator
 
    @param    p    The position to add.
    */
-  void addPosition(const Vector2& p);
+  void addPositionOrientation(const Vector2& p, const Vector2& o);
 
  protected:
   /*!
    @brief    The agent positions parsed from the file.
    */
   std::vector<Vector2> _positions;
+
+  /*!
+   @brief    The agent orientations parsed from the file.
+   */
+  std::vector<Vector2> _orientations;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -156,7 +170,7 @@ class MENGE_API ExplicitGeneratorFactory : public AgentGeneratorFactory {
    @returns  The 2D point defined in the \<Agent\> tag.
    @throws    AgentGeneratorException is the agent tag doesn't provide the required data.
    */
-  Vector2 parseAgent(TiXmlElement* node) const;
+  std::pair<Vector2, Vector2> ExplicitGeneratorFactory::parseAgent(TiXmlElement* node) const;
 };
 }  // namespace Agents
 }  // namespace Menge

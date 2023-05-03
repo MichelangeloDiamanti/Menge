@@ -85,6 +85,14 @@ class MENGE_API NavMeshGenerator : public AgentGenerator {
   virtual void setAgentPosition(size_t i, BaseAgent* agt);
 
   /*!
+   @brief    Sets the ith position to the given agent.
+
+   @param    i     The index of the requested position in the sequence.
+   @param    agt   A pointer to the agent whose position is to be set.
+   */
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
+
+  /*!
    @brief    Adds a position to the generator
 
    @param    p    The position to add.

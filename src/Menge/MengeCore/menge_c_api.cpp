@@ -92,7 +92,30 @@ MENGE_API bool AddPositionToExternalAgentGenerator(const char* generatorName, fl
 
   Menge::Math::Vector2 position = Menge::Math::Vector2(x, y);
 
-  extGenerator->addPosition(position);
+  extGenerator->addPositionOrientation(position);
+  return true;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+MENGE_API bool AddPositionOrientationToExternalAgentGenerator(const char* generatorName,
+                                                              float x_pos, float y_pos,
+                                                              float x_orient, float y_orient) {
+  assert(_simulator != nullptr);
+
+  Menge::Agents::PersistentAgentGeneratorWrapper* wrapper =
+      _simulator->getPersistentGeneratorWrapper(generatorName);
+  if (wrapper == 0x0) return false;
+
+  Menge::Agents::ExternalPersistentAgentGenerator* extGenerator =
+      dynamic_cast<Menge::Agents::ExternalPersistentAgentGenerator*>(wrapper->getGenerator());
+  if (extGenerator == 0x0) return false;
+
+  Menge::Math::Vector2 position = Menge::Math::Vector2(x_pos, y_pos);
+  Menge::Math::Vector2 orientation = Menge::Math::Vector2(x_orient, y_orient);
+
+  extGenerator->addPositionOrientation(position, orientation);
+
   return true;
 }
 
@@ -109,7 +132,7 @@ MENGE_API bool ClearExternalAgentGeneratorPositions(const char* generatorName) {
       dynamic_cast<Menge::Agents::ExternalPersistentAgentGenerator*>(wrapper->getGenerator());
   if (extGenerator == 0x0) return false;
 
-  extGenerator->clearPositions();
+  extGenerator->clearPositionOrientations();
   return true;
 }
 

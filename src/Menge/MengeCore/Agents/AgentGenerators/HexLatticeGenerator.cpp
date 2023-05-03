@@ -41,7 +41,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Math/consts.h"
 #include "MengeCore/Runtime/Logger.h"
-
 #include "thirdParty/tinyxml.h"
 
 namespace Menge {
@@ -134,6 +133,12 @@ void HexLatticeGenerator::setAgentPosition(size_t i, BaseAgent* agt) {
 
 ////////////////////////////////////////////////////////////////////////////
 
+void HexLatticeGenerator::setAgentOrientation(size_t i, BaseAgent* agt) {
+  agt->_orient = _agtOrient;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
 void HexLatticeGenerator::setRotationDeg(float angle) {
   float rad = angle * DEG_TO_RAD;
   _cosRot = cos(rad);
@@ -143,7 +148,8 @@ void HexLatticeGenerator::setRotationDeg(float angle) {
 ////////////////////////////////////////////////////////////////////////////
 
 void HexLatticeGenerator::set(const Vector2& anchor, AnchorAlignEnum align, LatticeRowEnum dir,
-                              float width, float density, size_t tgtPopulation, float angle) {
+                              float width, float density, size_t tgtPopulation, float angle,
+                              Vector2 agtOrient) {
   _rowDir = dir;
   setRotationDeg(angle);
   float r = effectiveRadius(density);
@@ -197,6 +203,9 @@ HexLatticeGeneratorFactory::HexLatticeGeneratorFactory() : AgentGeneratorFactory
   _widthID = _attrSet.addFloatAttribute("width", true, 0.f);
   _popID = _attrSet.addSizeTAttribute("population", true, 0);
   _rotID = _attrSet.addFloatAttribute("rotation", false, 0.f);
+
+  _agtOrientXID = _attrSet.addFloatAttribute("agt_orient_x", false /*required*/, 0.f);
+  _agtOrientYID = _attrSet.addFloatAttribute("agt_orient_y", false /*required*/, 1.f);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -241,9 +250,15 @@ bool HexLatticeGeneratorFactory::setFromXML(AgentGenerator* gen, TiXmlElement* n
            << node->Row() << ": " << rowDir << ".  Should be x or y.";
     return false;
   }
+
+  float agtOrientX = 0.f;
+  float agtOrientY = 1.f;
+  agtOrientX = float(_attrSet.getFloat(_agtOrientXID));
+  agtOrientY = float(_attrSet.getFloat(_agtOrientYID));
+
   lGen->set(Vector2(_attrSet.getFloat(_anchorXID), _attrSet.getFloat(_anchorYID)), align, dir,
             _attrSet.getFloat(_widthID), _attrSet.getFloat(_densityID), _attrSet.getSizeT(_popID),
-            _attrSet.getFloat(_rotID));
+            _attrSet.getFloat(_rotID), Vector2(agtOrientX, agtOrientY));
 
   return true;
 }

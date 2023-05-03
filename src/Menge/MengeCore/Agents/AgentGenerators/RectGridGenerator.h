@@ -85,6 +85,14 @@ class MENGE_API RectGridGenerator : public AgentGenerator {
   virtual void setAgentPosition(size_t i, BaseAgent* agt);
 
   /*!
+   @brief    Sets the ith position to the given agent.
+
+   @param    i     The index of the requested position in the sequence.
+   @param    agt   A pointer to the agent whose position is to be set.
+   */
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
+
+  /*!
    @brief    Sets the anchor position.
 
    @param    p    The anchor position.
@@ -130,6 +138,11 @@ class MENGE_API RectGridGenerator : public AgentGenerator {
    */
   void setRotationDeg(float angle);
 
+  /*!
+   @brief    Sets the agents orientation.
+   */
+  void setGeneratorOrientation(Vector2 orient);
+
  protected:
   /*!
    @brief    The anchor point of the lattice.
@@ -167,6 +180,11 @@ class MENGE_API RectGridGenerator : public AgentGenerator {
    Positive rotation values are counter-clockwise rotation.
    */
   float _sinRot;
+
+  /*!
+   @brief    the orientation of the agents
+   */
+  Vector2 _agtOrient;  
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -268,6 +286,12 @@ class MENGE_API RectGridGeneratorFactory : public AgentGeneratorFactory {
    @brief    The identifier for the "rotation" float parameter.
    */
   size_t _rotID;
+
+  /*!
+   @brief    The identifier for the "agtOrient" Vector parameter.
+   */
+  size_t _agtOrientXID; 
+  size_t _agtOrientYID; 
 };
 }  // namespace Agents
 }  // namespace Menge

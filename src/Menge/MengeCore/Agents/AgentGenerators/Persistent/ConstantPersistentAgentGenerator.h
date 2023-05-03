@@ -19,7 +19,10 @@ class MENGE_API ConstantPersistentAgentGenerator : public PersistentAgentGenerat
       override;  // this doesn't do anything in this case since this is not controlled externally
   virtual void setAgentPosition(size_t i, BaseAgent* agt) override;
 
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
+
   void setGeneratorPosition(float x, float y);
+  void setGeneratorOrientation(float x, float y);
   void setSpawnRate(int rate);
   void setSpawnInterval(float interval);
 
@@ -28,6 +31,8 @@ class MENGE_API ConstantPersistentAgentGenerator : public PersistentAgentGenerat
 
   float _posX;           // x position of the AgentGenerator
   float _posY;           // y position of the AgentGenerator
+  float _orientX;        // x orientation of the AgentGenerator
+  float _orientY;        // y orientation of the AgentGenerator
   int _spawnRate;        // number of agents to spawn
   float _spawnInterval;  // time interval between spawns (seconds)
   float _elapsedTime;    // time elapsed since last spawn (seconds)

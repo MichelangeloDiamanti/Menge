@@ -73,7 +73,9 @@ BaseAgent::BaseAgent() {
 
 ////////////////////////////////////////////////////////////////
 
-void BaseAgent::initialize() { _orient = _velPref.getPreferred(); }
+void BaseAgent::initialize() {
+  //_orient = _velPref.getPreferred();
+}
 
 ////////////////////////////////////////////////////////////////
 
@@ -95,7 +97,7 @@ void BaseAgent::update(float timeStep) {
   }
   _pos += _vel * timeStep;
 
-  updateOrient(timeStep);
+  if (_vel.Length() > 0.0f) updateOrient(timeStep);
   postUpdate();
 }
 

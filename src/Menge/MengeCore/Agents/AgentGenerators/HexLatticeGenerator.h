@@ -121,6 +121,14 @@ class MENGE_API HexLatticeGenerator : public AgentGenerator {
   virtual void setAgentPosition(size_t i, BaseAgent* agt);
 
   /*!
+   @brief    Sets the ith position to the given agent.
+
+   @param    i     The index of the requested position in the sequence.
+   @param    agt   A pointer to the agent whose position is to be set.
+   */
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
+
+  /*!
    @brief    Sets the properties of the generator
 
    @param    anchor          The anchor position of the lattice.
@@ -130,9 +138,10 @@ class MENGE_API HexLatticeGenerator : public AgentGenerator {
    @param    density         The target density (agent /m^2).
    @param    tgtPopulation   The target population (agents).
    @param    angle           The rotation angle (in degrees).
+   @param    agtOrient       The orientation of the agents.
    */
   void set(const Vector2& anchor, AnchorAlignEnum align, LatticeRowEnum dir, float width,
-           float density, size_t tgtPopulation, float angle);
+           float density, size_t tgtPopulation, float angle, Vector2 agtOrient);
 
   /*!
    @brief    Sets the lattice rotation.
@@ -152,8 +161,8 @@ class MENGE_API HexLatticeGenerator : public AgentGenerator {
   LatticeRowEnum _rowDir;
 
   /*!
-   @brief    The cosine of the amount the lattice is rotated around its anchor point. 
-   
+   @brief    The cosine of the amount the lattice is rotated around its anchor point.
+
    Positive values represent counter-clockwise rotation.
    */
   float _cosRot;
@@ -192,6 +201,11 @@ class MENGE_API HexLatticeGenerator : public AgentGenerator {
    @brief    The number of rows to create.
    */
   size_t _rowCount;
+
+  /*!
+   @brief    The orientation for the agents.
+   */
+  Vector2 _agtOrient;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -299,6 +313,12 @@ class MENGE_API HexLatticeGeneratorFactory : public AgentGeneratorFactory {
    @brief    The identifier for the "rotation" float parameter.
    */
   size_t _rotID;
+
+  /*!
+   @brief    The identifier for the "_agtOrient" x and y float parameters.
+   */
+  size_t _agtOrientXID;
+  size_t _agtOrientYID;
 };
 }  // namespace Agents
 }  // namespace Menge

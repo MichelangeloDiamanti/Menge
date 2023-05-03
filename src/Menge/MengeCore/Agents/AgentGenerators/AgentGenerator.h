@@ -125,6 +125,16 @@ class MENGE_API AgentGenerator : public Element {
    */
   virtual void setAgentPosition(size_t i, BaseAgent* agt) = 0;
 
+
+  /*!
+   @brief    Sets the ith orientation to the given agent.
+
+   @param    i      The index of the requested position in the sequence.
+   @param    agt    A pointer to the agent whose position is to be set.
+   @throws   AgentGeneratorException if the index, i, is invalid.
+   */
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) = 0;
+
   /*!
    @brief    Sets the Generators noise generation.
 

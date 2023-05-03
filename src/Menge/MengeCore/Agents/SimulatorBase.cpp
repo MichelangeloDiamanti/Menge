@@ -74,6 +74,7 @@ void SimulatorBase<Agent>::GenerateAgents() {
         AgentInitializer* agentProfile = profileSel->getProfile();
         BaseAgent* agent = addAgent(zero, agentProfile);
         generator->setAgentPosition(i, agent);
+        generator->setAgentOrientation(i, agent);
         this->getInitialState()->setAgentState(agent->_id, stateSel->getState());
 
         this->getBFSM()->updateAgentCount(getNumAgents());

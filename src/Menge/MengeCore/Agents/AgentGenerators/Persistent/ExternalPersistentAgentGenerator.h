@@ -11,21 +11,28 @@ namespace Agents {
 
 class MENGE_API ExternalPersistentAgentGenerator : public PersistentAgentGenerator {
  public:
+
+  struct PositionOrientation {
+    Vector2 position;
+    Vector2 orientation;
+  };
+     
   // Inherited via PersistentAgentGenerator
   virtual size_t agentCount() override;
   virtual bool shouldGenerate(float time_step) override;
   virtual size_t getSpawnRate() const override;
   virtual void spawn() override;
   virtual void setAgentPosition(size_t i, BaseAgent* agt) override;
+  virtual void setAgentOrientation(size_t i, BaseAgent* agt) override;
 
   /*!
    @brief    Adds a position to the generator
 
    @param    p    The position to add.
    */
-  void addPosition(const Vector2& p);
-  void removePosition(const Vector2& p);
-  void clearPositions();
+  void addPositionOrientation(const Vector2& p, const Vector2& o = Vector2(0.f, 1.f));
+  void removePositionOrientation(const Vector2& p);
+  void clearPositionOrientations();
   
  protected:
   size_t _count = 0;  // The number of agents that have been generated so far
@@ -33,7 +40,7 @@ class MENGE_API ExternalPersistentAgentGenerator : public PersistentAgentGenerat
   /*!
    @brief    The agent positions set from the external source.
    */
-  std::vector<Vector2> _positions;
+  std::vector<PositionOrientation> _posOrients;
 
   // Now I need to implement a mechanism which allows to trigger the spawning of agents
   // ideally, the external entity will call the spawn function, and there is going to be a 

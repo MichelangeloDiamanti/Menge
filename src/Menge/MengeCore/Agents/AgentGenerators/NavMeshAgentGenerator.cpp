@@ -41,7 +41,6 @@ Any questions or comments should be sent to the authors {menge,geom}@cs.unc.edu
 #include "MengeCore/Agents/BaseAgent.h"
 #include "MengeCore/Runtime/Logger.h"
 #include "MengeCore/Runtime/os.h"
-
 #include "thirdParty/tinyxml.h"
 
 namespace Menge {
@@ -70,6 +69,12 @@ void NavMeshGenerator::setAgentPosition(size_t i, BaseAgent* agt) {
     ss << agt->_pos << " onto the mesh in group " << _groupName << ".";
     throw AgentGeneratorFatalException(ss.str());
   }
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+void NavMeshGenerator::setAgentOrientation(size_t i, BaseAgent* agt) {
+  agt->setOrientation(0.0f, 1.0f);
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -359,6 +359,7 @@ bool SimXMLLoader::parseAgentGroup(TiXmlElement* node, AgentInitializer* agentIn
           AgentInitializer* agtInit = profileSel->getProfile();
           BaseAgent* agent = _sim->addAgent(zero, agtInit);
           generator->setAgentPosition(i, agent);
+          generator->setAgentOrientation(i, agent);
           _sim->getInitialState()->setAgentState(agent->_id, stateSel->getState());
         }
         _agtCount += (unsigned int)AGT_COUNT;
