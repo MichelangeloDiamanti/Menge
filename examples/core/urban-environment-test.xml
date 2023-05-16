@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Project 
+	scene="urban-environment-test/urban-environment-testS.xml" 
+	behavior="urban-environment-test/urban-environment-testB.xml" 
+	view="urban-environment-test/urban-environment-testV.xml" 
+	model="orca"
+	dumpPath="images/test"
+/>

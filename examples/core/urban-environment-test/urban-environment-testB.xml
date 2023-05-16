@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BFSM>
+  <GoalSet id="0">
+    <Goal type="point" id="1" x="448" y="152" capacity="1000"/>
+    <Goal type="point" id="2" x="448" y="144" capacity="1000"/>
+    <Goal type="point" id="3" x="432" y="344" capacity="1000"/>
+    <Goal type="point" id="4" x="432" y="336" capacity="1000"/>
+    <Goal type="point" id="5" x="424" y="344" capacity="1000"/>
+    <Goal type="point" id="6" x="424" y="336" capacity="1000"/>
+    <Goal type="point" id="7" x="400" y="152" capacity="1000"/>
+    <Goal type="point" id="8" x="392" y="152" capacity="1000"/>
+    <Goal type="point" id="9" x="384" y="152" capacity="1000"/>
+    <Goal type="point" id="10" x="376" y="392" capacity="1000"/>
+    <Goal type="point" id="11" x="376" y="384" capacity="1000"/>
+    <Goal type="point" id="12" x="376" y="152" capacity="1000"/>
+    <Goal type="point" id="13" x="368" y="152" capacity="1000"/>
+    <Goal type="point" id="14" x="360" y="152" capacity="1000"/>
+    <Goal type="point" id="15" x="336" y="240" capacity="1000"/>
+    <Goal type="point" id="16" x="336" y="232" capacity="1000"/>
+    <Goal type="point" id="17" x="328" y="240" capacity="1000"/>
+    <Goal type="point" id="18" x="328" y="232" capacity="1000"/>
+    <Goal type="point" id="19" x="304" y="408" capacity="1000"/>
+    <Goal type="point" id="20" x="304" y="400" capacity="1000"/>
+    <Goal type="point" id="21" x="304" y="240" capacity="1000"/>
+    <Goal type="point" id="22" x="304" y="232" capacity="1000"/>
+    <Goal type="point" id="23" x="296" y="408" capacity="1000"/>
+    <Goal type="point" id="24" x="296" y="400" capacity="1000"/>
+    <Goal type="point" id="25" x="296" y="240" capacity="1000"/>
+    <Goal type="point" id="26" x="296" y="232" capacity="1000"/>
+    <Goal type="point" id="27" x="296" y="144" capacity="1000"/>
+    <Goal type="point" id="28" x="296" y="136" capacity="1000"/>
+    <Goal type="point" id="29" x="296" y="128" capacity="1000"/>
+    <Goal type="point" id="30" x="296" y="120" capacity="1000"/>
+    <Goal type="point" id="31" x="296" y="112" capacity="1000"/>
+    <Goal type="point" id="32" x="296" y="104" capacity="1000"/>
+    <Goal type="point" id="33" x="264" y="160" capacity="1000"/>
+    <Goal type="point" id="34" x="264" y="152" capacity="1000"/>
+    <Goal type="point" id="35" x="224" y="368" capacity="1000"/>
+    <Goal type="point" id="36" x="216" y="368" capacity="1000"/>
+    <Goal type="point" id="37" x="208" y="368" capacity="1000"/>
+    <Goal type="point" id="38" x="200" y="248" capacity="1000"/>
+    <Goal type="point" id="39" x="200" y="240" capacity="1000"/>
+    <Goal type="point" id="40" x="192" y="248" capacity="1000"/>
+    <Goal type="point" id="41" x="192" y="240" capacity="1000"/>
+    <Goal type="point" id="42" x="184" y="312" capacity="1000"/>
+    <Goal type="point" id="43" x="184" y="304" capacity="1000"/>
+    <Goal type="point" id="44" x="176" y="312" capacity="1000"/>
+    <Goal type="point" id="45" x="176" y="304" capacity="1000"/>
+    <Goal type="point" id="46" x="168" y="312" capacity="1000"/>
+    <Goal type="point" id="47" x="168" y="304" capacity="1000"/>
+    <Goal type="point" id="48" x="96" y="120" capacity="1000"/>
+    <Goal type="point" id="49" x="96" y="112" capacity="1000"/>
+    <Goal type="point" id="50" x="88" y="120" capacity="1000"/>
+    <Goal type="point" id="51" x="88" y="112" capacity="1000"/>
+    <Goal type="point" id="52" x="64" y="264" capacity="1000"/>
+    <Goal type="point" id="53" x="64" y="256" capacity="1000"/>
+    <Goal type="point" id="54" x="56" y="264" capacity="1000"/>
+    <Goal type="point" id="55" x="56" y="256" capacity="1000"/>
+  </GoalSet>
+
+  <State name="stop" final="0">
+    <GoalSelector type="identity" />
+    <VelComponent type="zero" />
+  </State>
+
+  <State name="walk1" final="0">
+    <GoalSelector type="random" goal_set="0" per_agent="1" persistent="0" />
+    <VelComponent type="nav_mesh" file_name="urban-environment-test-navmesh.nav" heading_threshold="0.3" />
+  </State>
+
+  <Transition from="stop" to="walk1">
+    <Condition type="timer" per_agent="1" dist="c" value="10" />
+  </Transition>
+
+
+</BFSM>
